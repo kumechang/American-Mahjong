@@ -4,6 +4,7 @@ import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
+import { ClubFilterList } from "@/components/ClubFilterList";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so this route can't be statically
@@ -140,7 +141,6 @@ export default async function CityPage({
     notFound();
   }
 
-  const beginnerClubs = city.clubs.filter((club) => club.beginnerFriendly);
   const jsonLd = [buildBreadcrumbJsonLd(city), ...buildEventsJsonLd(city)];
 
   return (
@@ -157,49 +157,18 @@ export default async function CityPage({
         American Mahjong in {city.name}
       </h1>
       <p className="mt-3 text-zinc-600 dark:text-zinc-400">
-        Beginner-friendly clubs, lessons, and events near {city.name},{" "}
-        {city.state}.
+        Clubs, lessons, and events near {city.name}, {city.state} — filter
+        by beginner-friendly, free, lessons, open play, or social.
       </p>
 
       <section className="mt-12">
-        <h2 className="text-xl font-semibold">Beginner-Friendly Mahjong</h2>
-        {beginnerClubs.length === 0 ? (
-          <p className="mt-3 text-sm text-zinc-500">
-            No beginner-friendly clubs listed yet.
-          </p>
+        <h2 className="text-xl font-semibold">Mahjong Clubs</h2>
+        {city.clubs.length === 0 ? (
+          <p className="mt-3 text-sm text-zinc-500">No clubs listed yet.</p>
         ) : (
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-            {beginnerClubs.map((club) => (
-              <li
-                key={club.id}
-                className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
-              >
-                <h3 className="font-semibold">{club.name}</h3>
-                <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
-                  {club.beginnerFriendly && (
-                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
-                      Beginner Friendly
-                    </span>
-                  )}
-                  {club.lessonsAvailable && (
-                    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                      Lessons Available
-                    </span>
-                  )}
-                  {club.free && (
-                    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                      Free
-                    </span>
-                  )}
-                </div>
-                {club.schedule && (
-                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                    {club.schedule}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-4">
+            <ClubFilterList clubs={city.clubs} />
+          </div>
         )}
       </section>
 
