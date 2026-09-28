@@ -31,7 +31,10 @@ Real club/instructor/event data is manually curated, not scraped — see
 [`docs/DATA_COLLECTION.md`](docs/DATA_COLLECTION.md) for the research
 procedure and legal guardrails per source, and
 [`data/templates/`](data/templates/) for the CSV format researchers fill
-in before it gets imported.
+in before it gets imported via `node scripts/import-csv.mjs` (see the doc
+above for usage — it validates the CSV and generates a SQL file to apply
+with `wrangler d1 execute`, since the D1 binding isn't reachable from a
+plain Node script).
 
 ## Getting started
 

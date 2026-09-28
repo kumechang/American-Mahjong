@@ -117,6 +117,10 @@ export const instructors = sqliteTable(
       .notNull()
       .default(false),
     price: real("price"),
+    // Free text for anything that doesn't fit the fields above — pricing
+    // detail that isn't a single flat number (e.g. "$80/hour per person",
+    // a named course price), lesson format, special conditions.
+    notes: text("notes"),
     sourceUrl: text("sourceUrl"),
     lastVerifiedAt: text("lastVerifiedAt"),
     status: text("status").notNull().default("NEEDS_REVIEW").$type<RecordStatus>(),

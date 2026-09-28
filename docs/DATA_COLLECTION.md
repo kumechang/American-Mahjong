@@ -70,9 +70,51 @@
 
 1. `data/templates/*.csv` を都市ごとにコピーして記入する
    (例: `data/collected/dallas-clubs.csv`)
-2. 記入が終わったら、CSV → D1 へのインポートスクリプトを使って取り込む
-   (このスクリプトは別途実装する — 本ドキュメント作成時点では未実装)
-3. インポート後、実際に都市ページ(`/cities/[slug]`)を開いて表示を目視確認する
+2. `scripts/import-csv.mjs` でまず検証だけ行う(DBには何も書き込まない):
+   ```bash
+   node scripts/import-csv.mjs \
+     --clubs=data/collected/dallas-clubs.csv \
+     --instructors=data/collected/dallas-instructors.csv \
+     --events=data/collected/dallas-events.csv \
+     --dry-run
+   ```
+   エラーが出た行は修正して再実行する(警告は許容範囲 — 例:
+   `NEEDS_REVIEW`行の`source_url`欠落など)。
+3. エラーが無くなったら `--out=` を指定してSQLファイルを生成する:
+   ```bash
+   node scripts/import-csv.mjs \
+     --clubs=data/collected/dallas-clubs.csv \
+     --instructors=data/collected/dallas-instructors.csv \
+     --events=data/collected/dallas-events.csv \
+     --out=drizzle/imports/dallas-YYYY-MM-DD.sql
+   ```
+4. 生成されたSQLをD1に適用する:
+   ```bash
+   npx wrangler d1 execute american-mahjong-db --local --file=drizzle/imports/dallas-YYYY-MM-DD.sql
+   # 本番投入時は --local を --remote に変える
+   ```
+5. インポート後、実際に都市ページ(`/cities/[slug]`)を開いて表示を目視確認する
+
+再検証(`last_verified_at`更新)のときも同じCSVを編集して同じコマンドを
+再実行すればよい。`slug`をキーにUPSERTするので、同じ行を再インポートし
+ても重複は作られず、既存レコードが更新される。
+
+### event_typeのマッピング(暫定)
+
+ソースの表記がDBのenum(`OPEN_PLAY`/`TOURNAMENT`/`SOCIAL`/`LESSON`/`OTHER`)
+と完全一致しない場合、スクリプトが以下のエイリアスを自動変換する:
+
+| ソースの表記 | 変換先 |
+|---|---|
+| Competitive League / League | `TOURNAMENT` |
+| Beginner Lesson Series / Lesson Series | `LESSON` |
+| Supervised Play | `OPEN_PLAY` |
+
+「League」と「Tournament」は本質的に別物(継続的な順位戦 vs
+単発の大会)だが、現行enumに`LEAGUE`が無いため暫定的に`TOURNAMENT`へ
+寄せている。実データでLeague系イベントが増えてきたら、
+`src/db/schema.ts`の`EventType`に`LEAGUE`を追加するマイグレーションを
+検討する。
 
 ## 7. 将来の自動化候補(MVP後)
 
