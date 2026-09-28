@@ -131,6 +131,34 @@ function buildEventsJsonLd(city: City) {
   });
 }
 
+function buildClubsJsonLd(city: City) {
+  return city.clubs.map((club) => ({
+    "@context": "https://schema.org",
+    "@type": ["SportsActivityLocation", "LocalBusiness"],
+    name: club.name,
+    ...(club.description ? { description: club.description } : {}),
+    ...(club.website ? { url: club.website } : {}),
+    ...(club.phone ? { telephone: club.phone } : {}),
+    address: {
+      "@type": "PostalAddress",
+      ...(club.address ? { streetAddress: club.address } : {}),
+      addressLocality: city.name,
+      addressRegion: city.state,
+    },
+    ...(club.latitude != null && club.longitude != null
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: club.latitude,
+            longitude: club.longitude,
+          },
+        }
+      : {}),
+    ...(club.free ? { isAccessibleForFree: true } : {}),
+    ...(club.sourceUrl ? { sameAs: club.sourceUrl } : {}),
+  }));
+}
+
 export default async function CityPage({
   params,
 }: PageProps<"/cities/[slug]">) {
@@ -141,7 +169,11 @@ export default async function CityPage({
     notFound();
   }
 
-  const jsonLd = [buildBreadcrumbJsonLd(city), ...buildEventsJsonLd(city)];
+  const jsonLd = [
+    buildBreadcrumbJsonLd(city),
+    ...buildClubsJsonLd(city),
+    ...buildEventsJsonLd(city),
+  ];
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">

@@ -61,8 +61,8 @@ npx wrangler dev
   D1 at request time (can't be prerendered — see the `force-dynamic` note
   in `src/app/sitemap.ts`)
 - `/robots.txt` — points crawlers at the sitemap
-- City pages emit `BreadcrumbList` and `Event` JSON-LD (schema.org) for
-  each upcoming event
+- City pages emit `BreadcrumbList`, `LocalBusiness`/`SportsActivityLocation`
+  (one per club), and `Event` JSON-LD (schema.org) for each upcoming event
 
 ## Site structure
 
