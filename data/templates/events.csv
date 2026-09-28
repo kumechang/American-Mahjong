@@ -1,0 +1,3 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Beginner Open Play,Dallas,TX,2026-10-03,13:00,15:00,,Dallas Beginner Mahjong Club,,OPEN_PLAY,TRUE,,,https://example.com/dallas-beginner-club,2026-09-28,ACTIVE
+Beginner Open Play,Dallas,TX,2026-10-05,14:00,16:00,,Dallas Social Mahjong,,OPEN_PLAY,TRUE,,,https://example.com/dallas-social-mahjong,2026-09-28,ACTIVE

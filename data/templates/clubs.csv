@@ -1,0 +1,3 @@
+name,city,state,description,address,website,phone,email,latitude,longitude,beginner_friendly,lessons_available,open_play,social_play,women_only,free,price,schedule,source_url,last_verified_at,status
+Dallas Beginner Mahjong Club,Dallas,TX,"Weekly beginner-friendly group, tiles provided",,,,,,,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,20,"Saturdays, 1:00 PM",https://example.com/dallas-beginner-club,2026-09-28,ACTIVE
+Dallas Social Mahjong,Dallas,TX,"Casual drop-in social play, no lessons",,,,,,,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,,"Sundays, 2:00 PM",https://example.com/dallas-social-mahjong,2026-09-28,ACTIVE

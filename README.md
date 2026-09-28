@@ -25,6 +25,14 @@ SEO / city-page strategy:
   `sourceUrl`, `lastVerifiedAt`, and `status` for data-freshness tracking
 - `Product` — curated affiliate product recommendations for the Shop section
 
+## Data collection
+
+Real club/instructor/event data is manually curated, not scraped — see
+[`docs/DATA_COLLECTION.md`](docs/DATA_COLLECTION.md) for the research
+procedure and legal guardrails per source, and
+[`data/templates/`](data/templates/) for the CSV format researchers fill
+in before it gets imported.
+
 ## Getting started
 
 ```bash
