@@ -173,7 +173,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           {
             term: "Wall Game",
             definition:
-              "A round that ends with the wall of tiles used up and no one completing a hand — no one wins, and the deal usually moves to the next player.",
+              "A round that ends with the wall of tiles used up and no one completing a hand — no one wins, and in most groups the same dealer deals again.",
           },
         ],
       },
@@ -200,8 +200,8 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "How a hand gets started",
         ordered: true,
         items: [
-          "All four players build the wall together, stacking tiles into a square in front of the group.",
-          "Tiles are dealt out: 13 tiles to each player, and 14 to the dealer (the dealer always goes first).",
+          "All four players build the wall together, stacking tiles into a square in the middle of the table.",
+          "You deal out 13 tiles to each player, and 14 to the dealer (the dealer always goes first).",
           "Everyone arranges their tiles on their rack, usually sorting by suit, so they're easier to read.",
           "The Charleston happens next — a few rounds of passing tiles with other players to improve your hand before anyone draws or discards. See the Charleston guide for how this works.",
           "Once the Charleston is done, play begins: the dealer discards first, then players take turns drawing a tile and discarding one, working toward a hand on the card.",
@@ -212,7 +212,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "During play",
         paragraphs: [
           "On your turn, you'll draw a tile and decide whether to keep it or discard it. You're always working toward a specific hand from the card — pick one or two you think you can build early on, and adjust as your tiles change.",
-          "You can also call a tile another player discards, if it completes a pung, kong, or quint you're building — you don't have to wait for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it.",
+          "You can also call a tile another player discards if it completes a pung, kong, or quint you're building — you don't have to wait for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it.",
           "When your 14 tiles fully match a hand on the card, you call \"Mahjong\" and lay your hand down. Everyone checks it against the card before the win counts.",
         ],
       },
@@ -227,7 +227,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "A few tips for your first few games",
         paragraphs: [
-          "It's normal to feel slow at first — everyone does. Ask questions during the Charleston and early turns; that's when there's the most room to talk.",
+          "It's normal to feel slow at first — everyone does. Ask questions during the Charleston and early turns — that's when there's the most room to ask.",
           "Keep an eye on what other players are exposing (their face-up groups). It's a hint about which hands they might be building, and over time you'll start reading the table.",
           "Once the basics here feel familiar, the Rules guide covers the full game in more detail, and Scoring explains how points work once someone wins.",
         ],
@@ -247,14 +247,14 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "Setup",
         paragraphs: [
           "You need four players, a set of 152 tiles, four racks, and the current year's card from the National Mah Jongg League (NMJL), which lists the hands you're allowed to build and their point values.",
-          "All four players build the wall together: everyone stacks their tiles into a double row in front of them, and the four rows are pushed together into a square in the middle of the table.",
+          "All four players build the wall together: everyone stacks their tiles into a double row in front of them, and together you push the four rows into a square in the middle of the table.",
         ],
       },
       {
         type: "paragraphs",
         heading: "Dealing",
         paragraphs: [
-          "One player is chosen as the dealer (often by rolling dice or another agreed method). Tiles are dealt from the wall until each player has 13 tiles, and the dealer has 14 — the dealer always starts with one extra tile, since they discard first.",
+          "One player becomes the dealer — often by rolling dice, or however your group prefers. Tiles are dealt from the wall until each player has 13 tiles, and the dealer has 14 — the dealer always starts with one extra tile, since they discard first.",
         ],
       },
       {
@@ -279,14 +279,14 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "Winning",
         paragraphs: [
-          "When your 14 tiles fully match a hand on the card — using any exposed groups plus what's left in your hand — you call \"Mahjong.\" The other players check your hand against the card before the win is confirmed. See the Scoring guide for how points are worked out from there.",
+          "When your 14 tiles fully match a hand on the card — using any exposed groups plus what's left in your hand — you call \"Mahjong.\" The other players check your hand against the card before the win counts. See the Scoring guide for how points are worked out from there.",
         ],
       },
       {
         type: "paragraphs",
         heading: "Wall games",
         paragraphs: [
-          "If the wall runs out of tiles before anyone completes a hand, the round ends with no winner — this is called a wall game. Play resets for the next hand, and the deal typically moves to the next player.",
+          "If the wall runs out of tiles before anyone completes a hand, the round ends with no winner — this is called a wall game. Play resets for the next hand, and in most groups the same dealer deals again, since no one won that hand.",
         ],
       },
     ],
@@ -303,16 +303,16 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "Why it exists",
         paragraphs: [
-          "You're dealt 13 tiles at random, so most starting hands aren't close to any hand on the card. The Charleston lets everyone improve their hand a little before the game really begins, so play doesn't start with four players stuck on unworkable tiles.",
+          "You're dealt 13 tiles at random, so most starting hands aren't close to any hand on the card. The Charleston lets everyone improve their hand a little before the game really begins, so play doesn't start with four players stuck holding tiles that don't fit together.",
         ],
       },
       {
         type: "paragraphs",
         heading: "How it works",
         paragraphs: [
-          "You pass three tiles at a time to another player, and receive three tiles back from someone else, in a set order — first to the player on one side, then across the table, then to the player on your other side. This happens over a few rounds.",
-          "You don't have to pass your best tiles — the whole point is to pass tiles you don't need and hope you get something more useful back. You won't always love what you receive, and that's normal.",
-          "After the required passes, there's often an optional round where players can agree to pass again, or stop early if everyone's happy with their hand.",
+          "You pass three tiles at a time to another player, and receive three tiles back from someone else — first to the player on one side, then across the table, then to your other side. That's the required first round.",
+          "If everyone at the table agrees, there's a second round right after — it repeats the same pattern in reverse order (other side, across, first side). Everyone agrees before it starts, not partway through, so if anyone would rather stop, you skip straight to play.",
+          "You don't have to pass your best tiles — the whole point is to let go of tiles you don't need and hope for something more useful in return. You won't always love what you receive, and that's normal.",
         ],
       },
       {
@@ -343,7 +343,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "Where points come from",
         paragraphs: [
-          "Every hand listed on the NMJL card has a point value printed right next to it — that's what you're playing for. Harder or rarer hands are generally worth more. There's also typically a minimum point value a hand needs to be worth for you to go out (call Mahjong) with it — check your current card for the exact number, since it can change year to year.",
+          "Every hand listed on the NMJL card has a point value printed right next to it — that's what you're playing for. Harder or rarer hands are generally worth more. Most hands also have a minimum point value — you need to reach it before you can go out (call Mahjong) with that hand. Check your current card for the exact number, since it can change year to year.",
         ],
       },
       {
@@ -357,7 +357,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "Who pays whom",
         paragraphs: [
-          "When a hand ends, the losing players pay the winner directly — there's no shared pot. If you're the one who discarded the tile that completed the winning hand, you typically pay more than the other losing players, since your discard is what let the winner go out.",
+          "When a hand ends, the losing players pay the winner directly — there's no shared pot. If you discarded the tile that completed the winning hand, you typically pay double what the other losing players pay. That's because your discard is what let the winner go out.",
         ],
       },
       {
@@ -388,14 +388,14 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "What a joker can't do",
         paragraphs: [
-          "Jokers can't be used in every hand. Some hands on the card — usually ones built around single tiles and pairs — don't allow jokers at all. The card marks which hands are joker-free, so it's worth checking before you build your hand around one.",
+          "Jokers can never be used for a single tile or as part of a pair — that's true on every hand on the card. Some hands go further and don't allow jokers anywhere at all; the card marks which ones, so it's worth checking before you build around one.",
         ],
       },
       {
         type: "paragraphs",
         heading: "Trading for a joker",
         paragraphs: [
-          "If another player has an exposed group that includes a joker, you can trade for it: offer the matching real tile plus one extra tile from your hand, and you take the joker for your own hand while they take your two tiles. This is a normal part of play — don't be shy about it if it helps your hand.",
+          "If another player has an exposed group that includes a joker, and you're holding the real tile the joker represents, you can trade for it on your turn: hand over the matching tile, and take the joker for your own hand. Your tile takes the joker's place in their exposed group — no extra tile changes hands. This is a normal part of play — don't be shy about it if it helps your hand.",
         ],
       },
     ],
@@ -413,7 +413,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "At the table",
         paragraphs: [
           "Don't touch another player's tiles or rack, even to help. If you're not sure whether a hand is complete or a call is valid, ask instead of reaching in.",
-          "Keep the game moving at a reasonable pace once you're comfortable with the basics — long pauses on every turn can slow the whole table down. It's completely fine to take your time while you're still learning, though; most groups expect that.",
+          "Keep the game moving at a reasonable pace once you're comfortable with the basics — long pauses on every turn can slow the whole table down. It's completely fine to take your time while you're still learning — most groups expect that.",
           "Try to hold your tiles and rack so others can't see them. It's part of the game, not a trust issue.",
         ],
       },
@@ -421,7 +421,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "If you're new",
         paragraphs: [
-          "Say so at the start. Most players are glad to slow down, explain a call, or double-check your hand before you go out. Nobody expects a first-timer to know the etiquette below by heart.",
+          "Say so at the start. Most players are glad to slow down, explain a call, or double-check your hand before you go out. Nobody expects a first-timer to know all of this by heart.",
           "Bring your own card if you have one, but it's fine to share with your neighbor if you don't yet.",
         ],
       },
@@ -430,7 +430,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "General courtesy",
         paragraphs: [
           "Show up on time — a missing fourth player holds up the whole table. If you have to cancel, give as much notice as you can.",
-          "Keep side conversations light during play so everyone can hear calls and discards. Phones on silent is standard at most tables.",
+          "Keep side conversations light during play so everyone can hear calls and discards. Keeping your phone on silent is standard at most tables.",
           "If you're playing at someone's home or a club, it's common to bring a small snack or contribute to the table in some way — ask your host or fellow players what's typical for that group.",
         ],
       },
