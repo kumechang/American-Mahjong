@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
+import { SITE_URL } from "@/lib/site";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so this route can't be statically
@@ -66,6 +67,69 @@ function formatEventDate(dateString: string) {
   }).format(new Date(dateString));
 }
 
+type City = NonNullable<Awaited<ReturnType<typeof getCity>>>;
+
+function buildBreadcrumbJsonLd(city: City) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Cities",
+        item: `${SITE_URL}/cities`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: city.name,
+        item: `${SITE_URL}/cities/${city.slug}`,
+      },
+    ],
+  };
+}
+
+function buildEventsJsonLd(city: City) {
+  return city.events.map((event) => {
+    const venueName =
+      event.venue ??
+      city.clubs.find((club) => club.id === event.clubId)?.name ??
+      `${city.name}, ${city.state}`;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: event.name,
+      // eventDate is stored as a naive "YYYY-MM-DD HH:MM:SS" string (no
+      // timezone), so normalize it to ISO 8601 for schema.org/Google.
+      startDate: new Date(`${event.eventDate.replace(" ", "T")}Z`).toISOString(),
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      eventStatus: "https://schema.org/EventScheduled",
+      location: {
+        "@type": "Place",
+        name: venueName,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: city.name,
+          addressRegion: city.state,
+        },
+      },
+      ...(event.registrationUrl
+        ? {
+            offers: {
+              "@type": "Offer",
+              url: event.registrationUrl,
+              price: event.price ?? 0,
+              priceCurrency: "USD",
+            },
+          }
+        : {}),
+    };
+  });
+}
+
 export default async function CityPage({
   params,
 }: PageProps<"/cities/[slug]">) {
@@ -77,9 +141,18 @@ export default async function CityPage({
   }
 
   const beginnerClubs = city.clubs.filter((club) => club.beginnerFriendly);
+  const jsonLd = [buildBreadcrumbJsonLd(city), ...buildEventsJsonLd(city)];
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
+      {jsonLd.map((entry, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(entry) }}
+        />
+      ))}
+
       <h1 className="text-3xl font-bold tracking-tight">
         American Mahjong in {city.name}
       </h1>

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-const TOPIC_TITLES: Record<string, string> = {
+export const TOPIC_TITLES: Record<string, string> = {
   "what-is-american-mahjong": "What Is American Mahjong?",
   "beginner-guide": "Beginner Guide",
   rules: "Rules",

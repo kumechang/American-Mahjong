@@ -49,7 +49,20 @@ npx wrangler dev
    the real `database_id` it prints into `wrangler.jsonc`.
 2. Apply migrations and seed data with `--remote` instead of `--local`
    (`npm run db:migrate:remote -- --file=...`, `npm run db:seed:remote`).
-3. `npm run cf:deploy`
+3. Set `NEXT_PUBLIC_SITE_URL` to the real production domain (as a Workers
+   environment variable in `wrangler.jsonc`, or on the dashboard) — it
+   drives `metadataBase`, `sitemap.xml`, and `robots.txt`. It defaults to
+   `https://example.com`, which is fine for local dev only.
+4. `npm run cf:deploy`
+
+## SEO
+
+- `/sitemap.xml` — static routes plus every published city, generated from
+  D1 at request time (can't be prerendered — see the `force-dynamic` note
+  in `src/app/sitemap.ts`)
+- `/robots.txt` — points crawlers at the sitemap
+- City pages emit `BreadcrumbList` and `Event` JSON-LD (schema.org) for
+  each upcoming event
 
 ## Site structure
 
