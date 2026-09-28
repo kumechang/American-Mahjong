@@ -1,0 +1,3 @@
+﻿name,city,state,website,private_lesson,group_lesson,online_lesson,beginner_lesson,price,contact,notes,source_url,last_verified_at,status
+UES Mahjong,New York,NY,https://uesmahjong.com/,TRUE,TRUE,FALSE,TRUE,100,luskiashley@gmail.com,Private $100/90 min; group $300/90 min.,https://uesmahjong.com/,2026-09-28,ACTIVE
+So Bam Fun New York,New York,NY,https://sobamfun.com/,TRUE,TRUE,FALSE,TRUE,,hello@sobamfun.com,"Beginner-friendly American Mahjong lessons, private lessons and public events.",https://sobamfun.com/,2026-09-28,ACTIVE

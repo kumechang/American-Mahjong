@@ -1,0 +1,4 @@
+﻿name,event_date,start_time,end_time,venue,city,state,event_type,beginner_friendly,price,registration_url,club_name,instructor_name,source_url,last_verified_at,status
+American Mahjong - Beginner 101,2026-10-03,09:30,12:00,Lafayette Square,Los Angeles,CA,LESSON,TRUE,,,LA LA Mahjong,,https://lalamahjong.com/classes/,2026-09-28,ACTIVE
+American Mahjong Refresh/Guided Play Class 102,2026-10-04,09:30,12:00,Lafayette Square,Los Angeles,CA,LESSON,FALSE,,,LA LA Mahjong,,https://lalamahjong.com/classes/,2026-09-28,ACTIVE
+Intro to American Mahjong Class Series,2026-10-05,19:00,21:00,Venice Area,Los Angeles,CA,LESSON,TRUE,,,Mahjong Smiles,,https://mahjongsmiles.com/,2026-09-28,ACTIVE

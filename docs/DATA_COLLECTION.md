@@ -68,14 +68,19 @@
 
 ## 6. CSV記入後の流れ
 
+0. **まだDBに無い都市の場合、先に`City`行を追加する。** クラブ/
+   インストラクター/イベントは`city`/`state`列でこの行に紐付くので、
+   無いとインポート時に外部キーが解決できない。追加は非公開
+   (`published = 0`)で行い、データが揃ってから公開する
+   (`drizzle/imports/cities-2026-09-28.sql`が実例)。
 1. `data/templates/*.csv` を都市ごとにコピーして記入する
-   (例: `data/collected/dallas-clubs.csv`)
+   (例: `data/collected/austin/clubs.csv` — 都市ごとにサブフォルダを切る)
 2. `scripts/import-csv.mjs` でまず検証だけ行う(DBには何も書き込まない):
    ```bash
    node scripts/import-csv.mjs \
-     --clubs=data/collected/dallas-clubs.csv \
-     --instructors=data/collected/dallas-instructors.csv \
-     --events=data/collected/dallas-events.csv \
+     --clubs=data/collected/austin/clubs.csv \
+     --instructors=data/collected/austin/instructors.csv \
+     --events=data/collected/austin/events.csv \
      --dry-run
    ```
    エラーが出た行は修正して再実行する(警告は許容範囲 — 例:
@@ -83,14 +88,14 @@
 3. エラーが無くなったら `--out=` を指定してSQLファイルを生成する:
    ```bash
    node scripts/import-csv.mjs \
-     --clubs=data/collected/dallas-clubs.csv \
-     --instructors=data/collected/dallas-instructors.csv \
-     --events=data/collected/dallas-events.csv \
-     --out=drizzle/imports/dallas-YYYY-MM-DD.sql
+     --clubs=data/collected/austin/clubs.csv \
+     --instructors=data/collected/austin/instructors.csv \
+     --events=data/collected/austin/events.csv \
+     --out=drizzle/imports/austin-YYYY-MM-DD.sql
    ```
 4. 生成されたSQLをD1に適用する:
    ```bash
-   npx wrangler d1 execute american-mahjong-db --local --file=drizzle/imports/dallas-YYYY-MM-DD.sql
+   npx wrangler d1 execute american-mahjong-db --local --file=drizzle/imports/austin-YYYY-MM-DD.sql
    # 本番投入時は --local を --remote に変える
    ```
 5. インポート後、実際に都市ページ(`/cities/[slug]`)を開いて表示を目視確認する

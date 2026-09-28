@@ -68,7 +68,11 @@ function parseArgs(argv) {
 }
 
 function parseCSV(content) {
-  const lines = content.split(/\r?\n/).filter((l) => l.length > 0);
+  // Strip a UTF-8 BOM if present (common from Excel/Sheets exports) — left
+  // in place it would attach itself to the first header name and silently
+  // break every lookup of that column.
+  const withoutBom = content.replace(/^﻿/, "");
+  const lines = withoutBom.split(/\r?\n/).filter((l) => l.length > 0);
   if (lines.length === 0) return { header: [], rows: [] };
 
   function parseLine(line) {

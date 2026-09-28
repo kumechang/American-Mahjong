@@ -43,8 +43,12 @@ npm install
 npm run db:generate                          # generate SQL from src/db/schema.ts (only needed after a schema change)
 npm run db:migrate:local --file=drizzle/0000_vengeful_rage.sql
 npm run db:migrate:local --file=drizzle/0001_greedy_shatterstar.sql
-npm run db:seed:local                        # City + placeholder Shop products only
+npm run db:seed:local                        # Dallas City row + placeholder Shop products
+npm run db:migrate:local --file=drizzle/imports/cities-2026-09-28.sql  # the other 9 MVP cities (unpublished)
 npm run db:migrate:local --file=drizzle/imports/dallas-2026-09-28.sql  # real Dallas clubs/instructors/events
+for f in drizzle/imports/{austin,boston,chicago,los_angeles,miami,new_york,phoenix,san_francisco,scottsdale}-2026-09-28.sql; do
+  npx wrangler d1 execute american-mahjong-db --local --file="$f"
+done
 npm run dev
 ```
 

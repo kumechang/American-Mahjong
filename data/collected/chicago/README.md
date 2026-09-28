@@ -1,0 +1,1 @@
+American Mahjong MVP data, verified/collected 2026-09-28. Weak or third-party evidence is marked NEEDS_REVIEW. City scope is kept conservative; suburban locations are not silently relabeled as the target city.

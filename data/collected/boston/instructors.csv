@@ -1,0 +1,4 @@
+﻿name,city,state,website,private_lesson,group_lesson,online_lesson,beginner_lesson,price,contact,notes,source_url,last_verified_at,status
+Mahjong Theory,Boston,MA,https://www.mahjongtheory.com/,TRUE,TRUE,FALSE,TRUE,,maria@mahjongtheory.com,"American Mahjong instruction, open play and corporate events; lessons about two hours.",https://www.mahjongtheory.com/,2026-09-28,ACTIVE
+South Shore Mahjong,Boston,MA,https://southshoremahjong.com/,TRUE,TRUE,FALSE,TRUE,,hello@southshoremahjong.com; 617-378-5532,"Classes, leagues, open play and events; studio is in Cohasset and serves Boston area.",https://southshoremahjong.com/,2026-09-28,ACTIVE
+So Bam Fun Boston,Boston,MA,https://sobamfun.com/boston,TRUE,TRUE,FALSE,TRUE,,hello@sobamfun.com,"American Mahjong lessons, private/social events and corporate events across Boston.",https://sobamfun.com/boston,2026-09-28,ACTIVE
