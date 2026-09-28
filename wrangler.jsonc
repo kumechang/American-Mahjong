@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "american-mahjong-web",
+  "name": "american-mahjong",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
   "main": ".open-next/worker.js",
@@ -15,8 +15,7 @@
       // Placeholder: replace with the real ID from `wrangler d1 create
       // american-mahjong-db` (requires a Cloudflare account/login, not
       // available in this sandbox). Local dev works without it.
-      "database_id": "00000000-0000-0000-0000-000000000000",
-      "migrations_dir": "prisma/migrations"
+      "database_id": "00000000-0000-0000-0000-000000000000"
     }
   ]
 }
