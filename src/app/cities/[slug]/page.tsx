@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { eq, asc } from "drizzle-orm";
+import { eq, and, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
@@ -23,21 +23,28 @@ async function getCity(slug: string) {
     return null;
   }
 
+  // Only ACTIVE rows are shown publicly — NEEDS_REVIEW means a researcher
+  // wasn't fully confident in the data (docs/DATA_COLLECTION.md), and
+  // INACTIVE means it's known stale. Both stay in the database (so the
+  // work isn't lost and re-verification can flip them to ACTIVE) without
+  // ever reaching this page.
   const [cityClubs, cityInstructors, cityEvents] = await Promise.all([
     db
       .select()
       .from(clubs)
-      .where(eq(clubs.cityId, city.id))
+      .where(and(eq(clubs.cityId, city.id), eq(clubs.status, "ACTIVE")))
       .orderBy(asc(clubs.name)),
     db
       .select()
       .from(instructors)
-      .where(eq(instructors.cityId, city.id))
+      .where(
+        and(eq(instructors.cityId, city.id), eq(instructors.status, "ACTIVE")),
+      )
       .orderBy(asc(instructors.name)),
     db
       .select()
       .from(events)
-      .where(eq(events.cityId, city.id))
+      .where(and(eq(events.cityId, city.id), eq(events.status, "ACTIVE")))
       .orderBy(asc(events.eventDate))
       .limit(10),
   ]);

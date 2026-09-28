@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { eq, asc, count } from "drizzle-orm";
+import { eq, and, asc, count } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 
@@ -25,20 +25,27 @@ export default async function CitiesPage() {
 
   const citiesWithCounts = await Promise.all(
     cityRows.map(async (city) => {
+      // Counts match what the city page actually shows publicly — see the
+      // status-filtering note in src/app/cities/[slug]/page.tsx.
       const [[clubCount], [instructorCount], [eventCount]] = await Promise.all(
         [
           db
             .select({ value: count() })
             .from(clubs)
-            .where(eq(clubs.cityId, city.id)),
+            .where(and(eq(clubs.cityId, city.id), eq(clubs.status, "ACTIVE"))),
           db
             .select({ value: count() })
             .from(instructors)
-            .where(eq(instructors.cityId, city.id)),
+            .where(
+              and(
+                eq(instructors.cityId, city.id),
+                eq(instructors.status, "ACTIVE"),
+              ),
+            ),
           db
             .select({ value: count() })
             .from(events)
-            .where(eq(events.cityId, city.id)),
+            .where(and(eq(events.cityId, city.id), eq(events.status, "ACTIVE"))),
         ],
       );
       return {
