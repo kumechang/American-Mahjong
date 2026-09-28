@@ -12,7 +12,8 @@
     {
       "binding": "DB",
       "database_name": "american-mahjong-db",
-      "database_id": "34d3a676-1ace-450b-a275-288d26cb1f06"
+      "database_id": "34d3a676-1ace-450b-a275-288d26cb1f06",
+      "migrations_dir": "migrations"
     }
   ]
 }

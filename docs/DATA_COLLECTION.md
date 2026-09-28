@@ -64,8 +64,7 @@
 都市を公開(`published = 1`)するかどうかは、**ACTIVE行だけで数えた
 件数**で判断する。NEEDS_REVIEWだらけの都市を「データがある」と誤認して
 公開しないこと(例: 2026-09-28時点でPhoenixはACTIVEなクラブ・イベントが
-0件だったため公開を見送った — `drizzle/imports/publish-2026-09-28.sql`
-参照)。
+0件だったため公開を見送った — `migrations/0013_publish.sql`参照)。
 
 ## 5. データ更新(鮮度管理)
 
@@ -82,7 +81,7 @@
    インストラクター/イベントは`city`/`state`列でこの行に紐付くので、
    無いとインポート時に外部キーが解決できない。追加は非公開
    (`published = 0`)で行い、データが揃ってから公開する
-   (`drizzle/imports/cities-2026-09-28.sql`が実例)。
+   (`migrations/0002_cities.sql`が実例)。
 1. `data/templates/*.csv` を都市ごとにコピーして記入する
    (例: `data/collected/austin/clubs.csv` — 都市ごとにサブフォルダを切る)
 2. `scripts/import-csv.mjs` でまず検証だけ行う(DBには何も書き込まない):
@@ -95,20 +94,28 @@
    ```
    エラーが出た行は修正して再実行する(警告は許容範囲 — 例:
    `NEEDS_REVIEW`行の`source_url`欠落など)。
-3. エラーが無くなったら `--out=` を指定してSQLファイルを生成する:
+3. エラーが無くなったら `migrations/` 配下に**次の連番**でSQLファイルを
+   生成する(`migrations/`内の既存ファイルの最大番号+1を使う。例えば
+   現状の最新が`0015_...`なら`0016_...`):
    ```bash
    node scripts/import-csv.mjs \
      --clubs=data/collected/austin/clubs.csv \
      --instructors=data/collected/austin/instructors.csv \
      --events=data/collected/austin/events.csv \
-     --out=drizzle/imports/austin-YYYY-MM-DD.sql
+     --out=migrations/0016_austin_recheck.sql
    ```
-4. 生成されたSQLをD1に適用する:
+   `migrations/`はCloudflare D1のマイグレーション管理フォルダ
+   (`wrangler.jsonc`の`migrations_dir`)なので、ここに置いたファイルは
+   **次回デプロイ時に自動でD1へ適用される**(`npm run cf:deploy`が
+   `wrangler d1 migrations apply DB --remote`を実行してからデプロイする)。
+   手動でD1 Consoleに貼り付ける必要はもう無い。
+4. ローカルで先に確認したい場合のみ、手動適用できる:
    ```bash
-   npx wrangler d1 execute american-mahjong-db --local --file=drizzle/imports/austin-YYYY-MM-DD.sql
-   # 本番投入時は --local を --remote に変える
+   npx wrangler d1 migrations apply DB --local
    ```
-5. インポート後、実際に都市ページ(`/cities/[slug]`)を開いて表示を目視確認する
+5. コミット・プッシュしてデプロイすれば、ビルド時にD1へ反映される。
+   インポート後は実際に都市ページ(`/cities/[slug]`)を開いて表示を
+   目視確認する
 
 再検証(`last_verified_at`更新)のときも同じCSVを編集して同じコマンドを
 再実行すればよい。`slug`をキーにUPSERTするので、同じ行を再インポートし
