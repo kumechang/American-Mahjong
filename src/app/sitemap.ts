@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
-import { TOPIC_TITLES } from "@/app/learn/[slug]/page";
+import { LEARN_TOPIC_META } from "@/content/learn";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so the city list below can't be
@@ -32,8 +32,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1 : 0.6,
   }));
 
-  const learnEntries: MetadataRoute.Sitemap = Object.keys(TOPIC_TITLES).map(
-    (slug) => ({
+  const learnEntries: MetadataRoute.Sitemap = LEARN_TOPIC_META.map(
+    ({ slug }) => ({
       url: `${SITE_URL}/learn/${slug}`,
       changeFrequency: "monthly",
       priority: 0.5,
