@@ -1,0 +1,4 @@
+﻿name,city,state,website,private_lesson,group_lesson,online_lesson,beginner_lesson,price,contact,notes,source_url,last_verified_at,status
+Dallas Mahj Club,Dallas,TX,https://www.dallasmahjclub.com/,TRUE,TRUE,FALSE,TRUE,,,American Mahjong instruction; private and group lessons.,https://www.dallasmahjclub.com/,2026-09-28,ACTIVE
+Modern Day Mahj,Dallas,TX,https://www.moderndaymahj.com/,FALSE,TRUE,FALSE,TRUE,180,,Beginner's Mahjong Course: $180.,https://www.moderndaymahj.com/,2026-09-28,ACTIVE
+MAHJ ALL DAY,Dallas,TX,,TRUE,TRUE,FALSE,TRUE,80,,Private/small-group American Mahjong lessons; $80/hour per person.,,2026-09-28,NEEDS_REVIEW

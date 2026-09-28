@@ -1,0 +1,3 @@
+﻿name,event_date,start_time,end_time,venue,city,state,event_type,beginner_friendly,price,registration_url,club_name,instructor_name,source_url,last_verified_at,status
+Mahjong at Fate Brewing,2026-09-30,17:00,19:00,"Fate Brewing Company, 4445 N 7th St",Phoenix,AZ,OPEN_PLAY,TRUE,,,Mahjong for People who Work,,https://www.meetup.com/american-mahjong-for-people-who-work/,2026-09-28,ACTIVE
+American Mahjong Open Play,2026-11-07,12:30,15:30,"Desert Ridge Marketplace, 21001 North Tatum Boulevard, Phoenix, AZ 85050",Phoenix,AZ,OPEN_PLAY,FALSE,0,https://www.eventbrite.com/e/american-mahjong-open-play-tickets-1994956125474,,Mahj Mind,https://www.eventbrite.com/e/american-mahjong-open-play-tickets-1994956125474,2026-09-28,ACTIVE
