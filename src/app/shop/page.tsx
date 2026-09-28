@@ -1,0 +1,56 @@
+import type { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "American Mahjong Sets & Supplies",
+  description:
+    "Curated American Mahjong sets, tiles, cards, and accessories for beginners.",
+};
+
+export const revalidate = 3600;
+
+export default async function ShopPage() {
+  const products = await prisma.product.findMany({
+    orderBy: { createdAt: "asc" },
+  });
+
+  return (
+    <div className="mx-auto max-w-4xl px-6 py-16">
+      <h1 className="text-3xl font-bold tracking-tight">
+        American Mahjong sets &amp; supplies
+      </h1>
+      <p className="mt-3 text-zinc-600 dark:text-zinc-400">
+        Not sure what to buy? These are the sets, tiles, and accessories we
+        recommend for beginners. This page may contain affiliate links.
+      </p>
+
+      {products.length === 0 ? (
+        <p className="mt-10 rounded-xl border border-dashed border-black/20 p-6 text-sm text-zinc-500 dark:border-white/20">
+          No products yet. Run the database seed script to add sample
+          products.
+        </p>
+      ) : (
+        <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+          {products.map((product) => (
+            <li
+              key={product.id}
+              className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
+            >
+              <h2 className="font-semibold">{product.name}</h2>
+              {product.beginnerPick && (
+                <span className="mt-1 inline-block rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+                  Beginner Pick
+                </span>
+              )}
+              {product.description && (
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  {product.description}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
