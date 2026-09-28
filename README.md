@@ -40,9 +40,11 @@ plain Node script).
 
 ```bash
 npm install
-npm run db:generate                # generate SQL from src/db/schema.ts
+npm run db:generate                          # generate SQL from src/db/schema.ts (only needed after a schema change)
 npm run db:migrate:local --file=drizzle/0000_vengeful_rage.sql
-npm run db:seed:local              # loads sample data for the Dallas city page
+npm run db:migrate:local --file=drizzle/0001_greedy_shatterstar.sql
+npm run db:seed:local                        # City + placeholder Shop products only
+npm run db:migrate:local --file=drizzle/imports/dallas-2026-09-28.sql  # real Dallas clubs/instructors/events
 npm run dev
 ```
 
