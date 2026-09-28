@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { clubs } from "@/db/schema";
+import { VerifiedNote } from "@/components/VerifiedNote";
 
 type Club = typeof clubs.$inferSelect;
 
@@ -45,9 +46,18 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
     });
   }
 
+  const resultSummary =
+    filtered.length === 0
+      ? "No clubs match these filters yet."
+      : `${filtered.length} club${filtered.length === 1 ? "" : "s"} match these filters.`;
+
   return (
     <div>
-      <div className="flex flex-wrap gap-2">
+      <div
+        role="group"
+        aria-label="Filter clubs"
+        className="flex flex-wrap gap-2"
+      >
         {FILTERS.map((filter) => {
           const isActive = active.has(filter.key);
           return (
@@ -68,10 +78,14 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
         })}
       </div>
 
+      {/* Announced to screen reader users on every filter change, since the
+          list below updates without a page navigation. */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {resultSummary}
+      </p>
+
       {filtered.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500">
-          No clubs match these filters yet.
-        </p>
+        <p className="mt-4 text-sm text-zinc-500">{resultSummary}</p>
       ) : (
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
           {filtered.map((club) => (
@@ -107,11 +121,32 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
                   </span>
                 )}
               </div>
+              {club.description && (
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  {club.description}
+                </p>
+              )}
               {club.schedule && (
                 <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                   {club.schedule}
                 </p>
               )}
+              {club.website && (
+                <p className="mt-2 text-sm">
+                  <a
+                    href={club.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:no-underline"
+                  >
+                    Visit {club.name}&apos;s website
+                  </a>
+                </p>
+              )}
+              <VerifiedNote
+                lastVerifiedAt={club.lastVerifiedAt}
+                sourceUrl={club.sourceUrl}
+              />
             </li>
           ))}
         </ul>
