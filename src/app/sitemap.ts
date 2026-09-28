@@ -17,6 +17,7 @@ const STATIC_ROUTES = [
   "/cities",
   "/shop",
   "/community",
+  "/about",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

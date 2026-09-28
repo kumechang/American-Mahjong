@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { eq, and, asc } from "drizzle-orm";
+import Link from "next/link";
+import { eq, and, ne, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
 import { ClubFilterList } from "@/components/ClubFilterList";
+import { VerifiedNote } from "@/components/VerifiedNote";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so this route can't be statically
@@ -52,6 +54,67 @@ async function getCity(slug: string) {
   return { ...city, clubs: cityClubs, instructors: cityInstructors, events: cityEvents };
 }
 
+async function getNearbyCities(city: { id: string; slug: string; state: string }) {
+  const db = await getDb();
+  return db
+    .select({ slug: cities.slug, name: cities.name, state: cities.state })
+    .from(cities)
+    .where(
+      and(
+        eq(cities.published, true),
+        eq(cities.state, city.state),
+        ne(cities.id, city.id),
+      ),
+    )
+    .orderBy(asc(cities.name))
+    .limit(6);
+}
+
+// Per docs/CITY_PAGE_POLICY.md §1 — never claim a data type the city
+// doesn't actually have any ACTIVE rows for.
+function buildMetadataCopy(city: {
+  name: string;
+  state: string;
+  clubs: unknown[];
+  instructors: unknown[];
+  events: unknown[];
+}) {
+  const hasClubs = city.clubs.length > 0;
+  const hasInstructors = city.instructors.length > 0;
+  const hasEvents = city.events.length > 0;
+
+  const titleParts: string[] = [];
+  if (hasClubs) {
+    titleParts.push(`${city.clubs.length} Club${city.clubs.length === 1 ? "" : "s"}`);
+  }
+  if (hasEvents) {
+    titleParts.push(`${city.events.length} Event${city.events.length === 1 ? "" : "s"}`);
+  }
+  if (!hasClubs && hasInstructors) titleParts.push("Lessons");
+
+  const title = titleParts.length
+    ? `American Mahjong in ${city.name}, ${city.state} — ${titleParts.join(" & ")}`
+    : `American Mahjong in ${city.name}, ${city.state}`;
+
+  const descParts: string[] = [];
+  if (hasClubs) {
+    descParts.push(
+      `${city.clubs.length} beginner-friendly American Mahjong club${city.clubs.length === 1 ? "" : "s"} in ${city.name}, ${city.state}`,
+    );
+  } else if (hasInstructors) {
+    descParts.push(`American Mahjong lessons in ${city.name}, ${city.state}`);
+  } else {
+    descParts.push(`American Mahjong in ${city.name}, ${city.state}`);
+  }
+  if (hasEvents) {
+    descParts.push(
+      `plus ${city.events.length} upcoming event${city.events.length === 1 ? "" : "s"}`,
+    );
+  }
+
+  return { title, description: `${descParts.join(", ")}.` };
+}
+
 export async function generateMetadata({
   params,
 }: PageProps<"/cities/[slug]">): Promise<Metadata> {
@@ -62,10 +125,7 @@ export async function generateMetadata({
     return {};
   }
 
-  return {
-    title: `American Mahjong in ${city.name}`,
-    description: `Find beginner-friendly American Mahjong clubs, lessons, instructors, and events in ${city.name}, ${city.state}.`,
-  };
+  return buildMetadataCopy(city);
 }
 
 function formatEventDate(dateString: string) {
@@ -101,10 +161,8 @@ function buildBreadcrumbJsonLd(city: City) {
 
 function buildEventsJsonLd(city: City) {
   return city.events.map((event) => {
-    const venueName =
-      event.venue ??
-      city.clubs.find((club) => club.id === event.clubId)?.name ??
-      `${city.name}, ${city.state}`;
+    const club = city.clubs.find((club) => club.id === event.clubId);
+    const venueName = event.venue ?? club?.name ?? `${city.name}, ${city.state}`;
 
     return {
       "@context": "https://schema.org",
@@ -124,6 +182,15 @@ function buildEventsJsonLd(city: City) {
           addressRegion: city.state,
         },
       },
+      ...(club
+        ? {
+            organizer: {
+              "@type": "Organization",
+              name: club.name,
+              ...(club.website ? { url: club.website } : {}),
+            },
+          }
+        : {}),
       ...(event.registrationUrl
         ? {
             offers: {
@@ -138,8 +205,8 @@ function buildEventsJsonLd(city: City) {
   });
 }
 
-function buildClubsJsonLd(city: City) {
-  return city.clubs.map((club) => ({
+function buildClubJsonLd(city: City, club: City["clubs"][number]) {
+  return {
     "@context": "https://schema.org",
     "@type": ["SportsActivityLocation", "LocalBusiness"],
     name: club.name,
@@ -163,7 +230,27 @@ function buildClubsJsonLd(city: City) {
       : {}),
     ...(club.free ? { isAccessibleForFree: true } : {}),
     ...(club.sourceUrl ? { sameAs: club.sourceUrl } : {}),
-  }));
+  };
+}
+
+function buildClubsJsonLd(city: City) {
+  return city.clubs.map((club) => buildClubJsonLd(city, club));
+}
+
+// Wraps the club listing as an ItemList, per docs/CITY_PAGE_POLICY.md §8 —
+// separate from the individual LocalBusiness entries above.
+function buildClubsItemListJsonLd(city: City) {
+  if (city.clubs.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: city.clubs.map((club, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: buildClubJsonLd(city, club),
+    })),
+  };
 }
 
 export default async function CityPage({
@@ -176,8 +263,12 @@ export default async function CityPage({
     notFound();
   }
 
+  const nearbyCities = await getNearbyCities(city);
+
+  const clubsItemList = buildClubsItemListJsonLd(city);
   const jsonLd = [
     buildBreadcrumbJsonLd(city),
+    ...(clubsItemList ? [clubsItemList] : []),
     ...buildClubsJsonLd(city),
     ...buildEventsJsonLd(city),
   ];
@@ -242,6 +333,22 @@ export default async function CityPage({
                     {instructor.notes}
                   </p>
                 )}
+                {instructor.website && (
+                  <p className="mt-2 text-sm">
+                    <a
+                      href={instructor.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Visit {instructor.name}&apos;s website
+                    </a>
+                  </p>
+                )}
+                <VerifiedNote
+                  lastVerifiedAt={instructor.lastVerifiedAt}
+                  sourceUrl={instructor.sourceUrl}
+                />
               </li>
             ))}
           </ul>
@@ -270,6 +377,24 @@ export default async function CityPage({
           </ul>
         )}
       </section>
+
+      {nearbyCities.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-xl font-semibold">Nearby Cities</h2>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {nearbyCities.map((nearby) => (
+              <li key={nearby.slug}>
+                <Link
+                  href={`/cities/${nearby.slug}`}
+                  className="inline-block rounded-full border border-black/10 bg-white px-3 py-1 text-sm text-zinc-700 transition-colors hover:border-black/20 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300"
+                >
+                  {nearby.name}, {nearby.state}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }
