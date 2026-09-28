@@ -9,7 +9,7 @@
     "lint": "eslint",
     "cf:build": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts && opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare preview",
-    "cf:deploy": "opennextjs-cloudflare deploy",
+    "cf:deploy": "wrangler d1 migrations apply DB --remote && opennextjs-cloudflare deploy",
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "wrangler d1 execute american-mahjong-db --local --file=$npm_config_file",
     "db:migrate:remote": "wrangler d1 execute american-mahjong-db --remote --file=$npm_config_file",
