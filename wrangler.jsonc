@@ -12,10 +12,7 @@
     {
       "binding": "DB",
       "database_name": "american-mahjong-db",
-      // Placeholder: replace with the real ID from `wrangler d1 create
-      // american-mahjong-db` (requires a Cloudflare account/login, not
-      // available in this sandbox). Local dev works without it.
-      "database_id": "00000000-0000-0000-0000-000000000000"
+      "database_id": "34d3a676-1ace-450b-a275-288d26cb1f06"
     }
   ]
 }
