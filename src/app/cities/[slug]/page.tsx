@@ -1,18 +1,46 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import { eq, asc } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { cities, clubs, instructors, events } from "@/db/schema";
 
-export const revalidate = 3600;
+// The D1 binding is only available at request time (in the Workers
+// runtime), not during `next build`, so this route can't be statically
+// prerendered or revalidated on a timer — it's rendered per request.
+export const dynamic = "force-dynamic";
 
 async function getCity(slug: string) {
-  return prisma.city.findUnique({
-    where: { slug },
-    include: {
-      clubs: { orderBy: { name: "asc" } },
-      instructors: { orderBy: { name: "asc" } },
-      events: { orderBy: { eventDate: "asc" }, take: 10 },
-    },
-  });
+  const db = await getDb();
+  const [city] = await db
+    .select()
+    .from(cities)
+    .where(eq(cities.slug, slug))
+    .limit(1);
+
+  if (!city) {
+    return null;
+  }
+
+  const [cityClubs, cityInstructors, cityEvents] = await Promise.all([
+    db
+      .select()
+      .from(clubs)
+      .where(eq(clubs.cityId, city.id))
+      .orderBy(asc(clubs.name)),
+    db
+      .select()
+      .from(instructors)
+      .where(eq(instructors.cityId, city.id))
+      .orderBy(asc(instructors.name)),
+    db
+      .select()
+      .from(events)
+      .where(eq(events.cityId, city.id))
+      .orderBy(asc(events.eventDate))
+      .limit(10),
+  ]);
+
+  return { ...city, clubs: cityClubs, instructors: cityInstructors, events: cityEvents };
 }
 
 export async function generateMetadata({
@@ -31,11 +59,11 @@ export async function generateMetadata({
   };
 }
 
-function formatEventDate(date: Date) {
+function formatEventDate(dateString: string) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
-  }).format(date);
+  }).format(new Date(dateString));
 }
 
 export default async function CityPage({

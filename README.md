@@ -7,14 +7,18 @@ Concept: **Learn → Find → Play**.
 
 ## Stack
 
-- [Next.js](https://nextjs.org/) (App Router, TypeScript)
+- [Next.js](https://nextjs.org/) (App Router, TypeScript) via
+  [OpenNext for Cloudflare](https://opennext.js.org/cloudflare)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Prisma](https://www.prisma.io/) + PostgreSQL
+- [Cloudflare D1](https://developers.cloudflare.com/d1/) (serverless SQLite)
+  via [Drizzle ORM](https://orm.drizzle.team/)
+- Deploys to Cloudflare Workers (chosen over Prisma + Postgres/Hyperdrive to
+  stay on Cloudflare's free tier — see `src/db/schema.ts` for why)
 
 ## Data model
 
-`prisma/schema.prisma` defines the core entities behind the site's
-programmatic SEO / city-page strategy:
+`src/db/schema.ts` defines the core entities behind the site's programmatic
+SEO / city-page strategy:
 
 - `City` — a published city landing page (e.g. "American Mahjong in Dallas")
 - `Club`, `Instructor`, `Event` — scraped/curated local listings, each with
@@ -24,12 +28,28 @@ programmatic SEO / city-page strategy:
 ## Getting started
 
 ```bash
-cp .env.example .env   # then set DATABASE_URL to a local Postgres instance
 npm install
-npx prisma migrate dev
-npx prisma db seed     # loads sample data for the Dallas city page
+npm run db:generate                # generate SQL from src/db/schema.ts
+npm run db:migrate:local --file=drizzle/0000_vengeful_rage.sql
+npm run db:seed:local              # loads sample data for the Dallas city page
 npm run dev
 ```
+
+`next dev` works for day-to-day development (OpenNext proxies the D1 binding
+locally). To test the actual Cloudflare Workers runtime:
+
+```bash
+npm run cf:build
+npx wrangler dev
+```
+
+## Deploying
+
+1. `wrangler login` and `wrangler d1 create american-mahjong-db`, then put
+   the real `database_id` it prints into `wrangler.jsonc`.
+2. Apply migrations and seed data with `--remote` instead of `--local`
+   (`npm run db:migrate:remote -- --file=...`, `npm run db:seed:remote`).
+3. `npm run cf:deploy`
 
 ## Site structure
 

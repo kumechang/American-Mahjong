@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import { asc } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { products } from "@/db/schema";
 
 export const metadata: Metadata = {
   title: "American Mahjong Sets & Supplies",
@@ -7,12 +9,17 @@ export const metadata: Metadata = {
     "Curated American Mahjong sets, tiles, cards, and accessories for beginners.",
 };
 
-export const revalidate = 3600;
+// The D1 binding is only available at request time (in the Workers
+// runtime), not during `next build`, so this route can't be statically
+// prerendered or revalidated on a timer — it's rendered per request.
+export const dynamic = "force-dynamic";
 
 export default async function ShopPage() {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "asc" },
-  });
+  const db = await getDb();
+  const productRows = await db
+    .select()
+    .from(products)
+    .orderBy(asc(products.createdAt));
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
@@ -24,14 +31,14 @@ export default async function ShopPage() {
         recommend for beginners. This page may contain affiliate links.
       </p>
 
-      {products.length === 0 ? (
+      {productRows.length === 0 ? (
         <p className="mt-10 rounded-xl border border-dashed border-black/20 p-6 text-sm text-zinc-500 dark:border-white/20">
           No products yet. Run the database seed script to add sample
           products.
         </p>
       ) : (
         <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-          {products.map((product) => (
+          {productRows.map((product) => (
             <li
               key={product.id}
               className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
