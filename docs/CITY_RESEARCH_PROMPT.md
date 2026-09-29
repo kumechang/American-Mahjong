@@ -286,6 +286,17 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
 - **Reach 5 ACTIVE per city, from the group's own pages.** Directory
   listings (BamBuddies, etc.) alone rarely have dates; find the venue's
   or organizer's calendar.
+- **Prices are numbers.** Put only a number in `price` ("35", not "$35" or
+  "Free"); put member/public splits or ranges in `schedule` or `notes`. Use
+  `free=TRUE` for free.
+- **`instructor_name` must match a row in the instructors CSV.** A group
+  name, a first name only ("Shauna") or "Community Programming" is not an
+  instructor row; leave it blank or add the instructor row.
+- **Spread ACTIVE rows across organizers.** A city whose ACTIVE rows are
+  all sessions of one class or one studio is thin; note it and look for a
+  second organizer.
+- **A third-party blog (retailer, press) is not a group's own page.** Events
+  without a specific venue (only "City, ST") are `NEEDS_REVIEW`.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
