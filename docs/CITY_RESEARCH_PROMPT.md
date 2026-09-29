@@ -243,6 +243,14 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
 - **Link an event to a club only if that club actually runs it.** If a
   venue or teacher hosts the event, leave `club_name` blank and fill
   `instructor_name` instead.
+- **Don't publish a private home address.** If a class is held at someone's
+  home studio, put only the town ("Shelby Township, MI") in `address`
+  and `venue`.
+- **Aggregator-only rows need substance.** A row sourced only from a
+  directory (BamBuddies, Order of the Tile, etc.) with no dates, no website
+  and no contact should be `NEEDS_REVIEW`; the same goes for instructors
+  with neither a website nor a contact. Find the group's own page first.
+- **Only set `free=TRUE` when the source says it is free.**
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
