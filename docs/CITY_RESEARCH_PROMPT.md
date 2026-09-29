@@ -269,6 +269,15 @@ first):
 2. `{next+1}_{city}.sql` — the real `--out=` from `import-csv.mjs`
 3. `{next+2}_publish_{city}.sql` — `UPDATE "City" SET "published" = 1
    WHERE "slug" = '{city-slug}'` (only once the ≥5 bar is met)
+4. `{next+3}_{city}_intro.sql` — `UPDATE "City" SET "intro" = '...'
+   WHERE "slug" = '{city-slug}'`. The intro is **written at the import
+   step, not by the researcher**: 60–100 words, drawn only from that
+   city's verified listings (club names, formats, venues, who it's for
+   — e.g. "a JCC program, a library group, a dedicated space"), with no
+   counts or dates that will go stale, no superlatives, and a
+   beginner-oriented last sentence. Escape apostrophes as `''`. See
+   `migrations/0053_city_intros.sql` for examples. (Cities published
+   before this rule got their intros in that migration.)
 
 Apply locally (`wrangler d1 migrations apply DB --local`), verify
 `/cities/{city-slug}` renders correctly, then `npx tsc --noEmit` and
