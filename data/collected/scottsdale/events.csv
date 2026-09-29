@@ -1,2 +1,3 @@
 ﻿name,event_date,start_time,end_time,venue,city,state,event_type,beginner_friendly,price,registration_url,club_name,instructor_name,source_url,last_verified_at,status
 Mahj Monday - Open Play,2026-09-28,17:30,19:30,"Pinnacle Brewing Company, Scottsdale, AZ",Scottsdale,AZ,OPEN_PLAY,FALSE,,,Scottsdale Mahjong House,,,2026-09-28,NEEDS_REVIEW
+Beginner Guided Open Play: American Mah Jongg,Scottsdale,AZ,2026-10-05,09:30,12:00,"The Holland Center, 34250 N. 60th Street, Scottsdale, AZ 85266",,Katie Petrine,OPEN_PLAY,TRUE,25,https://hollandcenter.org/event/beginner-guided-open-play-american-mah-jongg-10/,https://hollandcenter.org/event/beginner-guided-open-play-american-mah-jongg-10/,2026-09-30,ACTIVE
