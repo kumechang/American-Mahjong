@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+MahJong,Providence,RI,2026-10-07,13:00,15:00,Rochambeau Library – Community Room,,,OPEN_PLAY,TRUE,,https://clpvd.org/event/mahjong-2-2/2026-10-07/,https://clpvd.org/event/mahjong-2-2/2026-10-07/,2026-09-30,NEEDS_REVIEW
+MahJong,Providence,RI,2026-10-14,13:00,15:00,Rochambeau Library – Community Room,,,OPEN_PLAY,TRUE,,https://clpvd.org/event/mahjong-2-2/2026-10-14/,https://clpvd.org/event/mahjong-2-2/2026-10-14/,2026-09-30,NEEDS_REVIEW
+MahJong,Providence,RI,2026-10-21,13:00,15:00,Rochambeau Library – Community Room,,,OPEN_PLAY,TRUE,,https://clpvd.org/event/mahjong-2-2/2026-10-21/,https://clpvd.org/event/mahjong-2-2/2026-10-21/,2026-09-30,NEEDS_REVIEW
+MahJong,Providence,RI,2026-10-28,13:00,15:00,Rochambeau Library – Community Room,,,OPEN_PLAY,TRUE,,https://clpvd.org/event/mahjong-2-2/2026-10-28/,https://clpvd.org/event/mahjong-2-2/2026-10-28/,2026-09-30,NEEDS_REVIEW
