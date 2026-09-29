@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Monthly Mahjong @ DSSOLVR - Open Play,Durham,NC,2026-10-22,18:30,20:30,DSSOLVR Durham,,,OPEN_PLAY,FALSE,0,https://downtowndurham.com/event/monthly-mahjong-dssolvr-free-play-every-4th-thursday/2026-10-22/,https://dssolvr.com/event-detail/monthly-mahjong-free-play-every-4th-thursday-durham/2026-09-24/,2026-09-30,NEEDS_REVIEW
+Learn to Play Mahjong,Durham,NC,2026-10-07,12:00,15:00,North Regional Library,,,LESSON,TRUE,,https://durhamcountylibrary.org/,https://durhamcountylibrary.org/person/bob/,2026-09-30,NEEDS_REVIEW
+Learn to Play Mahjong,Durham,NC,2026-10-14,12:00,15:00,North Regional Library,,,LESSON,TRUE,,https://durhamcountylibrary.org/,https://durhamcountylibrary.org/person/bob/,2026-09-30,NEEDS_REVIEW

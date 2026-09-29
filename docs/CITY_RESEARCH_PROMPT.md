@@ -313,6 +313,15 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
 - **Multi-week courses:** put the total course price in the club's `price`,
   and leave the per-session event `price` blank (or put the price on the
   first session only), so no session looks like it costs the full amount.
+- **Say why variant is confirmed.** For each ACTIVE row, the `description`
+  or `notes` should quote where the source says American / NMJL / the
+  National Mah Jongg League card. Library, church and recreation-center
+  events that just say "Mahjong" or "Learn to Play" are `NEEDS_REVIEW`
+  until the source names the American game.
+- **Re-send only new or changed rows** when topping up a city; earlier rows
+  are already imported.
+- **Several staff of one business.** List the business once; add individual
+  teachers only if each has their own bio or contact.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
