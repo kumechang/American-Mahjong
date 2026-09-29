@@ -63,6 +63,31 @@ this process exactly.
 Per `docs/CITY_PAGE_POLICY.md` §11: a city needs **≥5 ACTIVE rows**
 total (clubs + instructors + events combined) to publish.
 
+**Working standard when researching several cities at once:**
+
+- **Batches.** 5-6 cities per request is fine; one combined CSV per
+  type (clubs/instructors/events) is fine. The `city` column holds the
+  bare metro name only ("Cleveland", not "Cleveland, OH"), and nearby
+  suburbs are filed under the metro city.
+- **Target 7-8 ACTIVE rows per city**, not just 5. Some rows will be
+  downgraded in review, and a city that lands at exactly 5 has no margin.
+  If a city still can't reach 5, say so and list what you tried.
+- **Ground every ACTIVE row in the group's own page**: the venue's or
+  organizer's official calendar, event page or website. A row sourced
+  only from a directory (BamBuddies, MahJongg Maven, Order of the Tile,
+  etc.) with no dates, website or contact will be set to
+  `NEEDS_REVIEW`. Use directories to find leads, then confirm on the
+  lead's own page.
+- **Prefer dated events.** Events with a date, time, venue and
+  registration link are the strongest ACTIVE rows; add several per
+  city where the calendars have them.
+- **Watch for other variants.** Cities with large Asian-American
+  communities (e.g. Salt Lake City, Las Vegas, Sacramento) have many
+  Riichi, Hong Kong and Taiwanese listings under the generic name
+  "Mahjong". Include only what states American / NMJL rules.
+- **Freshness.** Only include upcoming events (on or after the
+  verification date), and set `last_verified_at` to the day you checked.
+
 **If the initial two searches (step 1) come up short of 5, don't stop
 — dig further before concluding the city doesn't have enough.** In
 practice, a first pass of general "club"/"instructor" searches often
