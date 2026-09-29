@@ -149,25 +149,48 @@ Rules for filling these in:
 
 ### Before handing off: data-quality checklist
 
-Two real issues turned up in a past handoff (Nashville) — check for
-both before sending CSVs back:
+Real issues have turned up in past handoffs (Nashville, Minneapolis)
+— check for all of these before sending CSVs back:
 
 - **`event_type` must be one of the five valid values** — `OPEN_PLAY`,
-  `TOURNAMENT`, `SOCIAL`, `LESSON`, or `OTHER` — not free text like
-  "beginner workshop" or "class." Map what you found to the closest of
-  these five (a beginner workshop/class → `LESSON`; a tournament or
-  competitive event → `TOURNAMENT`; drop-in/casual play → `OPEN_PLAY`;
-  a social mixer that isn't structured play → `SOCIAL`; anything else
-  → `OTHER`).
+  `TOURNAMENT`, `SOCIAL`, `LESSON`, or `OTHER` — not free text. Map
+  whatever you found to the closest of these five. Values seen in the
+  wild that need mapping: "beginner workshop," "beginner lesson,"
+  "class" → `LESSON`; "guided open play," "beginner/open play,"
+  "supervised play" → `OPEN_PLAY`; "social tournament," "league,"
+  "competitive league" → `TOURNAMENT`; anything that's a mixer/social
+  event without structured play → `SOCIAL`; anything else → `OTHER`.
+- **`city`/`state` must be the metro area this site pages by — not
+  the literal suburb a venue sits in.** This is the single most
+  important check. If you're researching "Minneapolis" and find a
+  great club in Edina, or an event in Fridley, or an instructor based
+  in Minnetonka, those still go in with `city=Minneapolis,
+  state=MN` — the real suburb/address goes in the `address` field (for
+  clubs) or in `description`/`notes`/`venue` text, never in the `city`
+  column. The database looks up cities by exact name match; a row with
+  `city=Edina` when only a `Minneapolis` City record exists will fail
+  to import (or worse, silently fail to link to other entries in the
+  same metro that reference it by name). This happened across an
+  entire Minneapolis handoff — every club, instructor, and event
+  needed its `city` column corrected from a real suburb name to
+  `Minneapolis` before import. Always use the exact city name given in
+  the assignment (e.g. "Minneapolis, MN"), never a suburb, even when
+  the actual venue/business is technically located elsewhere.
 - **Don't leave a truncated or partial phone number.** If a source page
   cuts off (e.g. "615-" with nothing after it), copy-paste errors
   happen — either go back and get the complete number, or leave the
   field blank. A broken-looking phone number is worse than no phone
   number.
+- **Don't paste literal `[email protected]`-style text as an email.**
+  This is a Cloudflare email-obfuscation placeholder that shows up
+  broken when scraped/copied from a page instead of rendering the real
+  address — it's not a real email. If a page shows this, either find
+  the real address elsewhere on the site or leave the `email` field
+  blank.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
-incorrectly — these two are the ones caught so far, not an exhaustive
+incorrectly — these are the ones caught so far, not an exhaustive
 list.
 
 ### After research: deliverable
