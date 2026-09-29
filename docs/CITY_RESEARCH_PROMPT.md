@@ -233,6 +233,16 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   private lessons. If the source doesn't say, FALSE is acceptable, but
   write it explicitly rather than leaving it blank, and only leave a
   field blank when you genuinely couldn't determine it.
+- **Check for column shifts.** If a row has extra/missing commas, a phone,
+  email or latitude can land in the wrong column. Confirm `phone` looks
+  like a phone number, `email` like an email, and `latitude`/`longitude`
+  are numbers or blank.
+- **`instructors` only lists people who teach.** An organizer or contact
+  person for a group who has no evidence of teaching belongs in the club's
+  description, not as an instructor row.
+- **Link an event to a club only if that club actually runs it.** If a
+  venue or teacher hosts the event, leave `club_name` blank and fill
+  `instructor_name` instead.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
