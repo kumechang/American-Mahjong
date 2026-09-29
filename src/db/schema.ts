@@ -32,6 +32,9 @@ export const cities = sqliteTable(
     slug: text("slug").notNull().unique(),
     latitude: real("latitude"),
     longitude: real("longitude"),
+    // Short, city-specific "Getting Started" paragraph (docs/CITY_PAGE_POLICY.md
+    // §2), written from the verified listings — never generic filler.
+    intro: text("intro"),
     published: integer("published", { mode: "boolean" })
       .notNull()
       .default(false),

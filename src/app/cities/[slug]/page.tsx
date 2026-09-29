@@ -291,6 +291,32 @@ export default async function CityPage({
         by beginner-friendly, free, lessons, open play, or social.
       </p>
 
+      {city.intro && (
+        <section className="mt-10">
+          <h2 className="text-xl font-semibold">
+            Getting Started in {city.name}
+          </h2>
+          <p className="mt-3 text-zinc-600 dark:text-zinc-400">{city.intro}</p>
+          <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+            New to the game? Read{" "}
+            <Link
+              href="/learn/what-is-american-mahjong"
+              className="underline hover:no-underline"
+            >
+              What Is American Mahjong?
+            </Link>{" "}
+            and the{" "}
+            <Link
+              href="/learn/beginner-guide"
+              className="underline hover:no-underline"
+            >
+              Beginner Guide
+            </Link>{" "}
+            before your first visit.
+          </p>
+        </section>
+      )}
+
       <section className="mt-12">
         <h2 className="text-xl font-semibold">Mahjong Clubs</h2>
         {city.clubs.length === 0 ? (
