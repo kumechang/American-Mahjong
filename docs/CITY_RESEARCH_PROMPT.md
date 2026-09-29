@@ -147,6 +147,29 @@ Rules for filling these in:
   `clubs.csv` (same city) for the two to link — check it matches
   character-for-character.
 
+### Before handing off: data-quality checklist
+
+Two real issues turned up in a past handoff (Nashville) — check for
+both before sending CSVs back:
+
+- **`event_type` must be one of the five valid values** — `OPEN_PLAY`,
+  `TOURNAMENT`, `SOCIAL`, `LESSON`, or `OTHER` — not free text like
+  "beginner workshop" or "class." Map what you found to the closest of
+  these five (a beginner workshop/class → `LESSON`; a tournament or
+  competitive event → `TOURNAMENT`; drop-in/casual play → `OPEN_PLAY`;
+  a social mixer that isn't structured play → `SOCIAL`; anything else
+  → `OTHER`).
+- **Don't leave a truncated or partial phone number.** If a source page
+  cuts off (e.g. "615-" with nothing after it), copy-paste errors
+  happen — either go back and get the complete number, or leave the
+  field blank. A broken-looking phone number is worse than no phone
+  number.
+
+More generally: skim every field you're about to write one more time
+for anything that reads as cut off, mismatched, or copy-pasted
+incorrectly — these two are the ones caught so far, not an exhaustive
+list.
+
 ### After research: deliverable
 
 Write the three CSVs into `data/collected/{city-slug}/`. That's the
