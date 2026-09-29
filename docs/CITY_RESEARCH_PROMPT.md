@@ -297,6 +297,14 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   second organizer.
 - **A third-party blog (retailer, press) is not a group's own page.** Events
   without a specific venue (only "City, ST") are `NEEDS_REVIEW`.
+- **Event `instructor_name` / `club_name` must match the row name exactly**,
+  including any "/" suffix ("MahjongRVA / Emilie Rabke"). If a club and its
+  events share a name, use `club_name`.
+- **A contact person isn't an instructor.** "Contact for the beginner
+  lesson" is not evidence the person teaches; use `NEEDS_REVIEW` unless the
+  page says they teach.
+- **Events with no venue** are `NEEDS_REVIEW`. So are games that aren't
+  standard American mahjong (e.g. "Mahjingo" bingo variants).
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted

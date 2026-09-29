@@ -1,0 +1,7 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+American Mahjong Basic Class,Richmond,VA,2026-10-01,18:00,20:30,"The Heist, Bowling Green",MahjongRVA,MahjongRVA / Emilie Rabke,LESSON,TRUE,,https://www.mahjongrva.com/,https://www.mahjongrva.com/,2026-09-30,ACTIVE
+American Mahjong Basic Class,Richmond,VA,2026-10-15,18:00,20:30,,MahjongRVA,MahjongRVA / Emilie Rabke,LESSON,TRUE,,https://www.mahjongrva.com/,https://www.mahjongrva.com/,2026-09-30,NEEDS_REVIEW
+MAHJ-O-WEEN Mania Event,Richmond,VA,2026-10-30,12:00,15:30,,MahjongRVA,MahjongRVA / Emilie Rabke,TOURNAMENT,TRUE,,https://www.mahjongrva.com/,https://www.mahjongrva.com/,2026-09-30,NEEDS_REVIEW
+Mahjingo™ @ WayGone!,Richmond,VA,2026-10-07,,,WayGone Brewery,,The Lucky Sparrow / Emily Cox,SOCIAL,FALSE,,https://www.theluckysparrow.com/events,https://www.theluckysparrow.com/events,2026-09-30,NEEDS_REVIEW
+Open Play @ Bar West!,Richmond,VA,2026-10-11,,,Bar West,,The Lucky Sparrow / Emily Cox,OPEN_PLAY,FALSE,25,https://www.theluckysparrow.com/events,https://www.theluckysparrow.com/events,2026-09-30,ACTIVE
+Haunted Mahjong,Richmond,VA,2026-10-25,,,The Poe Museum,,The Lucky Sparrow / Emily Cox,SOCIAL,TRUE,75,https://www.theluckysparrow.com/events,https://www.theluckysparrow.com/events,2026-09-30,ACTIVE
