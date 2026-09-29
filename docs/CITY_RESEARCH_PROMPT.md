@@ -188,6 +188,22 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   the real address elsewhere on the site or leave the `email` field
   blank.
 
+- **Don't mark a listing `ACTIVE` if you can't show a concrete session
+  or venue.** A row with no address, no schedule, and no confirmed
+  upcoming session — e.g. a city parks page that only says "check
+  availability" (Portland Parks & Recreation) — must be `NEEDS_REVIEW`,
+  not `ACTIVE`. It stays in the database but hidden from the public
+  page until someone confirms a real session. `ACTIVE` means "a reader
+  could show up and find this," not just "a source mentions it exists."
+  Such rows also don't count toward the ≥5 ACTIVE minimum.
+- **Fill in every true/false field explicitly.** Blank `free`,
+  `open_play`, `private_lesson`, etc. are silently treated as FALSE on
+  import (with a warning), which can misstate a listing — e.g. a JCC
+  drop-in that is actually free, or an instructor who does offer
+  private lessons. If the source doesn't say, FALSE is acceptable, but
+  write it explicitly rather than leaving it blank, and only leave a
+  field blank when you genuinely couldn't determine it.
+
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
 incorrectly — these are the ones caught so far, not an exhaustive
