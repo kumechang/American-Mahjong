@@ -251,6 +251,16 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   and no contact should be `NEEDS_REVIEW`; the same goes for instructors
   with neither a website nor a contact. Find the group's own page first.
 - **Only set `free=TRUE` when the source says it is free.**
+- **Don't reuse a listing already in the site.** If a club or instructor
+  is already on the site (check `data/collected/<city>/`), don't resubmit it
+  with less detail (e.g. a directory URL as `website`).
+- **`website` is the group's own site, never a directory page.**
+- **`club_name` on an event must be a club row in the same CSV.** A venue,
+  shop or series name isn't a club; leave `club_name` blank (or add the
+  club row).
+- **Reach 5 ACTIVE per city, from the group's own pages.** Directory
+  listings (BamBuddies, etc.) alone rarely have dates; find the venue's
+  or organizer's calendar.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
