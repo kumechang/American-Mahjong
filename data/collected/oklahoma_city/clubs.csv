@@ -1,0 +1,3 @@
+name,city,state,description,address,website,phone,email,latitude,longitude,beginner_friendly,lessons_available,open_play,social_play,women_only,free,price,schedule,source_url,last_verified_at,status
+Mahj & Bougie,Oklahoma City,OK,"American Mahjong organizer offering lessons, open play and league events in Oklahoma City.","Oklahoma City, OK",https://mahj-bougie.bamgoodtime.com/,,,,,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,,,https://mahj-bougie.bamgoodtime.com/,2026-09-30,ACTIVE
+OK LET'S MAHJONG,Oklahoma City,OK,Oklahoma City Mahjong organizer with dated social league and tournament events.,"Oklahoma City, OK",https://www.okletsmahjong.com/events,,,,,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,,,https://www.okletsmahjong.com/events,2026-09-30,NEEDS_REVIEW
