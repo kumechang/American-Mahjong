@@ -1,0 +1,2 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Learning Mahjong,Milwaukee,WI,2026-10-03,10:00,13:00,"Pewaukee Public Library, 210 Main St, Pewaukee, WI 53072",,,LESSON,TRUE,,,https://pewaukee.librarycalendar.com/events/upcoming,2026-09-30,ACTIVE
