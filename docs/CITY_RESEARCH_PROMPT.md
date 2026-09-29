@@ -206,6 +206,26 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   page until someone confirms a real session. `ACTIVE` means "a reader
   could show up and find this," not just "a source mentions it exists."
   Such rows also don't count toward the ≥5 ACTIVE minimum.
+
+  **This rule is for clubs, venues, and events — not for
+  instructors.** An instructor or lesson business that teaches by
+  appointment (private/group lessons booked through a website or
+  contact) is `ACTIVE` as long as you confirmed it teaches American/
+  NMJL and it has a working website or contact — a reader can simply
+  get in touch. Do *not* downgrade an instructor just because no dated
+  public class is posted. Also, `NEEDS_REVIEW` should reflect real
+  uncertainty (unclear variant, closed, can't be reached), not just a
+  missing calendar entry.
+- **Members-only groups aren't `ACTIVE` public listings.** If a club
+  can only be joined by becoming a paying member of a private
+  organization (e.g. a women's club or country club), mark it
+  `NEEDS_REVIEW` and say why in the handoff, so a reader isn't sent to
+  a door they can't walk through. (Groups that just take a guest fee or
+  invite the community are fine.)
+- **Address columns hold an address, not prose.** If the exact venue
+  isn't public (e.g. "shared with registered players"), put the general
+  area ("Spring Branch, Houston, TX") in `address` and the explanation
+  in `description`.
 - **Fill in every true/false field explicitly.** Blank `free`,
   `open_play`, `private_lesson`, etc. are silently treated as FALSE on
   import (with a warning), which can misstate a listing — e.g. a JCC
