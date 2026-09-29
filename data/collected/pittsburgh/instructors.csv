@@ -1,3 +1,4 @@
 name,city,state,website,contact,private_lesson,group_lesson,online_lesson,beginner_lesson,price,notes,source_url,last_verified_at,status
 Liz Watkins,Pittsburgh,PA,,,TRUE,TRUE,FALSE,TRUE,,"BamBuddies lists Liz Watkins as an American Mahjong instructor in Pittsburgh/Western PA offering lessons, open play sessions and tournaments by arrangement.",https://www.bambuddies.org/mahjong-near-me/pittsburgh-pa,2026-09-30,NEEDS_REVIEW
 Three Rivers Mahjong,Pittsburgh,PA,,,FALSE,TRUE,FALSE,TRUE,,BamBuddies lists Three Rivers Mahjong with scheduled Mahjong 101/102 classes in the Pittsburgh-area Wexford and Cranberry locations.,https://www.bambuddies.org/mahjong-near-me/pittsburgh-pa,2026-09-30,NEEDS_REVIEW
+Jane S.,Pittsburgh,PA,,412-805-7374,TRUE,TRUE,FALSE,TRUE,,MahJongg Maven teacher directory lists Jane S. in Cranberry Township/Pittsburgh as an American Mahjong teacher.,https://mahjonggmaven.com/teachers/,2026-09-30,ACTIVE
