@@ -305,6 +305,14 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   page says they teach.
 - **Events with no venue** are `NEEDS_REVIEW`. So are games that aren't
   standard American mahjong (e.g. "Mahjingo" bingo variants).
+- **Count the columns in every row.** A row with a missing or extra field
+  (e.g. `free` left out so `price` lands in `free`, or `ACTIVE` written
+  twice at the end) shifts everything after it. Header has 21 columns for
+  clubs; check each row against it.
+- **Write booleans as `TRUE` / `FALSE`.**
+- **Multi-week courses:** put the total course price in the club's `price`,
+  and leave the per-session event `price` blank (or put the price on the
+  first session only), so no session looks like it costs the full amount.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
