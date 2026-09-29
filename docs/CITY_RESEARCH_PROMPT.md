@@ -176,6 +176,16 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   `Minneapolis` before import. Always use the exact city name given in
   the assignment (e.g. "Minneapolis, MN"), never a suburb, even when
   the actual venue/business is technically located elsewhere.
+- **The `city` column holds the bare city name only — no state, no
+  comma.** Write `Washington`, not `"Washington, DC"`; the `state`
+  column carries `DC` separately. The site displays `{city}, {state}`,
+  so a `city` of "Washington, DC" renders as "Washington, DC, DC". Same
+  for any city (`Portland`, not `Portland, OR`).
+- **URL columns hold web URLs only.** `registration_url` and
+  `source_url` must be `http(s)://` links — not `mailto:` addresses or
+  phone numbers. If an event is registered for by email, leave
+  `registration_url` blank and put the contact in a description or
+  notes field instead.
 - **Don't leave a truncated or partial phone number.** If a source page
   cuts off (e.g. "615-" with nothing after it), copy-paste errors
   happen — either go back and get the complete number, or leave the
