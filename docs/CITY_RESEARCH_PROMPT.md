@@ -61,11 +61,52 @@ this process exactly.
 ### Minimum bar before publishing
 
 Per `docs/CITY_PAGE_POLICY.md` §11: a city needs **≥5 ACTIVE rows**
-total (clubs + instructors + events combined) to publish. If research
-comes up short, either keep digging (try senior centers, JCCs,
-synagogues, community rec centers — these are reliably real and
-American-style) or leave the city unpublished rather than shipping a
-thin page.
+total (clubs + instructors + events combined) to publish.
+
+**If the initial two searches (step 1) come up short of 5, don't stop
+— dig further before concluding the city doesn't have enough.** In
+practice, a first pass of general "club"/"instructor" searches often
+lands at 3-4 real, confirmed entries; a second round almost always
+finds the rest. This happened with both Philadelphia and San Diego —
+neither had enough after the first round, and both crossed the bar
+with one more search pass. Try these, roughly in order of how often
+they pay off:
+
+1. **JCCs and synagogues** — search `"{CITY} JCC" mahjong` and
+   `{CITY} synagogue mahjong beginner class`. Jewish community centers
+   and synagogues run seasonal American Mahjong beginner classes
+   almost everywhere in the US; they're reliably real, reliably
+   American-style, and often missed by a generic first search because
+   they don't brand themselves as "mahjong clubs."
+2. **Senior centers / community/rec centers** — search
+   `{CITY} senior center mahjong` and `{CITY} community center mahjong
+   lessons`. Same logic: extremely common, always genuinely American
+   in the US, easy to verify (city/county parks & rec sites are
+   authoritative).
+3. **Search by neighboring/synonymous instructor names already
+   found** — if one instructor mentions a colleague, or a directory
+   page lists several names at once (e.g. "Where the Winds Blow" or
+   the American Mahjong Association's state directory), search each
+   name individually — `"{Name}" mahjong {CITY}` — to confirm and get
+   more detail than the directory snippet alone.
+4. **A second, differently-worded search** — the exact query wording
+   matters more than it seems. If `American Mahjong club {CITY}
+   lessons open play beginner NMJL` didn't surface enough, try
+   `mahjong {CITY} {STATE} NMJL instructor` or `American Mahjong {CITY}
+   JCC OR synagogue open play beginner class {YEAR}` — different
+   phrasing surfaces different sites.
+5. **Local press / lifestyle magazine event calendars** — search
+   `{CITY} magazine mahjong` or `{CITY} events mahjong beginner` — city
+   magazines and community event calendars (e.g. a "San Diego
+   Magazine" community events page) often list real classes that
+   don't otherwise show up in club-focused searches.
+
+If, after genuinely working through the above, the city still has
+fewer than 5 confirmed ACTIVE entries, **leave it unpublished** rather
+than padding it with unconfirmed or wrong-variant entries — say so
+explicitly in the handoff (which sources were checked, what came up
+short) so whoever picks it up next doesn't repeat the same searches
+from zero.
 
 ### Output format
 
