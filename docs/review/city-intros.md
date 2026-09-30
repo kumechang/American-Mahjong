@@ -1,10 +1,10 @@
 # City introductions — text for editor review
 
-One short paragraph per city page (55 so far), generated from the migrations. Please look for unnatural phrasing, repetition across cities, and claims that sound like guarantees.
+One short paragraph per city page (53 so far), generated from the local database (published cities only). Please look for unnatural phrasing, repetition across cities, and claims that sound like guarantees.
 
 ### atlanta
 
-Atlanta's listings lean toward lessons and social play. Le Mahj Club runs 101 and 102 beginner lessons and casual open-play socials around Alpharetta, Roswell and Milton, while Mahj Studios in Buckhead is a membership club with beginner lessons, guided play and socials. Several independent instructors also teach American Mahjong across the metro. If you're new, a beginner lesson is the clearest first step.
+Atlanta's listings lean toward lessons and social play. Le Mahj Club runs 101 and 102 beginner lessons and casual open-play socials around Alpharetta, Roswell and Milton, while Mahj Studios in Buckhead is a membership club with beginner lessons, guided play and socials. Several independent instructors also teach American Mahjong across the metro. If you're new, a beginner lesson is a good first step.
 
 ### austin
 
@@ -20,7 +20,7 @@ Birmingham's listings center on two community sites. The Levite Jewish Community
 
 ### boise
 
-Boise's American Mahjong is centered on beginner classes. Mahjong at the Local teaches a two-part introductory series at LOCAL Boise, downtown, using the National Mah Jongg League card, and OK LET'S MAHJONG offers private lessons and community events. If you are new, the two-part series is the natural place to start. Check each event page for dates and registration.
+Boise's American Mahjong is centered on beginner classes. Mahjong at the Local teaches a two-part introductory series at LOCAL Boise, downtown, using the National Mah Jongg League card, and OK LET'S MAHJONG offers private lessons and community events. If you are new, the two-part series is a good place to start. Check each event page for dates and registration.
 
 ### boston
 
@@ -36,15 +36,11 @@ Charleston's American Mahjong is built around Holy Mahj, which runs a dedicated 
 
 ### charlotte
 
-Charlotte's American Mahjong meets in restaurants, taprooms and community venues. Sparrow Mahjong Club holds open play on Monday to Wednesday evenings in South Charlotte, with an optional monthly membership. Queen City Mahjong offers assisted open play on Wednesdays, and Charlotte Mahjong runs monthly socials and beginner lessons. Crown & Tile in Belmont adds lessons and guided open play. Beginner lessons are listed by several of these groups, so you can pick the location and schedule that suit you.
+Charlotte's American Mahjong meets in restaurants, taprooms and community venues. Sparrow Mahjong Club holds open play on Monday to Wednesday evenings in South Charlotte, with an optional monthly membership. Queen City Mahjong offers assisted open play on Wednesdays, and Charlotte Mahjong runs monthly socials and beginner lessons. Crown & Tile in Belmont adds lessons and guided open play.
 
 ### chicago
 
-Chicago's American Mahjong here runs through two community groups. The Mahjong Society offers 101 and 102 lessons, guided play, open play, leagues and events at rotating venues. Mahj & Mingle Social Club offers 101 lessons, guided play, open play and leagues. Both start newcomers with an introductory class and offer guided play as a next step, so you can learn the basics before joining open play.
-
-### cincinnati
-
-Cincinnati's listings center on community spaces. The Mayerson JCC holds a weekly Mah-Jongg drop-in, and Mariemont Branch Library offers open play with a short beginner instruction slot beforehand. Mahj with Meg teaches the National Mah Jongg League card and the basics of a full game, and a social evening event at Rookwood pairs open play with mingling. Locations are spread across the metro, so confirm the branch or venue before you go.
+Chicago's American Mahjong runs through two community groups. The Mahjong Society offers 101 and 102 lessons, guided play, open play, leagues and events at rotating venues. Mahj & Mingle Social Club offers 101 lessons, guided play, open play and leagues. Both start newcomers with an introductory class and offer guided play as a next step, so you can learn the basics before joining open play.
 
 ### cleveland
 
@@ -72,7 +68,7 @@ Durham has two regular options. DSSOLVR, a taproom, hosts monthly beginner lesso
 
 ### fort-lauderdale
 
-Fort Lauderdale's listings center on Your Mahjong Mama, a certified American Mahjong instructor who offers private lessons and events, including guided play and open play at Shooters Waterfront. Guided play is a good way to learn on the table with help from an instructor, and open play is a relaxed way to practice afterward. Event times are posted on her profile page, so check there for the latest details before you go.
+Fort Lauderdale's listings center on Your Mahjong Mama, an instructor who describes herself as a certified American Mahjong teacher and offers private lessons and events, including guided play and open play at Shooters Waterfront. Guided play is a good way to learn on the table with help from an instructor, and open play is a relaxed way to practice afterward. Event times are posted on her profile page, so check there for the latest details before you go.
 
 ### fort-worth
 
@@ -100,11 +96,11 @@ Jacksonville's listings come from Mahjong Social Club Jax, an organizer that run
 
 ### kansas-city
 
-Kansas City's listings include a club, a beginner course and several teachers. Kansas City Mahjong Club offers public lessons and guided open play at local venues, and the Park Hill District Office runs a two-session beginner course using the National Mah Jongg League card. Lauren Sinovic, Emily Levine and Val H. also teach, some online. Because venues are spread across the metro, check locations, and confirm the version taught, since one teacher also plays other styles.
+Kansas City's listings include a club, a beginner course and several teachers. Kansas City Mahjong Club offers public lessons and guided open play at local venues, and the Park Hill District Office runs a two-session beginner course using the National Mah Jongg League card. Lauren Sinovic, Emily Levine and Val H. also teach, some online. Venues are spread across the metro, so check each location. One teacher also plays other styles, so confirm you are booking American Mahjong.
 
 ### las-vegas
 
-Las Vegas has a dedicated American Mahjong studio on West Sahara Avenue. Las Vegas Mahjong offers a series of lessons, Mahj 101, 102 and 103, along with weekday social open play, and it references the National Mah Jongg League card on its own site. New players can start with Mahj 101 and move up through the series, then join open play. Check the schedule page for current times and pricing before you visit.
+Las Vegas has a dedicated American Mahjong studio on West Sahara Avenue. Las Vegas Mahjong offers a series of lessons, Mahj 101, 102 and 103, along with weekday social open play. New players can start with Mahj 101 and move up through the series, then join open play. Check the schedule page for current times and pricing before you visit.
 
 ### los-angeles
 
@@ -132,7 +128,7 @@ New Orleans has a parlor and a JCC program. Fleur de Mahj, in Metairie, offers b
 
 ### new-york
 
-Our New York listings are in Manhattan. Sparrow's Nest Studio offers beginner lessons and open play, and Congregation Habonim on the Upper West Side offers beginner classes and regular open play. UES Mahjong and So Bam Fun New York provide private and group lessons. We're still adding to New York, so more options will appear over time; for now, a beginner class at either venue is the simplest way in.
+Our New York listings are in Manhattan. Sparrow's Nest Studio offers beginner lessons and open play, and Congregation Habonim on the Upper West Side offers beginner classes and regular open play. UES Mahjong and So Bam Fun New York provide private and group lessons. We're still adding to New York, so more options will appear over time; for now, a beginner class at either venue is a good way in.
 
 ### newark
 
@@ -140,11 +136,11 @@ New Jersey listings come from a community center and a teaching organizer. CASA 
 
 ### oklahoma-city
 
-Oklahoma City has two organizers. Mahj & Bougie runs social play and beginner lessons at venues around the city, including a lakeside restaurant and a downtown bar. OK LET'S MAHJONG hosts lessons, a social league and two-player events at local restaurants and bars. Events tend to include food or drinks and carry a ticket price, so check the details first. If you are new, the lesson nights are the natural place to start.
+Oklahoma City has two organizers. Mahj & Bougie runs social play and beginner lessons at venues around the city, including a lakeside restaurant and a downtown bar. OK LET'S MAHJONG hosts lessons, a social league and special events at local restaurants and bars. Events tend to include food or drinks and carry a ticket price, so check the details first. If you are new, the lesson nights are a good place to start.
 
 ### omaha
 
-Omaha has two clubs and a private teacher. One Bam offers beginner classes and open play at restaurants and venues around the metro, Club Mahj offers lessons, supervised play and themed open-play events, and Mahjong with Mary teaches at a central Omaha studio. If you are new, a beginner class is the natural first step, and open play is a relaxed way to practice. Locations vary by event, so check the address first.
+Omaha has two clubs and a private teacher. One Bam offers beginner classes and open play at restaurants and venues around the metro, Club Mahj offers lessons, supervised play and themed open-play events, and Mahjong with Mary teaches at a central Omaha studio. If you are new, a beginner class is a good first step, and open play is a relaxed way to practice. Locations vary by event, so check the address first.
 
 ### orlando
 
@@ -156,11 +152,7 @@ Our Philadelphia listings are in the surrounding suburbs and community centers. 
 
 ### phoenix
 
-Phoenix's listings lean toward teachers rather than fixed clubs. Mahj Mind, Maj by Daron, Mod Mahj (in Arcadia and Central Phoenix) and So Bam Fun Phoenix offer courses ranging from beginner to advanced, plus supervised play. The one group listed, Mahjong for People who Work, is a Meetup group with recurring games where American Mahjong may be played when enough players attend, so confirm before you go.
-
-### pittsburgh
-
-Pittsburgh's listings are spread across the city and its suburbs. Cooper-Siegel Community Library in the Fox Chapel area hosts weekly open play, Northern Tier Regional Library and a restaurant group also run open play, and Jane S. teaches around Cranberry Township. Lauri Ann West Community Center offers beginner class series. Because options are scattered, check the location and travel time before your first visit, and a beginner class is a good place to start.
+Phoenix's listings lean toward teachers rather than fixed clubs. Mahj Mind, Maj by Daron, Mod Mahj (in Arcadia and Central Phoenix) and So Bam Fun Phoenix offer courses ranging from beginner to advanced, plus supervised play. One group, Mahjong for People who Work, holds recurring Meetup games. Its games are not always American Mahjong, so confirm the style before you go.
 
 ### portland
 
@@ -176,7 +168,7 @@ Richmond's listings come from two organizers. MahjongRVA teaches American Mahjon
 
 ### sacramento
 
-Sacramento's listings center on the Learnery at Sierra 2 Center, where Sheri Graciano teaches American Mah Jongg classes. The Introduction class is for beginners and a second-level 2.0 class covers National Mah Jongg League rules in more depth. Classes are held in the evening and on weekday afternoons, and prices are modest. Check the Learnery calendar for dates and registration, since new sessions are added through the year.
+Sacramento's listings center on the Learnery at Sierra 2 Center, where Sheri Graciano teaches American Mah Jongg classes. The Introduction class is for beginners and a second-level 2.0 class covers National Mah Jongg League rules in more depth. Classes are held in the evening and on weekday afternoons; prices are listed on the calendar. Check the Learnery calendar for dates and registration, since new sessions are added through the year.
 
 ### salt-lake-city
 
@@ -192,7 +184,7 @@ San Diego's listings split between classes and weekly play. Beginners American M
 
 ### san-francisco
 
-San Francisco's listings are still small but growing. The Jewish Community Center of San Francisco hosts American Mah Jongg social play and beginner classes. Toby Salk and Mahj with Molly teach around the Bay Area, and Mahjong with Kim (who also teaches online) and So Bam Fun San Francisco offer private lessons and events. If you're new, starting with a beginner class at the JCC or booking a private lesson is the simplest way in.
+San Francisco's listings are still small but growing. The Jewish Community Center of San Francisco hosts American Mah Jongg social play and beginner classes. Toby Salk and Mahj with Molly teach around the Bay Area, and Mahjong with Kim (who also teaches online) and So Bam Fun San Francisco offer private lessons and events. If you're new, starting with a beginner class at the JCC or booking a private lesson is a good way in.
 
 ### scottsdale
 

@@ -8,7 +8,7 @@ Generated from `src/content/learn.ts`. Please check rules and terms (domain expe
 
 _Page: /learn/what-is-american-mahjong_
 
-American Mahjong is a tile-based game for four players, built around collecting a hand of 14 tiles that matches one of the hands on an official card. If you've never played, don't worry — by the end of this page, you'll know what's going on the first time you sit down at a table.
+American Mahjong is a tile-based game for four players, built around collecting a hand of tiles that matches one of the hands on an official card. If you've never played, don't worry — by the end of this page, you'll know what's going on the first time you sit down at a table.
 
 ### The basics
 
@@ -24,7 +24,7 @@ Because the card changes every year, the game stays fresh even for people who've
 
 ### How it's different from other mahjong games
 
-If you've heard of mahjong before, it may have been the Chinese game, or Japanese Riichi. American Mahjong is its own game: it uses jokers freely — Chinese and Riichi mahjong don't. And instead of building any hand you like, you're working from that annual NMJL card. Even the scoring and the way people talk at the table feel different. If you've played one of those other versions, expect a genuinely different game, not just a new coat of paint on the one you know.
+If you've heard of mahjong before, it may have been the Chinese game, or Japanese Riichi. American Mahjong is its own game: it uses jokers, which most other styles don't. And instead of building any hand you like, you're working from that annual NMJL card. Even the scoring and the way people talk at the table feel different. If you've played one of those other versions, expect a genuinely different game, not a slight variation on the one you know.
 
 ### Where to go from here
 
@@ -56,7 +56,7 @@ If this is your first time, just say so. Most tables are happy to slow down and 
 
 On your turn, you'll draw a tile and decide whether to keep it or discard it. You're always working toward a specific hand from the card — pick one or two you think you can build early on, and adjust as your tiles change.
 
-You can also call a tile another player discards if it completes a pung, kong, or quint you're building — you don't have to wait for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it.
+You can also call a tile another player discards if it completes a pung, kong, or quint you're building — or completes your whole hand — without waiting for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it.
 
 When your 14 tiles fully match a hand on the card, you call "Mahjong" and lay your hand down. Everyone checks it against the card before the win counts.
 
@@ -66,7 +66,7 @@ Sometimes the wall runs out before anyone completes a hand. That's called a wall
 
 ### A few tips for your first few games
 
-It's normal to feel slow at first — everyone does. Ask questions during the Charleston and early turns — that's when there's the most room to ask.
+It's normal to feel slow at first — everyone does. Ask questions during the Charleston and the first few turns, while the pace is slower.
 
 Keep an eye on what other players are exposing (their face-up groups). It's a hint about which hands they might be building, and over time you'll start reading the table.
 
@@ -97,17 +97,23 @@ Before anyone draws or discards, players pass tiles to each other in a set patte
 ### Gameplay
 
 1. The dealer discards a tile to start play.
-2. Going around the table, each player draws a tile (from the wall, or by calling another player's discard) and then discards one.
-3. If a discarded tile completes a pung, kong, or quint you're building, you can call it out of turn instead of waiting to draw it. Calling exposes that group face-up in front of your rack.
+2. Going around the table (counterclockwise), each player draws a tile (from the wall, or by calling another player's discard) and then discards one.
+3. If a discarded tile completes a pung, kong, or quint you're building, you can call it out of turn instead of waiting to draw it. Calling exposes that group face-up in front of your rack. You can also call a discard to complete your whole hand. Jokers that have been discarded can't be called.
 4. Play continues, tile by tile, with everyone working toward one of the hands listed on the card.
 
 ### Winning
 
 When your 14 tiles fully match a hand on the card — using any exposed groups plus what's left in your hand — you call "Mahjong." The other players check your hand against the card before the win counts. See the Scoring guide for how points are worked out from there.
 
+If two players want the same discard, Mahjong beats a pung, kong, or quint call. Otherwise the player who would play next gets it.
+
+### Dead hands
+
+A hand can go dead — for example, if you call Mahjong on a hand that doesn't match the card, or your tile count is wrong. A player with a dead hand keeps drawing and discarding, but can no longer win or call tiles for that round. Your group can explain how it handles these cases.
+
 ### Wall games
 
-If the wall runs out of tiles before anyone completes a hand, the round ends with no winner — this is called a wall game. Play resets for the next hand, and in most groups the same dealer deals again, since no one won that hand.
+If the wall runs out of tiles before anyone completes a hand, the round ends with no winner — this is called a wall game. Play resets for the next hand. Ask your group who deals next — it can differ from table to table.
 
 ---
 
@@ -121,7 +127,7 @@ You'll hear a lot of new vocabulary at your first American Mahjong table. Here's
 
 **Charleston** — A set of passes at the start of the game, where you trade tiles with other players before anyone starts drawing and discarding. It's how you improve a weak starting hand.
 
-**Joker** — A wild tile that can stand in for other tiles — though not on every hand on the card. There are 8 jokers in a standard set.
+**Joker** — A wild tile that can stand in for other tiles in a group of three or more — but never for a single tile or a pair. There are 8 jokers in a standard set.
 
 **Wall** — The stack of face-down tiles built at the start of the game. You and the other players draw from it, turn by turn.
 
@@ -129,17 +135,19 @@ You'll hear a lot of new vocabulary at your first American Mahjong table. Here's
 
 **Pung** — A set of three matching tiles, such as three 5 Dots.
 
-**Kong** — A set of four matching tiles (jokers can often fill in), such as four Red Dragons.
+**Kong** — A set of four matching tiles (jokers can fill in), such as four Red Dragons.
+
+**Quint** — A set of five matching tiles. A standard set has only four of each tile, so a quint always includes at least one joker.
 
 **Pair** — Two matching tiles.
 
 **Exposure** — A group of tiles (like a pung or kong) that you've placed face-up in front of your rack, usually after calling a discard, so the other players can see it.
 
-**Call** — Claiming another player's discarded tile to complete a pung, kong, or quint in your hand, instead of waiting to draw it yourself.
+**Call** — Claiming another player's discarded tile to complete a pung, kong, or quint — or to win with Mahjong — instead of waiting to draw it yourself. A discarded joker can't be called.
 
 **Mahjong** — What you call out when you complete a winning hand that matches the card — the word that ends the game.
 
-**Wall Game** — A round that ends with the wall of tiles used up and no one completing a hand — no one wins, and in most groups the same dealer deals again.
+**Wall Game** — A round that ends with the wall of tiles used up and no one completing a hand — no one wins, and you start a new hand.
 
 ---
 
@@ -155,15 +163,17 @@ You're dealt 13 tiles at random, so most starting hands aren't close to any hand
 
 ### How it works
 
-You pass three tiles at a time to another player, and receive three tiles back from someone else — first to the player on one side, then across the table, then to your other side. That's the required first round.
+You pass three tiles at a time. In the first round, you pass to your right, then across the table, then to your left, and you receive three tiles from the other players each time. This first round is required. On the last pass, you may pass "blind": you can hand along tiles you just received without looking at them.
 
-If everyone at the table agrees, there's a second round right after — it repeats the same pattern in reverse order (other side, across, first side). Everyone agrees before it starts, not partway through, so if anyone would rather stop, you skip straight to play.
+The second round is optional, and all four players have to agree to it before it starts. If anyone says no, you skip straight to play. It runs in the opposite order: left, across, then right.
+
+After the Charleston, players sitting across from each other may agree to a courtesy pass, swapping anywhere from zero to three tiles.
 
 You don't have to pass your best tiles — the whole point is to let go of tiles you don't need and hope for something more useful in return. You won't always love what you receive, and that's normal.
 
 ### What to pass
 
-As a beginner, a simple approach works fine: look at the card, pick a hand or two that seem realistic based on what you already have, and pass tiles that don't fit those hands. Hang on to jokers, pairs, and anything that shows up in several hands on the card — those are worth keeping until you're sure you won't need them.
+As a beginner, a simple approach works fine: look at the card, pick a hand or two that seem realistic based on what you already have, and pass tiles that don't fit those hands. Jokers can never be passed, so they stay with you. Hang on to pairs and anything that shows up in several hands on the card — those are worth keeping until you're sure you won't need them.
 
 ### After the Charleston
 
@@ -179,15 +189,15 @@ Once someone calls "Mahjong," the hand isn't quite over — you still need to wo
 
 ### Where points come from
 
-Every hand listed on the NMJL card has a point value printed right next to it — that's what you're playing for. Harder or rarer hands are generally worth more. Most hands also have a minimum point value — you need to reach it before you can go out (call Mahjong) with that hand. Check your current card for the exact number, since it can change year to year.
+Every hand listed on the NMJL card has a point value printed right next to it — that's what you're playing for. Harder or rarer hands are generally worth more. Check your current card for the exact numbers, since they can change year to year.
 
 ### Concealed vs. exposed hands
 
-A concealed hand — one where you haven't called any tiles or exposed any groups the whole game — is usually worth more than the same hand played with exposures, and the card will often show a separate, higher value for playing it concealed. It's a nice bonus if you can pull it off, but it's harder, since you can't call tiles to speed things along.
+Some hands on the card have to be played concealed, which means you haven't exposed any groups. The card marks these hands (look for the C). They are often worth more, but they're harder to complete, since you can't call tiles to speed things along.
 
 ### Who pays whom
 
-When a hand ends, the losing players pay the winner directly — there's no shared pot. If you discarded the tile that completed the winning hand, you typically pay double what the other losing players pay. That's because your discard is what let the winner go out.
+When a hand ends, the losing players pay the winner directly — there's no shared pot. Under the standard rules, if you discarded the tile that completed the winning hand, you pay double what the other two players pay. If the winner drew the winning tile themselves, all three players pay double. Many hands also pay double when played without any jokers. Your card and your group will tell you which of these apply.
 
 ### Getting comfortable with it
 
@@ -211,7 +221,7 @@ Jokers can never be used for a single tile or as part of a pair — that's true 
 
 ### Trading for a joker
 
-If another player has an exposed group that includes a joker, and you're holding the real tile the joker represents, you can trade for it on your turn: hand over the matching tile, and take the joker for your own hand. Your tile takes the joker's place in their exposed group — no extra tile changes hands. This is a normal part of play — don't be shy about it if it helps your hand.
+If an exposed group on the table includes a joker, and you're holding the real tile that joker stands for, you can swap on your turn: put your tile into the group and take the joker for your own hand. It's a one-for-one swap, and you can use the joker right away. This works with other players' exposures and your own, and it's a normal part of play — don't be shy about it if it helps your hand. Remember that jokers can't be passed in the Charleston, and a discarded joker can't be called.
 
 ---
 
@@ -225,7 +235,7 @@ American Mahjong has its own set of table manners, mostly unwritten. Here's what
 
 Don't touch another player's tiles or rack, even to help. If you're not sure whether a hand is complete or a call is valid, ask instead of reaching in.
 
-Keep the game moving at a reasonable pace once you're comfortable with the basics — long pauses on every turn can slow the whole table down. It's completely fine to take your time while you're still learning — most groups expect that.
+In most groups, you say the name of a tile out loud when you discard it, so everyone can hear it. Keep the game moving at a reasonable pace once you're comfortable with the basics — long pauses on every turn can slow the whole table down. It's completely fine to take your time while you're still learning — most groups expect that.
 
 Try to hold your tiles and rack so others can't see them. It's part of the game, not a trust issue.
 

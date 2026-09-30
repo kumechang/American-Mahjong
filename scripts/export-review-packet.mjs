@@ -7,8 +7,8 @@
 //
 // (Node 22+. Re-run after content changes and commit the result.)
 
-import { readFile, readdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import { LEARN_TOPIC_META, LEARN_TOPICS } from "../src/content/learn.ts";
 
 function sectionMarkdown(section) {
@@ -31,20 +31,18 @@ await writeFile(
   `# Learn guides — text for expert review\n\nGenerated from \`src/content/learn.ts\`. Please check rules and terms (domain expert) or wording (editor). Comments format: see docs/EXPERT_REVIEW_PACKET.md.\n\n---\n\n${learn}\n`,
 );
 
-const intros = new Map();
-for (const file of (await readdir("migrations")).sort()) {
-  if (!file.endsWith(".sql")) continue;
-  const sql = await readFile(join("migrations", file), "utf8");
-  for (const m of sql.matchAll(/UPDATE "City" SET "intro" = '((?:[^']|'')*)' WHERE "(?:slug|name)" = '([^']*)'/g)) {
-    // Early migrations key by slug, later ones by city name; normalize so the
-    // newest text replaces the older one instead of appearing twice.
-    const key = m[2].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    intros.set(key, m[1].replaceAll("''", "'"));
-  }
-}
+// Read the intros from the local D1 (so later REPLACE-style migrations are
+// reflected). Run `npx wrangler d1 migrations apply DB --local` first.
+const raw = execFileSync(
+  "npx",
+  ["wrangler", "d1", "execute", "DB", "--local", "--json", "--command",
+   "SELECT slug, intro FROM City WHERE published = 1 AND intro IS NOT NULL ORDER BY slug"],
+  { encoding: "utf8", maxBuffer: 10 * 1024 * 1024 },
+);
+const intros = new Map(JSON.parse(raw)[0].results.map((r) => [r.slug, r.intro]));
 const introMd = [...intros.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, text]) => `### ${key}\n\n${text}`).join("\n\n");
 await writeFile(
   "docs/review/city-intros.md",
-  `# City introductions — text for editor review\n\nOne short paragraph per city page (${intros.size} so far), generated from the migrations. Please look for unnatural phrasing, repetition across cities, and claims that sound like guarantees.\n\n${introMd}\n`,
+  `# City introductions — text for editor review\n\nOne short paragraph per city page (${intros.size} so far), generated from the local database (published cities only). Please look for unnatural phrasing, repetition across cities, and claims that sound like guarantees.\n\n${introMd}\n`,
 );
 console.log(`wrote docs/review/learn-guides.md and docs/review/city-intros.md (${intros.size} intros)`);
