@@ -78,7 +78,7 @@ function toCsv(header, records) {
 
 // ------------------------------------------------------------ known data
 async function loadKnown() {
-  const known = { clubs: new Map(), instructors: new Map(), events: new Map() };
+  const known = { clubs: new Map(), instructors: new Map(), events: new Map(), eventSlugs: new Map() };
   let dirs = [];
   try { dirs = await readdir("data/collected"); } catch { return known; }
   for (const dir of dirs) {
@@ -92,6 +92,7 @@ async function loadKnown() {
         const cityKey = `${rec.city}|${rec.state}`.toLowerCase();
         const key = kind === "events" ? `${cityKey}|${rec.name}|${rec.event_date}|${rec.venue}`.toLowerCase() : `${cityKey}|${rec.name}`.toLowerCase();
         known[kind].set(key, rec);
+        if (kind === "events") known.eventSlugs.set(`${cityKey}|${rec.name}|${rec.event_date}`.toLowerCase(), rec);
       }
     }
   }
@@ -182,10 +183,17 @@ function checkRows(kind, records, ctxOf, known, today, batch) {
       }
     }
 
-    // duplicates inside this file
-    const dupKey = kind === "events" ? `${r.city}|${r.name}|${r.event_date}|${r.venue}`.toLowerCase() : `${r.city}|${r.name}`.toLowerCase();
-    if (seen.has(dupKey)) add("WARN", i, `duplicate of row ${records[seen.get(dupKey)]._line}`);
-    else seen.set(dupKey, i);
+    // duplicates inside this file. The importer's row identity (slug) is
+    // city + name for clubs/instructors and city + name + date for events, so
+    // two rows sharing it would silently overwrite each other.
+    const dupKey = kind === "events" ? `${r.city}|${r.name}|${r.event_date}`.toLowerCase() : `${r.city}|${r.name}`.toLowerCase();
+    if (seen.has(dupKey)) {
+      add("ERROR", i, `same ${kind === "events" ? "name and date" : "name"} as row ${records[seen.get(dupKey)]._line} in the same city — the importer keeps only one; make the names distinct`);
+    } else seen.set(dupKey, i);
+    if (kind === "events") {
+      const prevSlug = known.eventSlugs.get(`${r.city}|${r.state}|${r.name}|${r.event_date}`.toLowerCase());
+      if (prevSlug && prevSlug.venue !== r.venue) add("WARN", i, `overwrites an imported event with the same name and date but a different venue ("${prevSlug.venue}")`);
+    }
 
     // already imported?
     const cityKey = `${r.city}|${r.state}`.toLowerCase();
