@@ -1,0 +1,6 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+American Mahjong 101,Fresno,CA,2026-10-05,18:00,,Areni Wine Room - Kingsburg,Charleston Society,,LESSON,TRUE,70,https://charleston-society.bamgoodtime.com/,https://charleston-society.bamgoodtime.com/?type=lesson,2026-09-30,ACTIVE
+American Mahjong 101,Fresno,CA,2026-10-09,17:30,,Three Oaks Vineyard and Winery,Charleston Society,,LESSON,TRUE,80,https://charleston-society.bamgoodtime.com/,https://charleston-society.bamgoodtime.com/?type=lesson,2026-09-30,ACTIVE
+Guided Play,Fresno,CA,2026-10-12,18:00,,Out of the Barrel - Fig Garden,Charleston Society,,OPEN_PLAY,TRUE,40,https://charleston-society.bamgoodtime.com/,https://charleston-society.bamgoodtime.com/?type=lesson,2026-09-30,ACTIVE
+Guided Play,Fresno,CA,2026-10-21,18:00,,Areni Wine Room - Kingsburg,Charleston Society,,OPEN_PLAY,TRUE,40,https://charleston-society.bamgoodtime.com/,https://charleston-society.bamgoodtime.com/?type=lesson,2026-09-30,ACTIVE
+American Mahjong 101,Fresno,CA,2026-10-26,18:00,,Out of the Barrel - Fig Garden,Charleston Society,,LESSON,TRUE,70,https://charleston-society.bamgoodtime.com/,https://charleston-society.bamgoodtime.com/?type=lesson,2026-09-30,ACTIVE
