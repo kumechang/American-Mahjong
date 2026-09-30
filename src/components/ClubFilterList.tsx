@@ -69,7 +69,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 isActive
                   ? "border-emerald-700 bg-emerald-700 text-white"
-                  : "border-black/10 bg-white text-zinc-700 hover:border-black/20 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300"
+                  : "border-line bg-surface text-zinc-700 hover:border-jade dark:text-zinc-300"
               }`}
             >
               {filter.label}
@@ -91,7 +91,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
           {filtered.map((club) => (
             <li
               key={club.id}
-              className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
+              className="rounded-xl border border-line bg-surface p-5"
             >
               <h3 className="font-semibold">{club.name}</h3>
               <div className="mt-2 flex flex-wrap gap-1.5 text-xs">

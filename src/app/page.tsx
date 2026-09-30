@@ -1,4 +1,12 @@
 import Link from "next/link";
+import { eq, asc } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { cities } from "@/db/schema";
+import { CitySearch } from "@/components/CitySearch";
+import { TileRow } from "@/components/TileRow";
+
+// City list comes from D1, which only exists at request time.
+export const dynamic = "force-dynamic";
 
 const JOURNEY_STEPS = [
   {
@@ -24,20 +32,37 @@ const JOURNEY_STEPS = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const db = await getDb();
+  const published = await db
+    .select({ slug: cities.slug, name: cities.name, state: cities.state })
+    .from(cities)
+    .where(eq(cities.published, true))
+    .orderBy(asc(cities.name));
+
   return (
     <div className="mx-auto max-w-6xl px-6 py-16">
       <section className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
+        <TileRow />
+        <p className="mt-8 text-sm font-semibold uppercase tracking-widest text-jade">
           Learn &rarr; Find &rarr; Play
         </p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-6xl">
           Start playing American Mahjong
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">
+        <p className="mx-auto mt-5 max-w-2xl text-lg text-zinc-700 dark:text-zinc-300">
           Beginners don&apos;t just need to know the rules — they need to know
-          how to actually get started. We help you learn the game, find a
-          beginner-friendly club or lesson near you, and start playing.
+          how to actually get started. Find a beginner-friendly club, lesson
+          or open play near you.
+        </p>
+        <div className="mt-8">
+          <CitySearch cities={published} />
+        </div>
+        <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+          Clubs, teachers and events in {published.length} cities.{" "}
+          <Link href="/cities" className="underline hover:no-underline">
+            Browse all cities
+          </Link>
         </p>
       </section>
 
@@ -46,9 +71,9 @@ export default function Home() {
           <Link
             key={item.step}
             href={item.href}
-            className="rounded-2xl border border-black/10 bg-white p-6 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+            className="tile-card p-6 transition-shadow hover:shadow-md"
           >
-            <span className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
+            <span className="text-xs font-semibold uppercase tracking-widest text-jade">
               {item.step}
             </span>
             <h2 className="mt-2 text-xl font-semibold">{item.title}</h2>
@@ -59,7 +84,7 @@ export default function Home() {
         ))}
       </section>
 
-      <section className="mt-16 rounded-2xl border border-black/10 bg-white p-8 dark:border-white/10 dark:bg-zinc-900">
+      <section className="mt-16 rounded-2xl border border-line bg-surface p-8">
         <h2 className="text-2xl font-semibold">
           Find American Mahjong near you
         </h2>

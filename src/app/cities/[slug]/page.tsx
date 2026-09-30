@@ -7,6 +7,7 @@ import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
 import { ClubFilterList } from "@/components/ClubFilterList";
 import { VerifiedNote } from "@/components/VerifiedNote";
+import { CityHighlights } from "@/components/CityHighlights";
 import { todayEventDate } from "@/lib/city-counts";
 
 // The D1 binding is only available at request time (in the Workers
@@ -290,13 +291,22 @@ export default async function CityPage({
         />
       ))}
 
-      <h1 className="text-3xl font-bold tracking-tight">
+      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
         American Mahjong in {city.name}
       </h1>
       <p className="mt-3 text-zinc-600 dark:text-zinc-400">
         Clubs, lessons, and events near {city.name}, {city.state} — filter
         by beginner-friendly, free, lessons, open play, or social.
       </p>
+
+      <CityHighlights
+        clubs={city.clubs}
+        instructors={city.instructors}
+        eventCount={city.events.length}
+        nextEventLabel={
+          city.events[0] ? formatEventDate(city.events[0].eventDate) : null
+        }
+      />
 
       {city.intro && (
         <section className="mt-10">
@@ -346,7 +356,7 @@ export default async function CityPage({
             {city.instructors.map((instructor) => (
               <li
                 key={instructor.id}
-                className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
+                className="rounded-xl border border-line bg-surface p-5"
               >
                 <h3 className="font-semibold">{instructor.name}</h3>
                 <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
@@ -395,7 +405,7 @@ export default async function CityPage({
             No upcoming events listed yet.
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-black/10 rounded-xl border border-black/10 bg-white dark:divide-white/10 dark:border-white/10 dark:bg-zinc-900">
+          <ul className="mt-4 divide-y divide-line rounded-xl border border-line bg-surface">
             {city.events.map((event) => (
               <li
                 key={event.id}
@@ -419,7 +429,7 @@ export default async function CityPage({
               <li key={nearby.slug}>
                 <Link
                   href={`/cities/${nearby.slug}`}
-                  className="inline-block rounded-full border border-black/10 bg-white px-3 py-1 text-sm text-zinc-700 transition-colors hover:border-black/20 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="inline-block rounded-full border border-line bg-surface px-3 py-1 text-sm text-zinc-700 transition-colors hover:border-jade dark:text-zinc-300"
                 >
                   {nearby.name}, {nearby.state}
                 </Link>
