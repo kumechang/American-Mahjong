@@ -108,9 +108,19 @@ function parseCSV(content) {
     const values = parseLine(line);
     const row = {};
     header.forEach((h, i) => (row[h] = (values[i] ?? "").trim()));
-    return { rowNumber: index + 2, data: row }; // +2: header is line 1
+    return { rowNumber: index + 2, data: row, fieldCount: values.length }; // +2: header is line 1
   });
   return { header, rows };
+}
+
+// A row with more or fewer fields than the header means a stray or missing
+// comma, which silently shifts every later column. Never import those.
+function checkFieldCount(header, fieldCount, ctx, issues) {
+  if (fieldCount !== header.length) {
+    issues.errors.push(
+      `${ctx}: has ${fieldCount} fields but the header has ${header.length} — columns are shifted; fix the row (scripts/validate-csv.mjs shows where)`,
+    );
+  }
 }
 
 function slugify(text) {
@@ -223,9 +233,10 @@ async function main() {
 
   if (args.clubs) {
     const content = await readFile(args.clubs, "utf8");
-    const { rows } = parseCSV(content);
-    for (const { rowNumber, data } of rows) {
+    const { header, rows } = parseCSV(content);
+    for (const { rowNumber, data, fieldCount } of rows) {
       const ctx = `clubs.csv:${rowNumber} (${data.name || "unnamed"})`;
+      checkFieldCount(header, fieldCount, ctx, issues);
       requireField(data, "name", ctx, issues);
       requireField(data, "city", ctx, issues);
       requireField(data, "state", ctx, issues);
@@ -327,9 +338,10 @@ async function main() {
 
   if (args.instructors) {
     const content = await readFile(args.instructors, "utf8");
-    const { rows } = parseCSV(content);
-    for (const { rowNumber, data } of rows) {
+    const { header, rows } = parseCSV(content);
+    for (const { rowNumber, data, fieldCount } of rows) {
       const ctx = `instructors.csv:${rowNumber} (${data.name || "unnamed"})`;
+      checkFieldCount(header, fieldCount, ctx, issues);
       requireField(data, "name", ctx, issues);
       requireField(data, "city", ctx, issues);
       requireField(data, "state", ctx, issues);
@@ -417,9 +429,10 @@ async function main() {
 
   if (args.events) {
     const content = await readFile(args.events, "utf8");
-    const { rows } = parseCSV(content);
-    for (const { rowNumber, data } of rows) {
+    const { header, rows } = parseCSV(content);
+    for (const { rowNumber, data, fieldCount } of rows) {
       const ctx = `events.csv:${rowNumber} (${data.name || "unnamed"})`;
+      checkFieldCount(header, fieldCount, ctx, issues);
       requireField(data, "name", ctx, issues);
       requireField(data, "city", ctx, issues);
       requireField(data, "state", ctx, issues);
