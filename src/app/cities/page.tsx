@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { eq, and, asc, count } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { cities, clubs, instructors, events } from "@/db/schema";
+import { cities } from "@/db/schema";
+import { getCityCounts } from "@/lib/city-counts";
 
 export const metadata: Metadata = {
   title: "American Mahjong by City",
@@ -23,39 +24,14 @@ export default async function CitiesPage() {
     .where(eq(cities.published, true))
     .orderBy(asc(cities.name));
 
-  const citiesWithCounts = await Promise.all(
-    cityRows.map(async (city) => {
-      // Counts match what the city page actually shows publicly — see the
-      // status-filtering note in src/app/cities/[slug]/page.tsx.
-      const [[clubCount], [instructorCount], [eventCount]] = await Promise.all(
-        [
-          db
-            .select({ value: count() })
-            .from(clubs)
-            .where(and(eq(clubs.cityId, city.id), eq(clubs.status, "ACTIVE"))),
-          db
-            .select({ value: count() })
-            .from(instructors)
-            .where(
-              and(
-                eq(instructors.cityId, city.id),
-                eq(instructors.status, "ACTIVE"),
-              ),
-            ),
-          db
-            .select({ value: count() })
-            .from(events)
-            .where(and(eq(events.cityId, city.id), eq(events.status, "ACTIVE"))),
-        ],
-      );
-      return {
-        ...city,
-        clubCount: clubCount.value,
-        instructorCount: instructorCount.value,
-        eventCount: eventCount.value,
-      };
-    }),
+  const counts = await getCityCounts(
+    db,
+    cityRows.map((city) => city.id),
   );
+  const citiesWithCounts = cityRows.map((city) => ({
+    ...city,
+    ...counts.get(city.id)!,
+  }));
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">

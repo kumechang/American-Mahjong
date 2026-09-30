@@ -146,3 +146,21 @@
   自動化してもクラブ側の質的判断まで機械に任せない)
 - 上記を導入する場合も、取得したデータは必ず `status = NEEDS_REVIEW` で
   取り込み、人が確認してから `ACTIVE` にする運用にする
+
+## Ongoing maintenance
+
+- **Events expire on their own.** City pages, `/find` and `/cities` only show
+  and count events dated today or later (`todayEventDate` in
+  `src/lib/city-counts.ts`). Old event rows stay in the database and can be
+  left alone; an occasional cleanup migration (`UPDATE "Event" SET "status" =
+  'INACTIVE' WHERE "eventDate" < ...`) keeps counts honest in reports.
+- **Publish threshold uses ACTIVE rows at import time.** After events pass,
+  a city can drop below five *visible* rows. Before each re-verification
+  round, check which published cities have fewer than five ACTIVE clubs +
+  instructors + upcoming events and either top them up or unpublish them.
+- **Re-verify on a 90-day cadence.** `VerifiedNote` flags rows older than 90
+  days. Everything imported so far was verified between 2026-09-28 and
+  2026-09-30, so the first round is due in late December 2026.
+- **Weakest rows first.** Published rows with no website and a directory-only
+  source (BamBuddies, MahJongg Maven, Order of the Tile) are the first to
+  re-check or move to `NEEDS_REVIEW`.
