@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ContactLink } from "@/components/ContactLink";
 
 export const metadata: Metadata = {
   title: "About American Mahjong Guide",
@@ -70,8 +71,8 @@ export default function AboutPage() {
           <p className="mt-2">
             If a listing is out of date or inaccurate, the source link on
             its card is the fastest way to check the original information
-            yourself. We&apos;re working on a direct way to report
-            corrections — check back soon.
+            yourself. To report a correction, or to ask for a listing to be
+            changed or removed, contact <ContactLink />.
           </p>
         </section>
       </div>
