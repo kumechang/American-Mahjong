@@ -24,6 +24,24 @@ export const metadata: Metadata = {
   },
   description:
     "Learn American Mahjong, find beginner-friendly clubs, lessons, and events near you, and start playing.",
+  // Share image: see docs/OG_IMAGE_PROMPTS.md. Pages that define their own
+  // openGraph replace this object, so keep images in sync if that happens.
+  openGraph: {
+    type: "website",
+    siteName: "American Mahjong Guide",
+    images: [
+      {
+        url: "/og/og-default.jpg",
+        width: 1200,
+        height: 630,
+        alt: "American Mahjong Guide — Learn, Find, Play",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og/og-default.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
