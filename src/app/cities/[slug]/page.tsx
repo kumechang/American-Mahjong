@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { eq, and, ne, asc } from "drizzle-orm";
+import { eq, and, ne, asc, gte } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
 import { ClubFilterList } from "@/components/ClubFilterList";
 import { VerifiedNote } from "@/components/VerifiedNote";
+import { todayEventDate } from "@/lib/city-counts";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so this route can't be statically
@@ -46,7 +47,13 @@ async function getCity(slug: string) {
     db
       .select()
       .from(events)
-      .where(and(eq(events.cityId, city.id), eq(events.status, "ACTIVE")))
+      .where(
+        and(
+          eq(events.cityId, city.id),
+          eq(events.status, "ACTIVE"),
+          gte(events.eventDate, todayEventDate()),
+        ),
+      )
       .orderBy(asc(events.eventDate))
       .limit(10),
   ]);
