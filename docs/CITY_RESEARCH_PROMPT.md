@@ -322,6 +322,14 @@ Real issues have turned up in past handoffs (Nashville, Minneapolis)
   are already imported.
 - **Several staff of one business.** List the business once; add individual
   teachers only if each has their own bio or contact.
+- **Don't resend rows that are already imported** (this batch repeated the
+  Pewaukee event) and don't send events that are already past.
+- **Set `women_only=TRUE` only when the source says so.**
+- **A row switching from `NEEDS_REVIEW` to `ACTIVE` needs a stated reason**
+  (what changed on the source page); otherwise it stays `NEEDS_REVIEW`.
+- **Keep a city's events within its metro.** A statewide organizer's event
+  50+ miles away (e.g. Marlboro for Newark) is listed only if it is the
+  best available, and noted.
 
 More generally: skim every field you're about to write one more time
 for anything that reads as cut off, mismatched, or copy-pasted
