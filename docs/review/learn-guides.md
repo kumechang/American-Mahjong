@@ -56,7 +56,7 @@ If this is your first time, just say so. Most tables are happy to slow down and 
 
 On your turn, you'll draw a tile and decide whether to keep it or discard it. You're always working toward a specific hand from the card — pick one or two you think you can build early on, and adjust as your tiles change.
 
-You can also call a tile another player discards if it completes a pung, kong, or quint you're building — or completes your whole hand — without waiting for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it.
+You can also call a tile another player discards if it completes a pung, kong, or quint you're building — or completes your whole hand — without waiting for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it. The exception is a hand marked C on the card (see Scoring): for those hands, you can only claim a discard if it is the very last tile that completes Mahjong.
 
 When your 14 tiles fully match a hand on the card, you call "Mahjong" and lay your hand down. Everyone checks it against the card before the win counts.
 
@@ -97,8 +97,8 @@ Before anyone draws or discards, players pass tiles to each other in a set patte
 ### Gameplay
 
 1. The dealer discards a tile to start play.
-2. Going around the table (counterclockwise), each player draws a tile (from the wall, or by calling another player's discard) and then discards one.
-3. If a discarded tile completes a pung, kong, or quint you're building, you can call it out of turn instead of waiting to draw it. Calling exposes that group face-up in front of your rack. You can also call a discard to complete your whole hand. Jokers that have been discarded can't be called.
+2. Going around the table (counterclockwise), each player takes a turn: you either draw a tile from the wall or, when it's allowed, claim the tile that was just discarded. Then you discard one tile.
+3. If a discarded tile completes a pung, kong, or quint you're building, you can call it out of turn instead of waiting to draw it. Calling exposes that group face-up in front of your rack. You can also call a discard to complete your whole hand. Discarded jokers can't be called. Call promptly, before the next player draws. For hands marked C on the card, you can only call the last discard that completes Mahjong.
 4. Play continues, tile by tile, with everyone working toward one of the hands listed on the card.
 
 ### Winning
@@ -113,7 +113,7 @@ A hand can go dead — for example, if you call Mahjong on a hand that doesn't m
 
 ### Wall games
 
-If the wall runs out of tiles before anyone completes a hand, the round ends with no winner — this is called a wall game. Play resets for the next hand. Ask your group who deals next — it can differ from table to table.
+If the wall runs out of tiles before anyone completes a hand, the round ends with no winner — this is called a wall game. The last tile is played like any other: if the final discard completes someone's hand, that player can still call Mahjong. If nobody can, it's a wall game. After a wall game, the deal passes to the next player, just as it does after a win. Some groups have house rules, so check with yours.
 
 ---
 
@@ -137,7 +137,9 @@ You'll hear a lot of new vocabulary at your first American Mahjong table. Here's
 
 **Kong** — A set of four matching tiles (jokers can fill in), such as four Red Dragons.
 
-**Quint** — A set of five matching tiles. A standard set has only four of each tile, so a quint always includes at least one joker.
+**Quint** — A set of five matching tiles. Most tiles come in fours, so a quint usually needs jokers. Flowers are the exception: a standard set has eight of them.
+
+**Sextet** — A set of six matching tiles, made with jokers (or with Flowers, of which a standard set has eight).
 
 **Pair** — Two matching tiles.
 
@@ -147,7 +149,7 @@ You'll hear a lot of new vocabulary at your first American Mahjong table. Here's
 
 **Mahjong** — What you call out when you complete a winning hand that matches the card — the word that ends the game.
 
-**Wall Game** — A round that ends with the wall of tiles used up and no one completing a hand — no one wins, and you start a new hand.
+**Wall Game** — A round that ends with the wall of tiles used up and no one completing a hand — no one wins, and the deal passes to the next player.
 
 ---
 
@@ -163,9 +165,9 @@ You're dealt 13 tiles at random, so most starting hands aren't close to any hand
 
 ### How it works
 
-You pass three tiles at a time. In the first round, you pass to your right, then across the table, then to your left, and you receive three tiles from the other players each time. This first round is required. On the last pass, you may pass "blind": you can hand along tiles you just received without looking at them.
+You pass three tiles at a time. In the first round, you pass to your right, then across the table, then to your left, and you receive three tiles from the other players each time. This first round is required. On the last pass of the round (to your left), you may pass "blind": you can hand along one, two, or all three of the tiles you just received without looking at them, and fill in the rest from your own rack.
 
-The second round is optional, and all four players have to agree to it before it starts. If anyone says no, you skip straight to play. It runs in the opposite order: left, across, then right.
+The second round is optional, and all four players have to agree to it before it starts. If anyone says no, you skip straight to play. It runs in the opposite order: left, across, then right, and the last pass (to your right) can be blind too.
 
 After the Charleston, players sitting across from each other may agree to a courtesy pass, swapping anywhere from zero to three tiles.
 
@@ -193,11 +195,11 @@ Every hand listed on the NMJL card has a point value printed right next to it �
 
 ### Concealed vs. exposed hands
 
-Some hands on the card have to be played concealed, which means you haven't exposed any groups. The card marks these hands (look for the C). They are often worth more, but they're harder to complete, since you can't call tiles to speed things along.
+Some hands on the card must be completed concealed. The card marks these hands with a C, and you can't expose any groups while building them. The one exception: you may claim a discard if it is the very last tile that completes Mahjong. Hands marked X can be built with exposures. Concealed hands are often worth more, but they're harder to complete, since you can't call tiles to speed things along.
 
 ### Who pays whom
 
-When a hand ends, the losing players pay the winner directly — there's no shared pot. Under the standard rules, if you discarded the tile that completed the winning hand, you pay double what the other two players pay. If the winner drew the winning tile themselves, all three players pay double. Many hands also pay double when played without any jokers. Your card and your group will tell you which of these apply.
+When a hand ends, the losing players pay the winner directly — there's no shared pot. Under the standard rules, if you discarded the tile that completed the winning hand, you pay double what the other two players pay. If the winner drew the winning tile themselves, all three players pay double. Some hands also get a bonus when the finished hand contains no jokers. This doesn't apply to every hand — for example, not to Singles and Pairs — so check the current card and scoring rules. There's no bonus for being the dealer.
 
 ### Getting comfortable with it
 
@@ -213,7 +215,7 @@ Jokers are one of the most useful tiles in your hand, but they come with rules o
 
 ### What a joker can do
 
-A joker is a wild tile — it can stand in for almost any other tile in a pung, kong, or quint (a group of three, four, or five matching tiles). If a hand on the card calls for three 5 Dots, for example, you could use two real 5 Dots and a joker instead.
+A joker is a wild tile — it can stand in for any other tile in a group of three or more matching tiles: a pung, kong, quint, or sextet (three, four, five, or six tiles). If a hand on the card calls for three 5 Dots, for example, you could use two real 5 Dots and a joker instead.
 
 ### What a joker can't do
 
@@ -221,7 +223,7 @@ Jokers can never be used for a single tile or as part of a pair — that's true 
 
 ### Trading for a joker
 
-If an exposed group on the table includes a joker, and you're holding the real tile that joker stands for, you can swap on your turn: put your tile into the group and take the joker for your own hand. It's a one-for-one swap, and you can use the joker right away. This works with other players' exposures and your own, and it's a normal part of play — don't be shy about it if it helps your hand. Remember that jokers can't be passed in the Charleston, and a discarded joker can't be called.
+If an exposed group on the table includes a joker, and you're holding the real tile that joker stands for, you can swap on your turn, after you've drawn or claimed a tile and before you discard: put your tile into the group and take the joker for your own hand. It's a one-for-one swap, and you can use the joker right away. This works with other players' exposures and your own, and it's a normal part of play — don't be shy about it if it helps your hand. Remember that jokers can't be passed in the Charleston, and a discarded joker can't be called.
 
 ---
 
@@ -237,7 +239,7 @@ Don't touch another player's tiles or rack, even to help. If you're not sure whe
 
 In most groups, you say the name of a tile out loud when you discard it, so everyone can hear it. Keep the game moving at a reasonable pace once you're comfortable with the basics — long pauses on every turn can slow the whole table down. It's completely fine to take your time while you're still learning — most groups expect that.
 
-Try to hold your tiles and rack so others can't see them. It's part of the game, not a trust issue.
+Try to hold your tiles and rack so others can't see them. It's part of the game, not a trust issue. In most groups it's also polite not to comment on anyone's hand while a game is in progress, and to make your calls clearly.
 
 ### If you're new
 
