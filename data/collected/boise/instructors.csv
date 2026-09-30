@@ -1,2 +1,3 @@
 name,city,state,website,contact,private_lesson,group_lesson,online_lesson,beginner_lesson,price,notes,source_url,last_verified_at,status
 OK LET'S MAHJONG,Boise,ID,https://www.okletsmahjong.com/boise,,TRUE,TRUE,FALSE,TRUE,,Boise private lessons and social/community events; official site states it offers American Mahjong.,https://www.okletsmahjong.com/boise,2026-09-30,ACTIVE
+Mahjong at the Local,Boise,ID,https://www.eventbrite.com/o/121388652873,,FALSE,TRUE,FALSE,TRUE,,Organizer for Downtown Boise classes. Event pages explicitly say the classes teach American Mahjong using the official rules and playing card of the National Mah Jongg League.,https://www.eventbrite.com/o/121388652873,2026-09-30,ACTIVE
