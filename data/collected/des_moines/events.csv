@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahjong open play w/ DSM Pop-up Social Club,Des Moines,IA,2026-10-06,09:30,11:30,Barista's Bouquet - Urbandale,,,OPEN_PLAY,FALSE,,,https://baristasbouquet.com/events.html,2026-09-30,NEEDS_REVIEW
+Mahjong open play w/ DSM Pop-up Social Club,Des Moines,IA,2026-10-28,09:30,11:30,Barista's Bouquet - Urbandale,,,OPEN_PLAY,FALSE,,,https://baristasbouquet.com/events.html,2026-09-30,NEEDS_REVIEW
+Mahjong Monday: Open Play,Des Moines,IA,2026-10-12,17:00,,WineStyles Wine Bar - The District,,,OPEN_PLAY,FALSE,,,https://winestyles.com/ankeny/,2026-09-30,NEEDS_REVIEW
+Mahjong Monday 101: Beginners Class,Des Moines,IA,2026-10-26,17:30,,WineStyles Wine Bar - The District,,,LESSON,TRUE,,,https://winestyles.com/ankeny/,2026-09-30,NEEDS_REVIEW
