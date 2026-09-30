@@ -10,7 +10,7 @@ const NAV_LINKS = [
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-black/10 bg-white dark:border-white/10 dark:bg-black">
+    <header className="border-b border-line bg-surface">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/" className="text-lg font-semibold tracking-tight">
           American Mahjong Guide

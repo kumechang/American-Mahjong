@@ -61,3 +61,11 @@ Strengths: clean, fast, readable, good hierarchy, calm green accent, honest
 - No heavy animation or large image assets — page speed is an SEO factor.
 - Don't redesign every page before the home page, `/cities` and the city
   template are settled; those three carry almost all the traffic.
+
+## Status (2026-09-30)
+Implemented: design tokens in `globals.css` (ivory/jade/tile-red, `.tile-card`,
+focus rings), SVG tile art (`TileRow`), home hero with city search
+(`CitySearch`, ARIA combobox), `/cities` search + state grouping
+(`CityDirectory`), city-page summary chips and "Good place to start" card
+(`CityHighlights`). Not yet done: Learn/Find/Community page polish, per-page
+OG images, illustration beyond the tile set, contrast audit with a tool.

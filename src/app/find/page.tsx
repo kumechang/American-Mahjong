@@ -91,7 +91,7 @@ export default async function FindPage() {
             <li key={city.id}>
               <Link
                 href={`/cities/${city.slug}`}
-                className="block rounded-xl border border-black/10 bg-white p-5 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+                className="block rounded-xl border border-line bg-surface p-5 transition-shadow hover:shadow-md"
               >
                 <h3 className="font-semibold">
                   {city.name}, {city.state}

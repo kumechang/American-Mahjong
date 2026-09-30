@@ -41,7 +41,7 @@ export default async function ShopPage() {
           {productRows.map((product) => (
             <li
               key={product.id}
-              className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
+              className="rounded-xl border border-line bg-surface p-5"
             >
               <h2 className="font-semibold">{product.name}</h2>
               {product.beginnerPick && (

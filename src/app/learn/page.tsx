@@ -22,7 +22,7 @@ export default function LearnPage() {
           <li key={topic.slug}>
             <Link
               href={`/learn/${topic.slug}`}
-              className="block h-full rounded-xl border border-black/10 bg-white p-5 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+              className="block h-full rounded-xl border border-line bg-surface p-5 transition-shadow hover:shadow-md"
             >
               <h2 className="font-semibold">{topic.title}</h2>
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">

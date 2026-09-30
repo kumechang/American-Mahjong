@@ -110,7 +110,7 @@ export default async function CommunityPage() {
             {onlineInstructors.map((instructor) => (
               <li
                 key={instructor.name}
-                className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-900"
+                className="rounded-xl border border-line bg-surface p-5"
               >
                 <h3 className="font-semibold">{instructor.name}</h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
@@ -165,7 +165,7 @@ function CityGroupSection({
             <li key={city.slug}>
               <Link
                 href={`/cities/${city.slug}`}
-                className="inline-block rounded-full border border-black/10 bg-white px-3 py-1 text-sm text-zinc-700 transition-colors hover:border-black/20 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300"
+                className="inline-block rounded-full border border-line bg-surface px-3 py-1 text-sm text-zinc-700 transition-colors hover:border-jade dark:text-zinc-300"
               >
                 {city.name}, {city.state}
               </Link>

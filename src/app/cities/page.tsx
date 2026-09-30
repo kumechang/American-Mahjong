@@ -1,10 +1,9 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities } from "@/db/schema";
 import { getCityCounts } from "@/lib/city-counts";
-import { cityCountsLabel } from "@/lib/format";
+import { CityDirectory } from "@/components/CityDirectory";
 
 export const metadata: Metadata = {
   title: "American Mahjong by City",
@@ -36,37 +35,22 @@ export default async function CitiesPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
-      <h1 className="text-3xl font-bold tracking-tight">
+      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
         American Mahjong by city
       </h1>
-      <p className="mt-3 text-zinc-600 dark:text-zinc-400">
+      <p className="mt-3 max-w-2xl text-zinc-700 dark:text-zinc-300">
         We only publish a city page once we have real, verified clubs,
         lessons, or events for it.
       </p>
 
       {citiesWithCounts.length === 0 ? (
-        <p className="mt-10 rounded-xl border border-dashed border-black/20 p-6 text-sm text-zinc-500 dark:border-white/20">
-          No city pages are published yet. Run the database seed script to
-          add sample cities.
+        <p className="mt-10 rounded-xl border border-dashed border-line p-6 text-sm text-zinc-600">
+          No city pages are published yet. Check back soon.
         </p>
       ) : (
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-          {citiesWithCounts.map((city) => (
-            <li key={city.id}>
-              <Link
-                href={`/cities/${city.slug}`}
-                className="block rounded-xl border border-black/10 bg-white p-5 transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
-              >
-                <h2 className="font-semibold">
-                  {city.name}, {city.state}
-                </h2>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {cityCountsLabel(city)}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-8">
+          <CityDirectory cities={citiesWithCounts} />
+        </div>
       )}
     </div>
   );
