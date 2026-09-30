@@ -133,3 +133,15 @@ Keep the tile row, colors and footer identical so the set looks consistent.
 ## 7. Files in this repo
 - `docs/og/tile-row.svg` — editable vector of the tile row
 - `docs/og/tile-row.png` — 2136 × 672 transparent PNG for Canva
+
+## 8. What was actually made (2026-09-30)
+- `docs/og/bg-table.jpg` — Gemini "warm table" background (section 4b)
+- `docs/og/src/og-default.html` — the layout (text over the background) used
+  to render the final image with headless Chromium
+- `public/og/og-default.jpg` — final 1200 × 630 share image (about 90 KB),
+  wired into `src/app/layout.tsx` (`openGraph` and `twitter`)
+
+To change the text, edit `docs/og/src/og-default.html` and re-render (any
+headless browser screenshot at 1200 × 630), or rebuild the design in Canva and
+replace `public/og/og-default.jpg`. `og-learn` / `og-find` variants are not
+made yet; until then every page uses the default image.
