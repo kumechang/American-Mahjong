@@ -67,5 +67,5 @@ Implemented: design tokens in `globals.css` (ivory/jade/tile-red, `.tile-card`,
 focus rings), SVG tile art (`TileRow`), home hero with city search
 (`CitySearch`, ARIA combobox), `/cities` search + state grouping
 (`CityDirectory`), city-page summary chips and "Good place to start" card
-(`CityHighlights`). Not yet done: Learn/Find/Community page polish, per-page
+(`CityHighlights`). Learn index and article pages restyled (numbered guides, reading time, on-page contents, larger body text, previous/next, play CTA). Not yet done: Find/Community/Shop page polish, per-page
 OG images, illustration beyond the tile set, contrast audit with a tool.
