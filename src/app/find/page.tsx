@@ -4,6 +4,7 @@ import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities } from "@/db/schema";
 import { getCityCounts } from "@/lib/city-counts";
+import { cityCountsLabel } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Find American Mahjong Near You",
@@ -96,8 +97,7 @@ export default async function FindPage() {
                   {city.name}, {city.state}
                 </h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {city.clubCount} clubs &middot; {city.instructorCount}{" "}
-                  instructors &middot; {city.eventCount} events
+                  {cityCountsLabel(city)}
                 </p>
               </Link>
             </li>

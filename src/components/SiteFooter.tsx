@@ -16,6 +16,15 @@ export function SiteFooter() {
           </Link>
           .
         </p>
+        <p className="mt-2">
+          <Link href="/privacy" className="underline hover:no-underline">
+            Privacy Policy
+          </Link>
+          {" \u00b7 "}
+          <Link href="/terms" className="underline hover:no-underline">
+            Terms of Use
+          </Link>
+        </p>
       </div>
     </footer>
   );
