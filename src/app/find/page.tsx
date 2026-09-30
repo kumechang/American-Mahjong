@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities } from "@/db/schema";
-import { getCityCounts } from "@/lib/city-counts";
-import { cityCountsLabel } from "@/lib/format";
+import { CitySearch } from "@/components/CitySearch";
+import { getCategoryCities, type CategoryKey } from "@/lib/find-categories";
+import { pluralize } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Find American Mahjong Near You",
@@ -17,28 +18,38 @@ export const metadata: Metadata = {
 // prerendered or revalidated on a timer — it's rendered per request.
 export const dynamic = "force-dynamic";
 
-const CATEGORIES = [
+const CATEGORIES: {
+  key: CategoryKey;
+  title: string;
+  description: string;
+}[] = [
   {
+    key: "lessons",
+    title: "Lessons",
+    description: "Beginner classes and private or group lessons.",
+  },
+  {
+    key: "openPlay",
+    title: "Open play",
+    description: "Drop-in games where you can just show up and play.",
+  },
+  {
+    key: "clubs",
     title: "Clubs",
     description: "Beginner-friendly and social Mahjong clubs.",
   },
   {
-    title: "Lessons",
-    description: "Group and private lessons for new players.",
-  },
-  {
-    title: "Instructors",
+    key: "instructors",
+    title: "Teachers",
     description: "Instructors offering private, group, or online lessons.",
   },
   {
-    title: "Open Play",
-    description: "Drop-in games where beginners are welcome.",
-  },
-  {
+    key: "events",
     title: "Events",
-    description: "One-off Mahjong meetups and social events.",
+    description: "Upcoming classes, socials and meetups.",
   },
   {
+    key: "tournaments",
     title: "Tournaments",
     description: "Competitive American Mahjong tournaments.",
   },
@@ -46,68 +57,83 @@ const CATEGORIES = [
 
 export default async function FindPage() {
   const db = await getDb();
-  const cityRows = await db
-    .select()
-    .from(cities)
-    .where(eq(cities.published, true))
-    .orderBy(asc(cities.name));
-
-  const counts = await getCityCounts(
-    db,
-    cityRows.map((city) => city.id),
-  );
-  const citiesWithCounts = cityRows.map((city) => ({
-    ...city,
-    ...counts.get(city.id)!,
-  }));
+  const [cityRows, byCategory] = await Promise.all([
+    db
+      .select({ slug: cities.slug, name: cities.name, state: cities.state })
+      .from(cities)
+      .where(eq(cities.published, true))
+      .orderBy(asc(cities.name)),
+    getCategoryCities(db),
+  ]);
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
-      <h1 className="text-3xl font-bold tracking-tight">
+      <p className="text-sm font-semibold uppercase tracking-widest text-jade">
+        Find
+      </p>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
         Find American Mahjong near you
       </h1>
-      <p className="mt-3 text-zinc-600 dark:text-zinc-400">
-        Clubs, lessons, instructors, and events are organized by city. Pick
-        your city below to see what&apos;s available.
+      <p className="mt-3 max-w-2xl text-zinc-700 dark:text-zinc-300">
+        Search for your city, or start from what you are looking for.
       </p>
 
-      <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-600 dark:text-zinc-400">
-        {CATEGORIES.map((category) => (
-          <li key={category.title} title={category.description}>
-            {category.title}
-          </li>
-        ))}
-      </ul>
+      <div className="mt-8">
+        <CitySearch cities={cityRows} />
+      </div>
 
-      <h2 className="mt-10 text-xl font-semibold">Pick your city</h2>
-
-      {citiesWithCounts.length === 0 ? (
-        <p className="mt-4 rounded-xl border border-dashed border-black/20 p-6 text-sm text-zinc-500 dark:border-white/20">
-          No city pages are published yet. Check back soon.
-        </p>
-      ) : (
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {citiesWithCounts.map((city) => (
-            <li key={city.id}>
-              <Link
-                href={`/cities/${city.slug}`}
-                className="block rounded-xl border border-line bg-surface p-5 transition-shadow hover:shadow-md"
-              >
-                <h3 className="font-semibold">
-                  {city.name}, {city.state}
-                </h3>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {cityCountsLabel(city)}
+      <h2 className="mt-14 text-xl font-semibold">What are you looking for?</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        {CATEGORIES.map((category) => {
+          const list = byCategory[category.key];
+          const shown = list.slice(0, 6);
+          return (
+            <section key={category.key} className="tile-card p-5">
+              <h3 className="font-semibold">{category.title}</h3>
+              <p className="mt-1 text-sm text-zinc-700 dark:text-zinc-300">
+                {category.description}
+              </p>
+              {shown.length === 0 ? (
+                <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+                  None listed yet.
                 </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+              ) : (
+                <>
+                  <p className="mt-3 text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
+                    Most listings in
+                  </p>
+                  <ul className="mt-2 flex flex-wrap gap-2">
+                    {shown.map((city) => (
+                      <li key={city.slug}>
+                        <Link
+                          href={`/cities/${city.slug}`}
+                          className="inline-block rounded-full border border-line px-3 py-1 text-sm transition-colors hover:border-jade"
+                        >
+                          {city.name}
+                          <span className="ml-1 text-xs text-zinc-600 dark:text-zinc-400">
+                            {city.n}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs text-zinc-600 dark:text-zinc-400">
+                    {pluralize(list.length, "city", "cities")} with{" "}
+                    {category.title.toLowerCase()}
+                  </p>
+                </>
+              )}
+            </section>
+          );
+        })}
+      </div>
 
-      <p className="mt-8 text-sm text-zinc-500 dark:text-zinc-500">
-        Don&apos;t see your city yet? We&apos;re adding more all the time —
-        check back soon.
+      <p className="mt-10 text-sm text-zinc-700 dark:text-zinc-300">
+        Want to see everything?{" "}
+        <Link href="/cities" className="font-medium text-jade underline hover:no-underline">
+          Browse all {cityRows.length} cities
+        </Link>
+        . Don&apos;t see yours? We&apos;re adding more all the time.
       </p>
     </div>
   );
