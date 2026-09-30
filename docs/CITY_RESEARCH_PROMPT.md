@@ -347,6 +347,27 @@ not part of this research task, unless asked to also do that.
 
 ## Notes for whoever runs the import step later
 
+**Step 0 — check the files the researcher sent.** Before splitting by
+city or importing, run the checker on the raw CSVs:
+
+```bash
+npm run validate:csv -- \
+  --clubs=clubs.csv --instructors=instructors.csv --events=events.csv
+# add --fix --out-dir=cleaned/ to apply the mechanical fixes
+# (BOM/CRLF, TRUE/FALSE casing, blank booleans, "$35" -> "35")
+```
+
+It reports ERROR (import would fail or load wrong data), WARN (against
+this prompt) and INFO lines, with the row number and name. Send the ERROR
+and WARN lines back to the researcher, or fix them and note what you
+changed. It checks, among other things: shifted columns (wrong field
+count), header columns, TRUE/FALSE values, numeric prices, event types,
+dates and times, past events, http(s)-only URLs, prose in address columns,
+directory-only sources, missing venues, event links that match no club or
+instructor row, rows already imported, and personal contact details in
+public text. `import-csv.mjs` also refuses rows whose field count differs
+from the header.
+
 Once CSVs exist at `data/collected/{city-slug}/`:
 
 ```bash

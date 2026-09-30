@@ -14,7 +14,8 @@
     "db:migrate:local": "wrangler d1 execute american-mahjong-db --local --file=$npm_config_file",
     "db:migrate:remote": "wrangler d1 execute american-mahjong-db --remote --file=$npm_config_file",
     "db:seed:local": "wrangler d1 execute american-mahjong-db --local --file=drizzle/seed.sql",
-    "db:seed:remote": "wrangler d1 execute american-mahjong-db --remote --file=drizzle/seed.sql"
+    "db:seed:remote": "wrangler d1 execute american-mahjong-db --remote --file=drizzle/seed.sql",
+    "validate:csv": "node scripts/validate-csv.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.3",
