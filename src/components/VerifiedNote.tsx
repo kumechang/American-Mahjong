@@ -16,7 +16,7 @@ export function VerifiedNote({
   if (!verified) return null;
 
   return (
-    <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
+    <p className="mt-2 text-xs text-muted">
       Verified {verified.label}
       {sourceUrl && (
         <>

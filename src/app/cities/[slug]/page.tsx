@@ -337,7 +337,7 @@ export default async function CityPage({
       <section className="mt-12">
         <h2 className="text-xl font-semibold">Mahjong Clubs</h2>
         {city.clubs.length === 0 ? (
-          <p className="mt-3 text-sm text-zinc-500">No clubs listed yet.</p>
+          <p className="mt-3 text-sm text-muted">No clubs listed yet.</p>
         ) : (
           <div className="mt-4">
             <ClubFilterList clubs={city.clubs} />
@@ -348,7 +348,7 @@ export default async function CityPage({
       <section className="mt-12">
         <h2 className="text-xl font-semibold">American Mahjong Lessons</h2>
         {city.instructors.length === 0 ? (
-          <p className="mt-3 text-sm text-zinc-500">
+          <p className="mt-3 text-sm text-muted">
             No instructors listed yet.
           </p>
         ) : (
@@ -401,7 +401,7 @@ export default async function CityPage({
       <section className="mt-12">
         <h2 className="text-xl font-semibold">Upcoming Events</h2>
         {city.events.length === 0 ? (
-          <p className="mt-3 text-sm text-zinc-500">
+          <p className="mt-3 text-sm text-muted">
             No upcoming events listed yet.
           </p>
         ) : (
@@ -412,7 +412,7 @@ export default async function CityPage({
                 className="flex items-center justify-between px-5 py-3"
               >
                 <span className="font-medium">{event.name}</span>
-                <span className="text-sm text-zinc-500">
+                <span className="text-sm text-muted">
                   {formatEventDate(event.eventDate)}
                 </span>
               </li>

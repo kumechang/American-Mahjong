@@ -51,7 +51,7 @@ export function CityDirectory({ cities }: { cities: DirectoryCity[] }) {
         placeholder="Filter by city or state"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full max-w-md rounded-full border border-line bg-surface px-5 py-3 text-base placeholder:text-zinc-500 focus:border-jade"
+        className="w-full max-w-md rounded-full border border-line bg-surface px-5 py-3 text-base placeholder:text-muted focus:border-jade"
       />
       <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400" aria-live="polite">
         {pluralize(total, "city", "cities")}
