@@ -32,7 +32,7 @@ export default async function ShopPage() {
       </p>
 
       {productRows.length === 0 ? (
-        <p className="mt-10 rounded-xl border border-dashed border-black/20 p-6 text-sm text-zinc-500 dark:border-white/20">
+        <p className="mt-10 rounded-xl border border-dashed border-black/20 p-6 text-sm text-muted dark:border-white/20">
           No products yet. Run the database seed script to add sample
           products.
         </p>

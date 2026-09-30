@@ -69,3 +69,13 @@ focus rings), SVG tile art (`TileRow`), home hero with city search
 (`CityDirectory`), city-page summary chips and "Good place to start" card
 (`CityHighlights`). Learn index and article pages restyled (numbered guides, reading time, on-page contents, larger body text, previous/next, play CTA). Find is now a category hub (top cities per lessons / open play / clubs / teachers / events / tournaments) and Community shows the top 12 cities per group. Not yet done: Shop page polish, per-page
 OG images, illustration beyond the tile set, contrast audit with a tool.
+
+## Accessibility audit (2026-09-30)
+Ran axe-core (WCAG 2 A/AA + best practices, including color contrast) on the
+home page, `/cities`, two city pages, `/find`, `/community`, Learn pages,
+`/about`, `/privacy`, `/terms` and `/shop`, in light and dark mode.
+First run found secondary text (`text-zinc-500`, about 3.7:1 in dark mode and
+4.47:1 in light mode) below the 4.5:1 minimum. Fixed by adding a `--muted`
+token (`text-muted`, also used for input placeholders); rerun shows no
+violations. Re-run with `node scripts/a11y-audit.mjs` (setup steps are at the
+top of the script) after any color or layout change.

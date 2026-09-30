@@ -77,7 +77,7 @@ export function CitySearch({ cities }: { cities: SearchCity[] }) {
             setOpen(false);
           }
         }}
-        className="w-full rounded-full border border-line bg-surface px-6 py-4 text-base shadow-sm placeholder:text-zinc-500 focus:border-jade"
+        className="w-full rounded-full border border-line bg-surface px-6 py-4 text-base shadow-sm placeholder:text-muted focus:border-jade"
       />
       <ul
         id={listId}

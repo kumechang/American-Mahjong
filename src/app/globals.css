@@ -10,6 +10,7 @@
   --jade: #0f6b52;
   --jade-strong: #0a5340;
   --tile-red: #b3261e;
+  --muted: #5c564d; /* secondary text, AA on canvas and surface */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,6 +22,7 @@
     --jade: #4cc9a0;
     --jade-strong: #7be0bd;
     --tile-red: #ef7a72;
+    --muted: #a8a59c;
   }
 }
 
@@ -33,6 +35,7 @@
   --color-jade: var(--jade);
   --color-jade-strong: var(--jade-strong);
   --color-tile-red: var(--tile-red);
+  --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

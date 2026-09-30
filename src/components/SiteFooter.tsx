@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line bg-surface py-10 text-sm text-zinc-500 dark:text-zinc-400">
+    <footer className="border-t border-line bg-surface py-10 text-sm text-muted">
       <div className="mx-auto max-w-6xl px-6">
         <p>
           American Mahjong Guide helps beginners learn the rules, find

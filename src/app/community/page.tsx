@@ -115,7 +115,7 @@ export default async function CommunityPage() {
           Instructors offering online lessons — play or learn from anywhere.
         </p>
         {onlineInstructors.length === 0 ? (
-          <p className="mt-4 text-sm text-zinc-500">
+          <p className="mt-4 text-sm text-muted">
             No online instructors listed yet — check back soon.
           </p>
         ) : (

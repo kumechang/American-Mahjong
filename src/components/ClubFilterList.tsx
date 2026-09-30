@@ -85,7 +85,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
       </p>
 
       {filtered.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500">{resultSummary}</p>
+        <p className="mt-4 text-sm text-muted">{resultSummary}</p>
       ) : (
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
           {filtered.map((club) => (
