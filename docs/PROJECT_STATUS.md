@@ -1,0 +1,104 @@
+# Project Status
+
+Living record of where the project stands. Update it at the end of each work
+session (date at the top, then the sections below). Snapshot: **2026-09-30**.
+
+**Business goal:** grow organic page views with programmatic city pages, add an
+ad model later. Shop is deliberately deferred. Site: mahjong-map.com (Cloudflare
+Workers + D1). Working branch: `claude/ecstatic-archimedes-n8cojp`, PRs
+squash-merged to `main` (PR numbers below run through #60).
+
+## By the numbers (local DB, 2026-09-30)
+- Cities: **69 total, 53 published** (16 unpublished, listed below)
+- ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
+- NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
+- Migrations: 0000–0160 (`migrations/`, applied automatically at deploy)
+- Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
+
+### Unpublished cities and what each needs
+| City | ACTIVE now | Needs |
+|---|---|---|
+| Milwaukee | 4 | 1 more (MKE Mahjong dated event) |
+| Columbia, SC | 4 | 1 more; is Piecewise "Alice" American? |
+| Pittsburgh | 3 | 2 more; own-site sources for Rodef Shalom / Cooper-Siegel etc. |
+| Cincinnati | 3 | 2 more; own-site sources for Mayerson JCC / Mariemont |
+| Louisville | 3 | 2 more; Studio One and Keneseth Israel variant |
+| Little Rock | 2 | 3 more; dated events (Little Rock Mahjong) |
+| Colorado Springs | 2 | 3 more; dated events |
+| Albuquerque, Des Moines, Wichita | 1 each | 4 more each |
+| Greenville, Providence, Knoxville, Chattanooga, Spokane, Lexington | 0 | American/NMJL-confirmed sources |
+
+Published but fragile: about 20 cities sit at exactly 5–6 upcoming rows, so they
+will drop under 5 as events pass (see "Next steps").
+
+## Done
+**Site and infrastructure:** Next.js 16 on Cloudflare (OpenNext), D1 with Drizzle,
+data migrations at deploy, sitemap/robots, JSON-LD, GA4, city pages with filters,
+verified-date notes, city intros, `/about`, `/privacy`, `/terms`.
+**Design (PRs #47–#55):** tokens (ivory/jade/tile-red, muted text), tile art, hero
+city search, grouped `/cities`, city summary and "Good place to start", Learn
+restyle, Find category hub, Community top cities, share image (`public/og/`),
+axe accessibility audit (0 violations, `scripts/a11y-audit.mjs`).
+**Data pipeline:** external researcher → `npm run validate:csv` → per-city
+`data/collected/` → `scripts/import-csv.mjs` → numbered migrations. The importer
+now rejects rows with the wrong field count; the validator catches shifted
+columns, slug collisions, directory-only sources and more. Prompt for the
+researcher: `docs/CITY_RESEARCH_PROMPT.md`.
+**Quality decisions:** directory-only clubs without a website were downgraded
+(Cincinnati and Pittsburgh unpublished); events hidden after their date; private
+instructor contacts stored but never shown.
+**Expert reviews:** role-played SEO, E-E-A-T, local reader, accessibility, legal
+and privacy, brand/visual and UX, data engineering; independent AI rules and
+editorial reviews; a domain expert's written answer (applied to `learn.ts`,
+PR #60). Records in `docs/` and `docs/review/`.
+
+## In progress / waiting on people
+1. **Contact email:** set `NEXT_PUBLIC_CONTACT_EMAIL` (Cloudflare build
+   variable). Until then `/privacy`, `/terms`, `/about` say the address is being
+   set up.
+2. **Human reviewers:** a real American Mahjong player to confirm the wall-game
+   deal, the C-hand last discard and the jokerless bonus; a native US English
+   editor for the Learn guides and city intros. Outreach kit and candidate
+   profiles are in `docs/review/outreach/` (sent to the owner as zips).
+3. **Attorney review** of `/privacy` and `/terms` before ads or affiliate links.
+4. **Researcher batches** for the unpublished cities above and for New York
+   (only 5 rows for the largest market: Long Island, Westchester, Brooklyn).
+
+## Next steps (suggested order)
+1. Weekly freshness job (GitHub Actions): dead source links, events past their
+   date → `INACTIVE`, list of published cities under 5 upcoming rows.
+2. Rewrite the city intros in more varied structures once the editor has weighed
+   in (many share the "listings center on… / If you are new… / Check the…" shape).
+3. `db:audit` script comparing `data/collected/` with the local D1.
+4. Event slug disambiguation for new imports (same name and date collide).
+5. Learn/Find OG variants, Shop page later, a listing-request form after the
+   contact email exists.
+6. First re-verification round before late December 2026 (the 90-day stale
+   note appears on almost every listing then).
+
+## How to resume
+```bash
+git checkout claude/ecstatic-archimedes-n8cojp && git fetch origin main && git merge origin/main
+npm ci && npx wrangler d1 migrations apply DB --local
+npm run dev                      # site on :3000
+npm run validate:csv -- --clubs=… --instructors=… --events=…   # check new researcher CSVs
+node scripts/import-csv.mjs --clubs=… --out=migrations/NNNN_city.sql   # generate a migration
+node --experimental-strip-types scripts/export-review-packet.mjs      # refresh docs/review/
+```
+Workflow notes: squash merges make the branch diverge from `main`; merge `main`
+into the branch (keep the branch version of docs) and push normally, never
+force-push. Add city rows unpublished, then a separate publish migration and an
+intro migration once a city reaches 5 ACTIVE rows.
+
+## Where things are
+| Topic | File |
+|---|---|
+| Researcher prompt and import steps | `docs/CITY_RESEARCH_PROMPT.md` |
+| City page and SEO policy | `docs/CITY_PAGE_POLICY.md` |
+| Data collection and freshness | `docs/DATA_COLLECTION.md` |
+| Data engineering review | `docs/DATA_ENGINEERING_REVIEW.md` |
+| Voice and tone (Learn) | `docs/VOICE_AND_TONE.md` |
+| Legal and privacy notes | `docs/LEGAL_AND_PRIVACY.md` |
+| Design direction, accessibility | `docs/DESIGN_DIRECTION.md` |
+| Share image brief | `docs/OG_IMAGE_PROMPTS.md` |
+| Human review kit and feedback | `docs/EXPERT_REVIEW_PACKET.md`, `docs/review/` |

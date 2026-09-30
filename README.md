@@ -5,6 +5,8 @@ beginner-friendly clubs, lessons, and events by city, and start playing.
 
 Concept: **Learn → Find → Play**.
 
+**Current status and next steps:** see [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
+
 ## Stack
 
 - [Next.js](https://nextjs.org/) (App Router, TypeScript) via
