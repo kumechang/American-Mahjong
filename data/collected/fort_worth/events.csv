@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+October Mahjong Madness Monday - 6 Weeks,Fort Worth,TX,2026-10-12,10:00,12:00,The Mahj Clubhouse,The Mahj Clubhouse,,OPEN_PLAY,FALSE,140,https://www.themahjclubhouse.com/,https://www.themahjclubhouse.com/,2026-09-30,ACTIVE
+October See You Next Tuesday Mahj Nights - 6 Weeks,Fort Worth,TX,2026-10-13,18:00,20:00,The Mahj Clubhouse,The Mahj Clubhouse,,SOCIAL,FALSE,140,https://www.themahjclubhouse.com/,https://www.themahjclubhouse.com/,2026-09-30,ACTIVE
+Tournament Play with Prizes! - 6 Weeks,Fort Worth,TX,2026-10-15,12:30,14:30,The Mahj Clubhouse,The Mahj Clubhouse,,TOURNAMENT,FALSE,180,https://www.themahjclubhouse.com/,https://www.themahjclubhouse.com/,2026-09-30,ACTIVE
+OPEN PLAY at The Sidesaddle Saloon,Fort Worth,TX,2026-10-05,,,The Sidesaddle Saloon,The Mahj Clubhouse,,OPEN_PLAY,FALSE,30,https://www.themahjclubhouse.com/,https://www.themahjclubhouse.com/,2026-09-30,ACTIVE
