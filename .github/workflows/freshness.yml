@@ -1,0 +1,39 @@
+name: Weekly freshness report
+
+on:
+  schedule:
+    - cron: "17 13 * * 1" # Mondays, 13:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build local database from migrations
+        run: npx wrangler d1 migrations apply DB --local
+      - name: Run freshness report
+        run: node scripts/freshness-report.mjs --out=freshness-report.md
+      - name: Add to job summary
+        run: cat freshness-report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Open or update the weekly issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create freshness --color 0e8a16 --description "Weekly data freshness report" 2>/dev/null || true
+          existing=$(gh issue list --label freshness --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file freshness-report.md
+          else
+            gh issue create --title "Freshness report" --label freshness --body-file freshness-report.md
+          fi
