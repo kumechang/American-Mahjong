@@ -1,7 +1,9 @@
 # Domain expert feedback — 2026-09-30
 
 Received from the site owner as the domain expert's answer. It cites the
-American Mah Jongg Association rulebook and the Sloperama Q&A board, so it is
+American Mah Jongg Association (AMJA) guide and the Sloperama Q&A board — both
+secondary sources: the AMJA is independent of the National Mah Jongg League,
+which sets the rules (its book is "Mah Jongg Made Easy"), so it is
 worth a second look if a claim is disputed. (The pasted text carried
 `utm_source=chatgpt.com` links, which suggests it was produced with an AI
 assistant; if a human player has not yet confirmed these points, treat them as
@@ -56,3 +58,8 @@ Mahjong") was called a good warning.
   very common, not universal); waiting for a second opinion.
 - A human American Mahjong player should still confirm items 1, 3 and 5
   before the site is promoted.
+
+## Verify against the primary source
+Before promoting the site, check the three disputed rules (deal after a wall
+game, C-hand last discard, jokerless bonus) in the NMJL's "Mah Jongg Made Easy"
+and current rulings, not only the AMJA guide. See `docs/NOTEBOOKLM_WORKFLOWS.md`.
