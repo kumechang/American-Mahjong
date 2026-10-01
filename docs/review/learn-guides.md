@@ -109,7 +109,7 @@ If two players want the same discard, Mahjong beats a pung, kong, or quint call.
 
 ### Dead hands
 
-A hand can go dead — for example, if you call Mahjong on a hand that doesn't match the card, or your tile count is wrong. A player with a dead hand keeps drawing and discarding, but can no longer win or call tiles for that round. Your group can explain how it handles these cases.
+A hand can go dead — for example, if you call Mahjong on a hand that doesn't match the card, or your tile count is wrong. A player with a dead hand stays at the table but can no longer call tiles, declare Mahjong, or take turns drawing and discarding for that round. The other players carry on without them. Your group can explain how it handles these cases.
 
 ### Wall games
 
