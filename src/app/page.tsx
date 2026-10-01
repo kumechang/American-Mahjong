@@ -14,7 +14,7 @@ const JOURNEY_STEPS = [
     href: "/learn",
     title: "Learn how to play",
     description:
-      "What is American Mahjong? Rules, the Charleston, scoring, jokers, and etiquette — explained for total beginners.",
+      "What is American Mahjong? Rules, the Charleston, scoring, jokers and etiquette — explained for total beginners.",
   },
   {
     step: "Find",
