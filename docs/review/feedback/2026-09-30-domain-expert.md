@@ -63,3 +63,6 @@ Mahjong") was called a good warning.
 Before promoting the site, check the three disputed rules (deal after a wall
 game, C-hand last discard, jokerless bonus) in the NMJL's "Mah Jongg Made Easy"
 and current rulings, not only the AMJA guide. See `docs/NOTEBOOKLM_WORKFLOWS.md`.
+
+## Cross-check with NotebookLM (2026-10-01)
+C-hand last discard and the jokerless bonus (not Singles & Pairs) were supported by AMJA and Sloperama quotes; the wall-game deal was only indirectly supported (a general "the dice move to the right" quote). Details: `docs/review/notebooklm/2026-10-01-notebook-a-open-questions.md`.
