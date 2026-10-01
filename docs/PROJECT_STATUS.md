@@ -65,8 +65,7 @@ PR #60). Records in `docs/` and `docs/review/`.
    (only 5 rows for the largest market: Long Island, Westchester, Brooklyn).
 
 ## Next steps (suggested order)
-1. Weekly freshness job (GitHub Actions): dead source links, events past their
-   date → `INACTIVE`, list of published cities under 5 upcoming rows.
+1. ~~Weekly freshness job~~ Built 2026-10-01: `.github/workflows/freshness.yml` (Mondays) runs `scripts/freshness-report.mjs` and posts the report to a `freshness` GitHub issue. Report only; fixes go through researcher CSV + migration. First run found 5 dead links and 6 past events still ACTIVE.
 2. ~~Rewrite the city intros~~ Done 2026-10-01 (`0161_intro_rewrite.sql`, all 53, editor's structures A/B/C, no generic closers; the city page now carries one sitewide "check the event page" line). Still to check: program-title wording ("Mah Jongg" vs "Mahjong") against each source page, and send the new intros back to the editor.
 3. `db:audit` script comparing `data/collected/` with the local D1.
 4. Event slug disambiguation for new imports (same name and date collide).
