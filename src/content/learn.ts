@@ -78,7 +78,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "The basics",
         paragraphs: [
-          "Four players sit around a table, each with a rack to hold their tiles. Instead of cards, you play with 152 tiles. There are three suits — Bams, Dots, and Craks — numbered 1 through 9. You'll also find Winds, Dragons, Flowers, and Jokers.",
+          "Four players sit around a table, each with a rack to hold their tiles. Instead of cards, you play with 152 tiles. There are three suits — Bams, Dots and Craks — numbered 1 through 9. You'll also find Winds, Dragons, Flowers and Jokers.",
           "You'll start with 13 tiles on your rack (the dealer starts with 14). As the game goes on, you draw and discard tiles until your hand matches one of the official hands for the year. (At the very start, you'll also trade some tiles in a phase called the Charleston.) Match one, and you call \"Mahjong\" to win.",
         ],
       },
@@ -110,7 +110,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
     slug: "terms",
     title: "Terms",
     description:
-      "A plain-English glossary of American Mahjong terms — Charleston, jokers, exposures, the card, and more — for players just getting started.",
+      "A plain-English glossary of American Mahjong terms — Charleston, jokers, exposures, the card and more — for players just getting started.",
     intro:
       "You'll hear a lot of new vocabulary at your first American Mahjong table. Here's what the most common terms actually mean — bookmark this page and check back whenever something in another guide isn't clear.",
     sections: [
@@ -173,12 +173,27 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           {
             term: "Call",
             definition:
-              "Claiming another player's discarded tile to complete a pung, kong, or quint — or to win with Mahjong — instead of waiting to draw it yourself. A discarded joker can't be called.",
+              "Claiming another player's discarded tile to complete a pung, kong or quint — or to win with Mahjong — instead of waiting to draw it yourself. A discarded joker can't be called.",
           },
           {
             term: "Mahjong",
             definition:
               "What you call out when you complete a winning hand that matches the card — the word that ends the game.",
+          },
+          {
+            term: "Round",
+            definition:
+              "One deal of the tiles, from the Charleston to the moment someone wins or the wall runs out. On this site, \"round\" means one deal, and \"hand\" means the tiles you hold or a combination listed on the card.",
+          },
+          {
+            term: "Open Play",
+            definition:
+              "Casual games that anyone who knows the rules can join, usually without a teacher.",
+          },
+          {
+            term: "Guided Play",
+            definition:
+              "Games with a teacher at or near the table who helps as you go.",
           },
           {
             term: "Wall Game",
@@ -193,7 +208,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
     slug: "beginner-guide",
     title: "Beginner Guide",
     description:
-      "A step-by-step walkthrough of your first game of American Mahjong — what to bring, how a hand starts, and what actually happens at the table.",
+      "A step-by-step walkthrough of your first game of American Mahjong — what to bring, how a round starts, and what actually happens at the table.",
     intro:
       "Your first game of American Mahjong can feel like a lot at once. This guide walks through what happens, in order, so you know what to expect before you sit down.",
     sections: [
@@ -207,7 +222,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
       },
       {
         type: "list",
-        heading: "How a hand gets started",
+        heading: "How a round gets started",
         ordered: true,
         items: [
           "All four players build the wall together, stacking tiles into a square in the middle of the table.",
@@ -222,7 +237,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "During play",
         paragraphs: [
           "On your turn, you'll draw a tile and decide whether to keep it or discard it. You're always working toward a specific hand from the card — pick one or two you think you can build early on, and adjust as your tiles change.",
-          "You can also call a tile another player discards if it completes a pung, kong, or quint you're building — or completes your whole hand — without waiting for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it. The exception is a hand marked C on the card (see Scoring): for those hands, you can only claim a discard if it is the very last tile that completes Mahjong.",
+          "You can also call a tile another player discards if it completes a pung, kong or quint you're building — or completes your whole hand — without waiting for your own turn. When you call a tile, you expose that group face-up in front of your rack so everyone can see it. The exception is a hand marked C on the card (see Scoring): for those hands, you can only claim a discard if it is the very last tile that completes Mahjong.",
           "When your 14 tiles fully match a hand on the card, you call \"Mahjong\" and lay your hand down. Everyone checks it against the card before the win counts.",
         ],
       },
@@ -230,7 +245,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "If nobody wins",
         paragraphs: [
-          "Sometimes the wall runs out before anyone completes a hand. That's called a wall game — no one wins, and you reset for the next hand.",
+          "Sometimes the wall runs out before anyone completes a hand. That's called a wall game — no one wins, and you reset for the next round.",
         ],
       },
       {
@@ -248,9 +263,9 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
     slug: "rules",
     title: "Rules",
     description:
-      "The full rules of American Mahjong, step by step: setup, dealing, the Charleston, gameplay, and how a hand ends.",
+      "The full rules of American Mahjong, step by step: setup, dealing, the Charleston, gameplay, and how a round ends.",
     intro:
-      "This page covers the full rules of American Mahjong, from setting up the table to how a hand ends. If you just want the short version, start with the Beginner Guide instead.",
+      "This page covers the full rules of American Mahjong, from setting up the table to how a round ends. If you just want the short version, start with the Beginner Guide instead.",
     sections: [
       {
         type: "paragraphs",
@@ -281,7 +296,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         items: [
           "The dealer discards a tile to start play.",
           "Going around the table (counterclockwise), each player takes a turn: you either draw a tile from the wall or, when it's allowed, claim the tile that was just discarded. Then you discard one tile.",
-          "If a discarded tile completes a pung, kong, or quint you're building, you can call it out of turn instead of waiting to draw it. Calling exposes that group face-up in front of your rack. You can also call a discard to complete your whole hand. Discarded jokers can't be called. Call promptly, before the next player draws. For hands marked C on the card, you can only call the last discard that completes Mahjong.",
+          "If a discarded tile completes a pung, kong or quint you're building, you can call it out of turn instead of waiting to draw it. Calling exposes that group face-up in front of your rack. You can also call a discard to complete your whole hand. Discarded jokers can't be called. Call promptly, before the next player draws. For hands marked C on the card, you can only call the last discard that completes Mahjong.",
           "Play continues, tile by tile, with everyone working toward one of the hands listed on the card.",
         ],
       },
@@ -290,7 +305,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         heading: "Winning",
         paragraphs: [
           "When your 14 tiles fully match a hand on the card — using any exposed groups plus what's left in your hand — you call \"Mahjong.\" The other players check your hand against the card before the win counts. See the Scoring guide for how points are worked out from there.",
-          "If two players want the same discard, Mahjong beats a pung, kong, or quint call. Otherwise the player who would play next gets it.",
+          "If two players want the same discard, Mahjong beats a pung, kong or quint call. Otherwise the player who would play next gets it.",
         ],
       },
       {
@@ -315,37 +330,37 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
     description:
       "How the Charleston tile-passing phase works in American Mahjong, and basic strategy for what to pass and what to keep.",
     intro:
-      "The Charleston happens at the very start of every hand, before anyone draws or discards. It's your chance to trade away tiles you don't want for ones that might actually help you.",
+      "The Charleston is a set of tile swaps at the very start of every round, before anyone draws or discards. It's your chance to trade away tiles you don't want for ones that might actually help you.",
     sections: [
       {
         type: "paragraphs",
         heading: "Why it exists",
         paragraphs: [
-          "You're dealt 13 tiles at random, so most starting hands aren't close to any hand on the card. The Charleston lets everyone improve their hand a little before the game really begins, so play doesn't start with four players stuck holding tiles that don't fit together.",
+          "You're dealt 13 tiles at random, so most starting hands aren't close to any hand on the card (the yearly list of winning hands from the National Mah Jongg League). The Charleston lets everyone improve their hand a little before the game really begins, so play doesn't start with four players stuck holding tiles that don't fit together.",
         ],
       },
       {
         type: "paragraphs",
         heading: "How it works",
         paragraphs: [
-          "You pass three tiles at a time. In the first round, you pass to your right, then across the table, then to your left, and you receive three tiles from the other players each time. This first round is required. On the last pass of the round (to your left), you may pass \"blind\": you can hand along one, two, or all three of the tiles you just received without looking at them, and fill in the rest from your own rack.",
-          "The second round is optional, and all four players have to agree to it before it starts. If anyone says no, you skip straight to play. It runs in the opposite order: left, across, then right, and the last pass (to your right) can be blind too.",
-          "After the Charleston, players sitting across from each other may agree to a courtesy pass, swapping anywhere from zero to three tiles.",
-          "You don't have to pass your best tiles — the whole point is to let go of tiles you don't need and hope for something more useful in return. You won't always love what you receive, and that's normal.",
+          "The first round is required. You pass three tiles at a time: first to your right, then across the table, then to your left. Each time you pass, another player passes three tiles to you. On the last pass of the round (to your left), you can pass \"blind,\" which means handing along one, two or all three of the tiles you just received without looking at them. You fill in the rest from your own rack.",
+          "The second round is optional, and all four players have to agree to it before it starts. If anyone says no, you skip the second round. It runs in the opposite order: left, across, then right, and the last pass (to your right) can be blind too.",
+          "After that, you and the player across from you can agree to a courtesy pass, one last swap of up to three tiles.",
+          "The idea is to let go of tiles you don't need and hope for something more useful in return. You won't always love what you receive, and that's normal.",
         ],
       },
       {
         type: "paragraphs",
         heading: "What to pass",
         paragraphs: [
-          "As a beginner, a simple approach works fine: look at the card, pick a hand or two that seem realistic based on what you already have, and pass tiles that don't fit those hands. Jokers can never be passed, so they stay with you. Hang on to pairs and anything that shows up in several hands on the card — those are worth keeping until you're sure you won't need them.",
+          "As a beginner, a simple approach works fine: look at the card, pick a hand or two that seem realistic based on what you already have, and pass tiles that don't fit those hands. Jokers can never be passed, so they stay with you. Hang on to pairs (two matching tiles) and any tile that shows up in several hands on the card, at least until you're sure you won't need them.",
         ],
       },
       {
         type: "paragraphs",
         heading: "After the Charleston",
         paragraphs: [
-          "Once passing is done, regular play begins: the dealer discards first, and turns move around the table from there. See the Rules guide for what happens next.",
+          "Once passing is done, regular play begins. The dealer discards first, and turns move to the right (counterclockwise) from there. See the Rules guide for what happens next.",
         ],
       },
     ],
@@ -356,34 +371,49 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
     description:
       "How scoring works in American Mahjong: where point values come from, what it takes to go out, and how points are settled between players.",
     intro:
-      "Once someone calls \"Mahjong,\" the hand isn't quite over — you still need to work out the score. Here's how it works.",
+      "Once someone calls \"Mahjong,\" the round isn't quite over — you still need to work out the score. Here's how it works.",
     sections: [
       {
         type: "paragraphs",
         heading: "Where points come from",
         paragraphs: [
-          "Every hand listed on the NMJL card has a point value printed right next to it — that's what you're playing for. Harder or rarer hands are generally worth more. Check your current card for the exact numbers, since they can change year to year.",
+          "Every hand on the National Mah Jongg League (NMJL) card has a point value printed next to it. Harder or rarer hands are generally worth more. Check your current card for the exact numbers, since they can change from year to year.",
         ],
       },
       {
         type: "paragraphs",
         heading: "Concealed vs. exposed hands",
         paragraphs: [
-          "Some hands on the card must be completed concealed. The card marks these hands with a C, and you can't expose any groups while building them. The one exception: you may claim a discard if it is the very last tile that completes Mahjong. Hands marked X can be built with exposures. Concealed hands are often worth more, but they're harder to complete, since you can't call tiles to speed things along.",
+          "Some hands on the card must be completed concealed. That means you keep all your tiles on your rack and don't set any groups face-up on the table while you build the hand. The card marks these hands with a C. The one exception: you may claim a discard if it is the very last tile that completes Mahjong. Hands marked X can include exposed groups. Concealed hands are often worth more, but they're harder to complete, since you can't call discards to build them.",
         ],
       },
       {
         type: "paragraphs",
         heading: "Who pays whom",
         paragraphs: [
-          "When a hand ends, the losing players pay the winner directly — there's no shared pot. Under the standard rules, if you discarded the tile that completed the winning hand, you pay double what the other two players pay. If the winner drew the winning tile themselves, all three players pay double. Some hands also get a bonus when the finished hand contains no jokers. This doesn't apply to every hand — for example, not to Singles and Pairs — so check the current card and scoring rules. There's no bonus for being the dealer.",
+          "When someone wins, the other three players pay the winner directly. There's no shared pot. Under the standard rules, here's how much each person pays:",
+        ],
+      },
+      {
+        type: "list",
+        items: [
+          "If you threw the tile that completed the winning hand, you pay double. The other two players pay the regular amount.",
+          "If the winner drew the winning tile from the wall, all three players pay double.",
+          "Some hands also pay double when the winner used no jokers. This doesn't apply to every hand (for example, not to Singles and Pairs), so check your current card.",
+          "There's no bonus for being the dealer.",
+        ],
+      },
+      {
+        type: "paragraphs",
+        paragraphs: [
+          "Some groups add their own house rules, so it's worth asking before you start.",
         ],
       },
       {
         type: "paragraphs",
         heading: "Getting comfortable with it",
         paragraphs: [
-          "Scoring feels like a lot at first, but most tables are happy to walk you through it the first few times you win or lose a hand. It gets natural fast once you've seen it happen a few times.",
+          "Scoring can seem complicated at first, but most tables are happy to walk you through it the first few times you win or lose a hand. After you've seen it a couple of times, it starts to feel natural.",
         ],
       },
     ],
@@ -400,7 +430,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "What a joker can do",
         paragraphs: [
-          "A joker is a wild tile — it can stand in for any other tile in a group of three or more matching tiles: a pung, kong, quint, or sextet (three, four, five, or six tiles). If a hand on the card calls for three 5 Dots, for example, you could use two real 5 Dots and a joker instead.",
+          "A joker is a wild tile — it can stand in for any other tile in a group of three or more matching tiles: a pung, kong, quint or sextet (three, four, five or six tiles). If a hand on the card calls for three 5 Dots, for example, you could use two real 5 Dots and a joker instead.",
         ],
       },
       {
@@ -440,7 +470,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
         type: "paragraphs",
         heading: "If you're new",
         paragraphs: [
-          "Say so at the start. Most players are glad to slow down, explain a call, or double-check your hand before you go out. Nobody expects a first-timer to know all of this by heart.",
+          "Say so at the start. Most players are glad to slow down, explain a call or double-check your hand before you go out. Nobody expects a first-timer to know all of this by heart.",
           "Bring your own card if you have one, but it's fine to share with your neighbor if you don't yet.",
         ],
       },
