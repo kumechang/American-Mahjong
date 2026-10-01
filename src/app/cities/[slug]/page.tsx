@@ -329,7 +329,8 @@ export default async function CityPage({
             >
               Beginner Guide
             </Link>{" "}
-            before your first visit.
+            before your first visit. Times and places change, so check the
+            event page before you go.
           </p>
         </section>
       )}
