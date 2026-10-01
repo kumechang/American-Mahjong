@@ -102,3 +102,4 @@ intro migration once a city reaches 5 ACTIVE rows.
 | Design direction, accessibility | `docs/DESIGN_DIRECTION.md` |
 | Share image brief | `docs/OG_IMAGE_PROMPTS.md` |
 | Human review kit and feedback | `docs/EXPERT_REVIEW_PACKET.md`, `docs/review/` |
+| NotebookLM evidence-check workflows | `docs/NOTEBOOKLM_WORKFLOWS.md` |
