@@ -1,7 +1,7 @@
 # Project Status
 
 Living record of where the project stands. Update it at the end of each work
-session (date at the top, then the sections below). Snapshot: **2026-09-30**.
+session (date at the top, then the sections below). Snapshot: **2026-10-01**.
 
 **Business goal:** grow organic page views with programmatic city pages, add an
 ad model later. Shop is deliberately deferred. Site: mahjong-map.com (Cloudflare
@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0160 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0161 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -67,8 +67,7 @@ PR #60). Records in `docs/` and `docs/review/`.
 ## Next steps (suggested order)
 1. Weekly freshness job (GitHub Actions): dead source links, events past their
    date → `INACTIVE`, list of published cities under 5 upcoming rows.
-2. Rewrite the city intros in more varied structures once the editor has weighed
-   in (many share the "listings center on… / If you are new… / Check the…" shape).
+2. ~~Rewrite the city intros~~ Done 2026-10-01 (`0161_intro_rewrite.sql`, all 53, editor's structures A/B/C, no generic closers; the city page now carries one sitewide "check the event page" line). Still to check: program-title wording ("Mah Jongg" vs "Mahjong") against each source page, and send the new intros back to the editor.
 3. `db:audit` script comparing `data/collected/` with the local D1.
 4. Event slug disambiguation for new imports (same name and date collide).
 5. Learn/Find OG variants, Shop page later, a listing-request form after the
