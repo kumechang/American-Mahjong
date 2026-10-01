@@ -24,19 +24,29 @@ source counts and file types.
 7. **Record the result** (see the end) so the check can be repeated.
 
 ## Notebook A — Rules fact-check (Learn guides)
-**Sources to add**
-- The American Mah Jongg Association online rulebook pages: playing the game,
-  the Charleston, jokers and joker exchange, game completion, glossary
-  (wall game)
-- The association's glossary and "rules companion" pages
-- Sloperama Mah-Jongg Q&A pages relevant to the question
-- Your own current NMJL card (personal reference; mark it private)
-- `docs/review/learn-guides.md` (the text under test; regenerate with
-  `node --experimental-strip-types scripts/export-review-packet.mjs`)
+**Sources to add (in order of authority)**
+1. **NMJL "Mah Jongg Made Easy"** — the National Mah Jongg League's official
+   instruction (rule) book, last updated in 2024; the league also issues
+   rulings between editions. Buy your own copy (print or ebook) from the NMJL
+   or an authorized seller and keep the notebook private. This is the primary
+   source for every rule claim.
+2. **Your current-year NMJL card** (personal reference, private notebook).
+3. **NMJL public pages** (nmjl.org FAQ and rulings pages), added as URLs.
+4. *Secondary — useful, not authoritative:* the American Mah Jongg Association's
+   online rulebook and glossary (an independent group that does not set the
+   rules and is not affiliated with the NMJL), the Sloperama Mah-Jongg Q&A
+   pages, and the Mahj Life wiki article "Rules not found in Mah Jongg Made
+   Easy". Where a secondary source disagrees with the NMJL book, the book wins;
+   note the disagreement.
+5. `docs/review/learn-guides.md` (the text under test; regenerate with
+   `node --experimental-strip-types scripts/export-review-packet.mjs`).
+
+Label each source in the notebook ("PRIMARY: Mah Jongg Made Easy 2024",
+"SECONDARY: AMJA guide") so answers show which kind of source supports them.
 
 **Prompts**
 1. *Contradictions:*
-   > Using only the rulebook sources (not the document "Learn guides"), list every
+   > Using only the sources labeled PRIMARY first, then SECONDARY (not the document "Learn guides"), list every
    > sentence in "Learn guides" that conflicts with the sources. For each: quote the
    > sentence, quote the source passage, name the source, and say whether it is a
    > clear conflict or just different wording. If nothing conflicts, say so.
