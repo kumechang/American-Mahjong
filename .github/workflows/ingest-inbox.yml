@@ -1,0 +1,65 @@
+# 外部の調査サーバーが inbox/** ブランチに push した CSV を検証し、結果を PR にまとめる。
+# データベースには何も書かない。取り込み(マイグレーション作成・公開)は人が PR を見て行う。
+name: ingest-inbox
+on:
+  push:
+    branches: ["inbox/**"]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # 検証スクリプトは main のものを使い、inbox ブランチのデータだけを読む
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+      - uses: actions/checkout@v4
+        with:
+          path: inbox
+      - name: Validate inbox CSVs
+        run: |
+          set +e
+          report="$PWD/report.md"
+          echo "## Inbox validation for \`$GITHUB_REF_NAME\`" > "$report"
+          status=0
+          found=0
+          for dir in inbox/data/inbox/*/*/; do
+            [ -d "$dir" ] || continue
+            ls "$dir" | grep -q '\.csv$' || continue
+            found=1
+            args=()
+            for t in clubs instructors events; do
+              [ -f "$dir$t.csv" ] && args+=("--$t=$PWD/$dir$t.csv")
+            done
+            echo "" >> "$report"
+            echo "### \`${dir#inbox/}\`" >> "$report"
+            echo '```' >> "$report"
+            (cd main && node scripts/validate-csv.mjs "${args[@]}") >> "$report" 2>&1
+            rc=$?
+            echo '```' >> "$report"
+            if [ $rc -ne 0 ]; then status=1; echo "**Result: ERRORS found. Send back to the researcher.**" >> "$report"; else echo "**Result: no errors.**" >> "$report"; fi
+          done
+          [ $found -eq 1 ] || echo "No CSV folders found under data/inbox/<date>/<city>/." >> "$report"
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          echo "STATUS=$status" >> "$GITHUB_ENV"
+      - name: Open or update the PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: inbox
+        run: |
+          set -e
+          n=$(gh pr list --head "$GITHUB_REF_NAME" --base main --json number --jq '.[0].number')
+          if [ -n "$n" ]; then
+            gh pr comment "$n" --body-file ../report.md
+          else
+            gh pr create --base main --head "$GITHUB_REF_NAME" \
+              --title "Inbox: $GITHUB_REF_NAME" --body-file ../report.md
+          fi
+      - name: Fail if validation had errors
+        run: '[ "${STATUS:-0}" = "0" ]'
