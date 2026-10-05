@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Open Play at Hotel Trundle,Columbia,SC,2026-10-08,18:30,,Hotel Trundle,Mahjong with Alice,,OPEN_PLAY,FALSE,20,https://mahjongwithalice.bamgoodtime.com,https://mahjongwithalice.bamgoodtime.com,2026-10-05,NEEDS_REVIEW
+Intro to Mahjong,Columbia,SC,2026-10-12,13:30,,,Mahjong with Alice,,LESSON,TRUE,35,https://mahjongwithalice.bamgoodtime.com,https://mahjongwithalice.bamgoodtime.com,2026-10-05,NEEDS_REVIEW
+Intro to Mahjong,Columbia,SC,2026-10-16,18:30,,,Mahjong with Alice,,LESSON,TRUE,35,https://mahjongwithalice.bamgoodtime.com,https://mahjongwithalice.bamgoodtime.com,2026-10-05,NEEDS_REVIEW
+Open Play at Pitas,Columbia,SC,2026-11-04,18:00,,Pitas,Mahjong with Alice,,OPEN_PLAY,FALSE,10,https://mahjongwithalice.bamgoodtime.com,https://mahjongwithalice.bamgoodtime.com,2026-10-05,NEEDS_REVIEW
