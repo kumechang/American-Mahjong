@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0166 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0167 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -100,6 +100,10 @@ cities whose clubs publish a booking calendar. Raw output: `data/inbox/2026-10-0
 changed relative to `main`.
 Second run (cron-job.org test, PR #80, `0166`): +1 Tucson event (Dec 7, ACTIVE); Jacksonville (5) and Cleveland (1) events as NEEDS_REVIEW
 (no start time or individual link; or no American/NMJL on the event page). Fort Lauderdale again nothing: needs a person to read its Calendly page.
+
+Run 3 (cron-job.org's first real night, server-made PR #83, `0167`): Fort Lauderdale 3 events and Jacksonville 2 events as NEEDS_REVIEW
+(Jacksonville's Gaa Cafe events were sent as ACTIVE but the year is inferred and the venue's style is unverified). Cleveland and San Antonio:
+nothing new. San Antonio's ACTIVE rows (Polished Tile classes) all ended 10/3; the city page is thin until new dates appear.
 
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
