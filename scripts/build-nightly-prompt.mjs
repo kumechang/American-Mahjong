@@ -15,7 +15,7 @@
 // Run `npx wrangler d1 migrations apply DB --local` first.
 
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const arg = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const out = arg("out");
@@ -51,16 +51,32 @@ const stats = (c) => {
   return { n, soon, after: n - soon };
 };
 
-const atRisk = cities
+// Cities the server already looked at in the last few days (folders in data/inbox/<date-time>/<slug>/)
+// go to the back of the line, so one stubborn city doesn't take the slot every night.
+const RECENT_DAYS = 3;
+const recent = new Set();
+if (existsSync("data/inbox")) {
+  for (const run of readdirSync("data/inbox")) {
+    const m = run.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (!m || (Date.parse(today) - Date.parse(m[1])) / 864e5 >= RECENT_DAYS) continue;
+    for (const slug of readdirSync(`data/inbox/${run}`)) recent.add(slug);
+  }
+}
+const slugOf = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+const atRiskAll = cities
   .filter((c) => c.published)
   .map((c) => ({ c, ...stats(c) }))
   .filter((x) => x.after < MIN_ROWS)
   .sort((a, b) => a.after - b.after || b.soon - a.soon);
+const atRisk = [...atRiskAll.filter((x) => !recent.has(x.c.slug)), ...atRiskAll.filter((x) => recent.has(x.c.slug))];
 
 const known = new Set(cities.map((c) => `${c.name}, ${c.state}`.toLowerCase()));
 const queue = readFileSync("data/city-queue.txt", "utf8")
   .split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#"))
   .filter((l) => !known.has(l.toLowerCase()));
+const queueFresh = queue.filter((l) => !recent.has(slugOf(l.split(",")[0])));
+const queueOrdered = [...queueFresh, ...queue.filter((l) => !queueFresh.includes(l))];
 
 let mode = forced;
 if (!mode) {
@@ -96,7 +112,7 @@ if (mode === "events") {
 - 日付つきのイベントが見つからない都市は、CSV を作らず report.md にだけ、調べた情報源を書く。`;
   focus = picked.map((x) => `- ${x.c.name}: 公式カレンダーから、${today} 以降のイベントを探す。いま ACTIVE ${x.n} 行のうち ${x.soon} 件が14日以内に終わる。`).join("\n");
 } else {
-  const picked = queue.slice(0, 2);
+  const picked = queueOrdered.slice(0, 2);
   targets = picked.map((l) => `- ${l}`).join("\n");
   existing = picked.map((l) => `### ${l}\nまだサイトに掲載がない新規の都市。既存の行はない。\n`).join("\n");
   modeText = `## 今夜のモード: 新規都市
