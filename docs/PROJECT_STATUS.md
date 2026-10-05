@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0163 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0164 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -21,7 +21,7 @@ squash-merged to `main` (PR numbers below run through #60).
 | Milwaukee | 4 | 1 more (a dated event; last one passed 10/3) |
 | Columbia, SC | 5 (4 are USC 10/14 sessions that end soon) | dates after 10/14; is "Alice" American? Hold publishing |
 | Pittsburgh | 3 | 2 more; own-site sources for Rodef Shalom / Cooper-Siegel etc. |
-| Cincinnati | 3 | 2 more; own-site sources for Mayerson JCC / Mariemont |
+| Cincinnati | 4 | 1 more; Cincy Mahjong Club / Mayerson JCC / Mariemont need American/NMJL on their own pages |
 | Louisville | 3 | 2 more; Studio One and Keneseth Israel variant |
 | Little Rock | 2 | 3 more; dated events (Little Rock Mahjong) |
 | Colorado Springs | 2 | 3 more; dated events |
@@ -80,6 +80,11 @@ The server pushes CSVs to branch `inbox/<date>` under `data/inbox/<date>/<city>/
 validates them and opens a PR. A person curates what is new, writes `data/collected/<city>/update*.csv`
 and a migration. Edit the target cities at the top of the prompt before each run. First run (PR #71)
 mostly repeated rows already in the DB under different names; the prompt now says to read `data/collected/` first.
+
+Run 2 (2026-10-05, prompt with embedded existing rows): the server obeyed (no resends; reports only where nothing
+new was found) but found little: Cincinnati +Mrs Mahj promoted, +Cincy Mahjong Club and 3 events (NEEDS_REVIEW);
+Pittsburgh, Louisville, Milwaukee, Columbia nothing publishable. Raw output in `data/inbox/2026-10-05-run2/`.
+Branch names now carry the time (`inbox/YYYY-MM-DD-HHMM`) so reruns on the same day don't collide.
 
 ## How to resume
 ```bash
