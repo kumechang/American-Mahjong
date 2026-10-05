@@ -1,0 +1,84 @@
+# 毎晩、調査サーバーに「今夜の調査」を依頼する。
+# 17:00 UTC = 日本時間 02:00。モードは scripts/build-nightly-prompt.mjs が決める
+# (期限切れ間近のイベントの更新 / 新規都市)。結果はサーバーが inbox/ ブランチに push し、
+# ingest-inbox が検証して PR にする。データベースには何も書かない。
+name: nightly-research
+on:
+  schedule:
+    - cron: "0 17 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "events か cities(空欄なら自動)"
+        default: ""
+      force:
+        description: "未処理の inbox PR が溜まっていても実行する(true)"
+        default: "false"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: nightly-research
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: 未処理の inbox PR を数える
+        id: backlog
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          set -euo pipefail
+          open=$(gh pr list --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("inbox/"))] | length')
+          echo "未処理の inbox PR: $open"
+          if [ "$open" -ge 2 ] && [ "${FORCE:-false}" != "true" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "## Skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "未処理の inbox PR が ${open} 件あるため、今夜は依頼しません。先に取り込んでください。" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - run: npm ci
+        if: steps.backlog.outputs.skip == 'false'
+      - name: ローカル DB を作る
+        if: steps.backlog.outputs.skip == 'false'
+        run: npx wrangler d1 migrations apply DB --local
+      - name: 今夜のプロンプトを作る
+        id: build
+        if: steps.backlog.outputs.skip == 'false'
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          set +e
+          [[ -z "$MODE" || "$MODE" =~ ^(events|cities)$ ]] || { echo "不正な mode: $MODE"; exit 1; }
+          args=(--out=prompt.md)
+          [ -n "$MODE" ] && args+=("--mode=$MODE")
+          node scripts/build-nightly-prompt.mjs "${args[@]}" | tee summary.md
+          rc=${PIPESTATUS[0]}
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$rc" -eq 3 ]; then echo "send=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [ "$rc" -eq 0 ] || exit "$rc"
+          echo "send=true" >> "$GITHUB_OUTPUT"
+      - name: サーバーに送る
+        if: steps.build.outputs.send == 'true'
+        env:
+          URL: ${{ secrets.CLAUDE_SERVER_URL }}
+          TOKEN: ${{ secrets.CLAUDE_SERVER_TOKEN }}
+          PROJECT: mahjong
+        run: |
+          set -euo pipefail
+          jq -Rs '{prompt: .}' prompt.md |
+            curl -fsS --retry 3 --retry-delay 5 --max-time 60 -X POST "$URL/projects/$PROJECT/run" \
+              -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" --data-binary @-
+          echo
