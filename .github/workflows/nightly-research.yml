@@ -1,11 +1,10 @@
 # 毎晩、調査サーバーに「今夜の調査」を依頼する。
-# 17:00 UTC = 日本時間 02:00。モードは scripts/build-nightly-prompt.mjs が決める
+# 起動は cron-job.org から workflow_dispatch(毎日 日本時間 02:00)。GitHub の schedule は
+# 遅れるため使わない(二重実行を避ける)。モードは scripts/build-nightly-prompt.mjs が決める
 # (期限切れ間近のイベントの更新 / 新規都市)。結果はサーバーが inbox/ ブランチに push し、
 # ingest-inbox が検証して PR にする。データベースには何も書かない。
 name: nightly-research
 on:
-  schedule:
-    - cron: "0 17 * * *"
   workflow_dispatch:
     inputs:
       mode:

@@ -87,7 +87,7 @@ Pittsburgh, Louisville, Milwaukee, Columbia nothing publishable. Raw output in `
 Branch names now carry the time (`inbox/YYYY-MM-DD-HHMM`) so reruns on the same day don't collide.
 
 ## Nightly research (built 2026-10-05)
-`.github/workflows/nightly-research.yml` runs daily at 17:00 UTC (02:00 JST) and on demand. `scripts/build-nightly-prompt.mjs`
+`.github/workflows/nightly-research.yml` is started daily at 02:00 JST by cron-job.org (workflow_dispatch; no GitHub schedule, to avoid double runs) and on demand. `scripts/build-nightly-prompt.mjs`
 picks the mode: **events** (the 4 published cities closest to dropping under 5 rows) or **cities** (next 2 from
 `data/city-queue.txt`); every third day of the year is reserved for a new city. It skips the night if 2+ `inbox/` PRs are open.
 The server's output arrives as an `inbox/YYYY-MM-DD-HHMM` PR (validated by `ingest-inbox`); a person curates and imports
