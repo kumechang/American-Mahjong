@@ -12,14 +12,14 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0161 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0163 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
 | City | ACTIVE now | Needs |
 |---|---|---|
-| Milwaukee | 4 | 1 more (MKE Mahjong dated event) |
-| Columbia, SC | 4 | 1 more; is Piecewise "Alice" American? |
+| Milwaukee | 4 | 1 more (a dated event; last one passed 10/3) |
+| Columbia, SC | 5 (4 are USC 10/14 sessions that end soon) | dates after 10/14; is "Alice" American? Hold publishing |
 | Pittsburgh | 3 | 2 more; own-site sources for Rodef Shalom / Cooper-Siegel etc. |
 | Cincinnati | 3 | 2 more; own-site sources for Mayerson JCC / Mariemont |
 | Louisville | 3 | 2 more; Studio One and Keneseth Israel variant |
@@ -73,6 +73,13 @@ PR #60). Records in `docs/` and `docs/review/`.
    contact email exists.
 6. First re-verification round before late December 2026 (the 90-day stale
    note appears on almost every listing then).
+
+## External research server (2026-10-05)
+`kick-claude` workflow (cron-job.org or manual) sends `prompts/city-research.md` to the research server.
+The server pushes CSVs to branch `inbox/<date>` under `data/inbox/<date>/<city>/`; `ingest-inbox`
+validates them and opens a PR. A person curates what is new, writes `data/collected/<city>/update*.csv`
+and a migration. Edit the target cities at the top of the prompt before each run. First run (PR #71)
+mostly repeated rows already in the DB under different names; the prompt now says to read `data/collected/` first.
 
 ## How to resume
 ```bash
