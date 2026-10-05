@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0164 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0165 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -93,6 +93,11 @@ picks the mode: **events** (the 4 published cities closest to dropping under 5 r
 The server's output arrives as an `inbox/YYYY-MM-DD-HHMM` PR (validated by `ingest-inbox`); a person curates and imports
 (step 1 of 3: later the event-only PRs may get an auto-generated migration, then auto-merge). The prompt rules live in
 `prompts/city-research.md`; its marked blocks are replaced per night. Manual run: Actions → nightly-research → Run workflow.
+
+First nightly run (events mode, 2026-10-05, PR kumechang/American-Mahjong#78): +16 Las Vegas, +2 Fort Worth, +1 Cleveland dated
+events (all validated, imported as `0165`); Fort Lauderdale had nothing new (Calendly page unreadable). This mode works well for
+cities whose clubs publish a booking calendar. Raw output: `data/inbox/2026-10-05-1301/`. `ingest-inbox` now validates only folders
+changed relative to `main`.
 
 ## How to resume
 ```bash
