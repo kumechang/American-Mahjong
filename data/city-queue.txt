@@ -1,0 +1,23 @@
+# Cities to research for the nightly job, in order. One per line: City, ST
+# The nightly job takes the first lines whose city is not yet in the database.
+# City = the metro name only (suburbs are filed under it).
+Naples, FL
+Sarasota, FL
+San Jose, CA
+Palm Springs, CA
+Rochester, NY
+Madison, WI
+Grand Rapids, MI
+Tulsa, OK
+Albany, NY
+Virginia Beach, VA
+Savannah, GA
+Asheville, NC
+Wilmington, DE
+Baton Rouge, LA
+Honolulu, HI
+Reno, NV
+Boulder, CO
+Santa Barbara, CA
+Portland, ME
+Manchester, NH

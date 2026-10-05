@@ -2,13 +2,18 @@
 下の「対象都市」について、実在する American Mahjong(NMJL ルール)のクラブ・講師・今後のイベントを WebSearch と各サイトの確認で調べ、
 CSV にまとめて GitHub リポジトリに保存してください。
 
+<!-- MODE:START -->
+<!-- MODE:END -->
+
 ## 対象都市(実行ごとにここを書き換える)
 
+<!-- TARGETS:START -->
 - Pittsburgh, PA
 - Cincinnati, OH
 - Louisville, KY
 - Milwaukee, WI
 - Columbia, SC
+<!-- TARGETS:END -->
 
 (都市名は metro の都市名のみ。郊外の会場も、CSV の city 列にはこの都市名を入れ、実際の町名は address / description に書く)
 
@@ -100,6 +105,7 @@ Upcoming events:
 
 <!-- EXISTING:END -->
 
+<!-- FOCUS:START -->
 ### 今回、特に確認してほしいこと
 
 - Pittsburgh / Cincinnati: NEEDS_REVIEW の団体(Rodef Shalom、Cooper-Siegel 図書館、Hillel JUC、Temple Sinai、Mayerson JCC、Mariemont 図書館など)について、**その団体自身のページ**に American / NMJL とあるか、今後の日程があるか。あれば一覧と同じ name で ACTIVE として再送し、根拠の一文を引用する。
@@ -107,6 +113,8 @@ Upcoming events:
 - Milwaukee: 今後の日付つきイベント(JCC、Whole Foods、MKE Mahjong の教室や講座)を探す。
 - Columbia: 10月14日より後の日程(USC の追加講座、Soda City Mahj、図書館・シナゴーグ)を探す。
 
+
+<!-- FOCUS:END -->
 
 ## 守ること(最重要)
 
