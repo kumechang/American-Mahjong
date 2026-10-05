@@ -151,8 +151,8 @@ name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,e
 ## 保存先(必ず守る)
 
 - リポジトリ: kumechang/American-Mahjong
-- ブランチ: `inbox/<実行日 YYYY-MM-DD>`(新規作成。**main には絶対に push しない**)
-- フォルダ: `data/inbox/<実行日>/<city-slug>/`(例: `data/inbox/2026-10-05/milwaukee/`)
+- ブランチ: `inbox/<実行日時 YYYY-MM-DD-HHMM>`(例: `inbox/2026-10-05-1240`。実行のたびに新規作成する。**main には絶対に push しない**)
+- フォルダ: `data/inbox/<ブランチ名の日時部分>/<city-slug>/`(例: `data/inbox/2026-10-05-1240/milwaukee/`)
   - `clubs.csv`、`instructors.csv`、`events.csv`
   - `report.md`: 調べた情報源、除外した理由、不足があればその内容、迷った行とその理由(日本語で簡潔に)
 - 都市ごとにフォルダを分ける。city-slug は小文字・ハイフン区切り(例: `salt-lake-city`)。
