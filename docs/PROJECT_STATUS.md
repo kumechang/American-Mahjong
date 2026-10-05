@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0165 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0166 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -98,6 +98,8 @@ First nightly run (events mode, 2026-10-05, PR kumechang/American-Mahjong#78): +
 events (all validated, imported as `0165`); Fort Lauderdale had nothing new (Calendly page unreadable). This mode works well for
 cities whose clubs publish a booking calendar. Raw output: `data/inbox/2026-10-05-1301/`. `ingest-inbox` now validates only folders
 changed relative to `main`.
+Second run (cron-job.org test, PR #80, `0166`): +1 Tucson event (Dec 7, ACTIVE); Jacksonville (5) and Cleveland (1) events as NEEDS_REVIEW
+(no start time or individual link; or no American/NMJL on the event page). Fort Lauderdale again nothing: needs a person to read its Calendly page.
 
 ## How to resume
 ```bash

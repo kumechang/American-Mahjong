@@ -1,0 +1,2 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+CLE Urban Winery Open Play,Cleveland,OH,2026-10-06,18:00,20:00,"CLE Urban Winery, 2180 Lee Road, Cleveland Heights, OH",,,OPEN_PLAY,FALSE,,https://www.eventbrite.com/e/cle-urban-winery-open-play-winery-tickets-2002521011251,https://www.eventbrite.com/e/cle-urban-winery-open-play-winery-tickets-2002521011251,2026-10-05,NEEDS_REVIEW
