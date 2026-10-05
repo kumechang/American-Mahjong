@@ -105,6 +105,11 @@ Run 3 (cron-job.org's first real night, server-made PR #83, `0167`): Fort Lauder
 (Jacksonville's Gaa Cafe events were sent as ACTIVE but the year is inferred and the venue's style is unverified). Cleveland and San Antonio:
 nothing new. San Antonio's ACTIVE rows (Polished Tile classes) all ended 10/3; the city page is thin until new dates appear.
 
+Prompt tuning after run 3: ACTIVE events need an explicit year, time, venue and American/NMJL (or an already ACTIVE organizer); never guess
+the style from the venue; unreadable pages (Calendly, Eventbrite organizer) must be retried via individual event pages and listed under
+"人が見る必要があるページ"; fixed `report.md` headings. The builder sends cities researched in the last 3 days (folders in `data/inbox/`) to
+the back of the line, so one stubborn city doesn't take a slot every night.
+
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
 
