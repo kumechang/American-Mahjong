@@ -1,26 +1,24 @@
 # Milwaukee, WI 調査レポート (2026-10-05)
 
-## 結果
-- clubs: ACTIVE 2 (JCC Milwaukee, MKE Mahjong) / NEEDS_REVIEW 1 (Hales Corners)
-- instructors: ACTIVE 1 (Julie Littman)
-- events: なし(実在する今後のイベントを確認できず)
-- **目標の ACTIVE 7〜8 行・最低5行に未達(計3行)。不足。**
+clubs: ACTIVE 2 / NEEDS_REVIEW 2。instructors: ACTIVE 1。events.csv は確認できた今後のイベントがないため作成せず。
+ACTIVE は合計3行で、目標(7〜8行)・最低ライン(5行)ともに未達。
+
+## ACTIVE
+- MKE Mahjong / Julie Littman: 公式サイトに American Mah Jongg (NMJL) と明記。https://www.mkemahjong.com/
+- JCC Milwaukee 月曜 Mah Jongg: 公式ページに NMJL カード使用と明記。https://www.jccmilwaukee.org/program/mah-jongg/
+
+## NEEDS_REVIEW
+- South Milwaukee Public Library: Bam Good Time ディレクトリのみが根拠。図書館側ページ未確認。
+- Whitefish Bay (Bam Good Time): 主催者・会場・日程不明。
+
+## 除外
+- Kalmar Community Center: Eagle River で Milwaukee 圏外。
+- Brookfield Library: コネチカット州の Brookfield で別地域。
+- Whole Foods Prospect Ave 金曜 / Monona Public Library: 主催者側ページ未確認(Monona は Madison 圏)。
+- Candace Burrows (Mequon): 第三者リストの個人メールのみ、未確認。
+- UWM OLLI Mah Jongg SIG: ページがリダイレクトで内容未確認。
+- modernmahjong.com/wisconsin: ルール種別未確認。
 
 ## 調べた情報源
-- https://www.mkemahjong.com/ (公式。NMJL ルール明記)
-- https://www.jccmilwaukee.org/program/mah-jongg/ (公式。NMJL カード明記、月曜 12-3)
-- https://bamgoodtime.com/mahjong-clubs/wisconsin, https://halescornersmahjongclub.bamgoodtime.com (ディレクトリ)
-- https://jewishmuseummilwaukee.org/behind-the-card-the-national-mah-jongg-league-and-the-making-of-the-card/ (展示記事のみ、クラブではない)
-- 図書館 (Wauwatosa/Shorewood/Brookfield 等) の検索 → 該当プログラム未確認
-
-## 除外・保留
-- Whole Foods (2305 N Prospect Ave) 金曜 1-4pm: 検索スニペット由来のみで、主催者ページ未確認 → 載せず。
-- Frank Koller Memorial Library / South Milwaukee Public Library: 検索スニペットのみ、公式イベントページ未確認 → 載せず。
-- Candace Burrows (Mequon)、Sue Berce: ディレクトリ由来、個人連絡先のため載せず。
-- Palmyra の Cribbage and Mahjong Game Day: Milwaukee 圏外、過去日。
-- Mahjong Memories: ジョージア州で対象外。
-- Hales Corners: 日程なし・American/NMJL 記載なし → NEEDS_REVIEW。
-
-## 備考
-- リポジトリの既存 data/collected/milwaukee/ はこの環境から読めず(gh 実行が許可されなかった)、重複確認は未実施。
-- JCC の price は community 料金 4 を採用(会員 3 は schedule に記載)。
+mkemahjong.com, jccmilwaukee.org, bamgoodtime.com(Milwaukee / South Milwaukee / Wisconsin), brookfieldlibrary.org, eagleriver.org, uwm.edu。
+未調査: Brookfield WI シニアセンター(冬号ニュースレターに Mahjong Basics の記載があるが American 表記は未確認)、シナゴーグ、地元誌イベント欄。
