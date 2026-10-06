@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahj at Mercato,Naples,FL,2026-10-13,18:00,,Mercato,Naples Mahjong,,OTHER,TRUE,,https://www.naplesmahjong.com/,https://www.naplesmahjong.com/,2026-10-07,NEEDS_REVIEW
+Morning Mahjong at K&A Coastal Design,Naples,FL,2026-10-15,09:30,,K&A Coastal Design,Naples Mahjong,,OTHER,TRUE,,https://www.naplesmahjong.com/,https://www.naplesmahjong.com/,2026-10-07,NEEDS_REVIEW
+Mahjong Open Play at PJK Naples,Naples,FL,2026-10-19,12:00,,PJK Neighborhood Chinese Restaurant,Naples Mahjong,,OPEN_PLAY,TRUE,,https://www.naplesmahjong.com/,https://www.naplesmahjong.com/,2026-10-07,NEEDS_REVIEW
+Bams & Boos on the Bay,Naples,FL,2026-10-25,11:00,13:30,Bayside Seafood Grill & Bar,Naples Mahjong,,SOCIAL,TRUE,,https://www.eventbrite.com/e/bams-boos-on-the-bay-at-bayside-tickets-1998783621618,https://www.eventbrite.com/e/bams-boos-on-the-bay-at-bayside-tickets-1998783621618,2026-10-07,NEEDS_REVIEW
