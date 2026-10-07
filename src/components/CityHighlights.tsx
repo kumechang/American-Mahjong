@@ -1,5 +1,5 @@
 import type { clubs, instructors } from "@/db/schema";
-import { pluralize } from "@/lib/format";
+import { pluralize, splitPrice } from "@/lib/format";
 
 type Club = typeof clubs.$inferSelect;
 type Instructor = typeof instructors.$inferSelect;
@@ -50,6 +50,7 @@ export function CityHighlights({
   nextEventLabel: string | null;
 }) {
   const start = pickStart(clubList, instructorList);
+  const detail = splitPrice(start?.detail);
 
   return (
     <div className="mt-6">
@@ -80,8 +81,18 @@ export function CityHighlights({
           <h2 className="mt-1 text-lg font-semibold">{start.name}</h2>
           <p className="mt-1 text-sm text-zinc-700 dark:text-zinc-300">
             {start.why}
-            {start.detail ? ` — ${start.detail}` : ""}
           </p>
+          {detail.main && (
+            <p className="mt-1 text-sm text-muted">{detail.main}</p>
+          )}
+          {detail.price && (
+            <p className="mt-1 text-sm text-muted">
+              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                Price:
+              </span>{" "}
+              {detail.price}
+            </p>
+          )}
           {start.href && (
             <p className="mt-2 text-sm">
               <a

@@ -113,6 +113,10 @@ the back of the line, so one stubborn city doesn't take a slot every night.
 Run 4 (new-city night, PR #87, `0168`–`0170`): Naples (2 ACTIVE, 12 waiting) and Sarasota (0 ACTIVE, 13 waiting), both unpublished.
 Open questions per city are collected in `docs/HUMAN_CHECKS.md` (the nightly reports' "pages a person needs to check").
 
+UI pass 1 (2026-10-07, no skill): city pages now list events as rows with weekday/date tile, time, place, type, beginner and price tags,
+a Details link and "Show N more"; schedule and price no longer run together in "Good place to start" and club cards. axe: 0 violations.
+Next candidates: header/content width alignment on inner pages, home and /cities search, mobile tap targets, instructor cards.
+
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
 

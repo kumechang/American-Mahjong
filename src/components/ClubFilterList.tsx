@@ -3,6 +3,23 @@
 import { useMemo, useState } from "react";
 import type { clubs } from "@/db/schema";
 import { VerifiedNote } from "@/components/VerifiedNote";
+import { splitPrice } from "@/lib/format";
+
+function ScheduleLines({ text }: { text: string | null }) {
+  const { main, price } = splitPrice(text);
+  return (
+    <>
+      {main && (
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{main}</p>
+      )}
+      {price && (
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+          <span className="font-medium">Price:</span> {price}
+        </p>
+      )}
+    </>
+  );
+}
 
 type Club = typeof clubs.$inferSelect;
 
@@ -126,11 +143,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
                   {club.description}
                 </p>
               )}
-              {club.schedule && (
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  {club.schedule}
-                </p>
-              )}
+              <ScheduleLines text={club.schedule} />
               {club.website && (
                 <p className="mt-2 text-sm">
                   <a

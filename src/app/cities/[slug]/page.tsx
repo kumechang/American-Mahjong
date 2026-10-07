@@ -8,6 +8,7 @@ import { SITE_URL } from "@/lib/site";
 import { ClubFilterList } from "@/components/ClubFilterList";
 import { VerifiedNote } from "@/components/VerifiedNote";
 import { CityHighlights } from "@/components/CityHighlights";
+import { EventList } from "@/components/EventList";
 import { todayEventDate } from "@/lib/city-counts";
 
 // The D1 binding is only available at request time (in the Workers
@@ -406,19 +407,7 @@ export default async function CityPage({
             No upcoming events listed yet.
           </p>
         ) : (
-          <ul className="mt-4 divide-y divide-line rounded-xl border border-line bg-surface">
-            {city.events.map((event) => (
-              <li
-                key={event.id}
-                className="flex items-center justify-between px-5 py-3"
-              >
-                <span className="font-medium">{event.name}</span>
-                <span className="text-sm text-muted">
-                  {formatEventDate(event.eventDate)}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <EventList events={city.events} />
         )}
       </section>
 
