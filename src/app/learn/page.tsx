@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function LearnPage() {
   return (
-    <div className="mx-auto max-w-4xl px-6 py-16">
+    <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-4xl">
       <p className="text-sm font-semibold uppercase tracking-widest text-jade">
         Learn
       </p>
