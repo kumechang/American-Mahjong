@@ -68,14 +68,14 @@ export function CityHighlights({
         {eventCount > 0 && (
           <li className="rounded-full bg-tile-red/10 px-3 py-1 text-tile-red">
             {pluralize(eventCount, "upcoming event")}
-            {nextEventLabel ? ` · next ${nextEventLabel}` : ""}
+            {nextEventLabel ? `, next on ${nextEventLabel}` : ""}
           </li>
         )}
       </ul>
 
       {start && (
         <div className="tile-card mt-5 p-5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-jade">
+          <p className="text-sm font-semibold text-jade-strong">
             Good place to start
           </p>
           <h2 className="mt-1 text-lg font-semibold">{start.name}</h2>

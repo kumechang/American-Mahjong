@@ -123,6 +123,11 @@ Fresno, Orlando had nothing new. Fresno's Charleston Society site is a "Coming S
 Hand-checked (2026-10-08): the owner read Charleston Society's package page and sent a screenshot; 2 Fresno events (10/27 101, 10/28 guided play) imported as `0172`.
 The pages the server can't read (bamgoodtime package pages, Calendly) are best checked by a person.
 
+UI pass 2 (2026-10-08, following the frontend-design skill file at /mnt/skills/public/frontend-design/SKILL.md): home page rebuilt around
+real data (a "coming up in the next two weeks" list: one event per city, beginner-friendly first, from `src/lib/upcoming.ts`), left-aligned
+hero, display serif (Literata) for h1/h2, no all-caps eyebrows or dot-joined chip strings, "How it works" as a real numbered sequence.
+Still open: header/content width alignment, mobile tap targets, instructor cards, `/cities` search.
+
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
 
