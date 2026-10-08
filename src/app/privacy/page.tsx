@@ -11,7 +11,7 @@ const H2 = "text-lg font-semibold text-zinc-900 dark:text-zinc-100";
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
+    <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-3xl">
       <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
       <p className="mt-2 text-sm text-muted">Last updated: September 30, 2026</p>
 

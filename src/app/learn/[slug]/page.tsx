@@ -99,7 +99,7 @@ export default async function LearnTopicPage({
 
   if (!topic) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-16">
+      <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-3xl">
         <h1 className="text-3xl font-bold tracking-tight">{meta.title}</h1>
         <p className="mt-4 text-zinc-600 dark:text-zinc-400">
           This content is being written by our Mahjong domain expert and US
@@ -118,7 +118,7 @@ export default async function LearnTopicPage({
     .filter((h): h is string => Boolean(h));
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
+    <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-3xl">
       <p className="text-sm font-semibold uppercase tracking-widest text-jade">
         <Link href="/learn" className="hover:underline">
           Learn

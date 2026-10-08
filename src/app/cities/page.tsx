@@ -34,7 +34,7 @@ export default async function CitiesPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-16">
+    <div className="mx-auto max-w-6xl px-6 py-16">
       <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
         American Mahjong by city
       </h1>

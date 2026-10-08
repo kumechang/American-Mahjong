@@ -53,55 +53,64 @@ export function CityDirectory({ cities }: { cities: DirectoryCity[] }) {
         onChange={(e) => setQuery(e.target.value)}
         className="w-full max-w-md rounded-full border border-line bg-surface px-5 py-3 text-base placeholder:text-muted focus:border-jade"
       />
-      <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400" aria-live="polite">
+      <p className="mt-3 text-sm text-muted" aria-live="polite">
         {pluralize(total, "city", "cities")}
         {query.trim() ? " match" + (total === 1 ? "es" : "") : ""}
       </p>
 
       {groups.length === 0 ? (
-        <p className="mt-8 rounded-xl border border-dashed border-line p-6 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-8 rounded-xl border border-dashed border-line p-6 text-sm text-muted">
           No matching city yet. We add new cities regularly.
         </p>
       ) : (
-        groups.map(([state, list]) => (
-          <section key={state} className="mt-10" aria-labelledby={`state-${state}`}>
-            <h2
-              id={`state-${state}`}
-              className="border-b border-line pb-2 text-sm font-semibold uppercase tracking-widest text-jade"
+        <div className="mt-8 gap-x-10 sm:columns-2 lg:columns-3">
+          {groups.map(([state, list]) => (
+            <section
+              key={state}
+              className="mb-8 break-inside-avoid"
+              aria-labelledby={`state-${state}`}
             >
-              {stateName(state)}
-            </h2>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {list.map((city) => (
-                <li key={city.slug}>
-                  <Link
-                    href={`/cities/${city.slug}`}
-                    className="tile-card block p-5 transition-shadow hover:shadow-md"
-                  >
-                    <span className="font-semibold">{city.name}</span>
-                    <span className="mt-2 flex flex-wrap gap-1.5 text-xs">
-                      {city.clubCount > 0 && (
-                        <span className="rounded-full bg-jade/10 px-2 py-0.5 text-jade-strong">
-                          {pluralize(city.clubCount, "club")}
+              <h2
+                id={`state-${state}`}
+                className="border-b border-line pb-1.5 text-xl font-semibold"
+              >
+                {stateName(state)}
+              </h2>
+              <ul className="mt-2 divide-y divide-line">
+                {list.map((city) => {
+                  const parts = [
+                    city.clubCount > 0 ? pluralize(city.clubCount, "club") : null,
+                    city.instructorCount > 0
+                      ? pluralize(city.instructorCount, "teacher")
+                      : null,
+                  ].filter(Boolean);
+                  return (
+                    <li key={city.slug}>
+                      <Link
+                        href={`/cities/${city.slug}`}
+                        className="block py-3 hover:bg-jade/5"
+                      >
+                        <span className="font-semibold text-jade-strong underline-offset-4 hover:underline">
+                          {city.name}
                         </span>
-                      )}
-                      {city.instructorCount > 0 && (
-                        <span className="rounded-full bg-jade/10 px-2 py-0.5 text-jade-strong">
-                          {pluralize(city.instructorCount, "teacher")}
-                        </span>
-                      )}
-                      {city.eventCount > 0 && (
-                        <span className="rounded-full bg-tile-red/10 px-2 py-0.5 text-tile-red">
-                          {pluralize(city.eventCount, "upcoming event")}
-                        </span>
-                      )}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+                        {parts.length > 0 && (
+                          <span className="mt-0.5 block text-sm text-muted">
+                            {parts.join(", ")}
+                          </span>
+                        )}
+                        {city.eventCount > 0 && (
+                          <span className="block text-sm font-medium text-tile-red">
+                            {pluralize(city.eventCount, "upcoming event")}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
       )}
     </div>
   );

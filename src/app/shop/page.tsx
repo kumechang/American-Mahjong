@@ -22,7 +22,7 @@ export default async function ShopPage() {
     .orderBy(asc(products.createdAt));
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-16">
+    <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-4xl">
       <h1 className="text-3xl font-bold tracking-tight">
         American Mahjong sets &amp; supplies
       </h1>
