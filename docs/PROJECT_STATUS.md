@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0171 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0172 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -119,6 +119,9 @@ Next candidates: header/content width alignment on inner pages, home and /cities
 
 Run 5 (events night, PR #90, `0171`): only Cleveland produced rows (3 Cleveland Mahjong Collective events, NEEDS_REVIEW); Fort Lauderdale,
 Fresno, Orlando had nothing new. Fresno's Charleston Society site is a "Coming Soon" page, so its events need a person to find them.
+
+Hand-checked (2026-10-08): the owner read Charleston Society's package page and sent a screenshot; 2 Fresno events (10/27 101, 10/28 guided play) imported as `0172`.
+The pages the server can't read (bamgoodtime package pages, Calendly) are best checked by a person.
 
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
