@@ -7,7 +7,13 @@ import { stateName } from "@/lib/us-states";
 
 export type SearchCity = { slug: string; name: string; state: string };
 
-export function CitySearch({ cities }: { cities: SearchCity[] }) {
+export function CitySearch({
+  cities,
+  className = "mx-auto",
+}: {
+  cities: SearchCity[];
+  className?: string;
+}) {
   const router = useRouter();
   const id = useId();
   const listId = `${id}-list`;
@@ -39,7 +45,7 @@ export function CitySearch({ cities }: { cities: SearchCity[] }) {
   const showList = open && query.trim() !== "";
 
   return (
-    <div className="relative mx-auto w-full max-w-xl text-left">
+    <div className={`relative w-full max-w-xl text-left ${className}`}>
       <label htmlFor={`${id}-input`} className="sr-only">
         Search for your city
       </label>
