@@ -362,14 +362,24 @@ export default async function CityPage({
               >
                 <h3 className="font-semibold">{instructor.name}</h3>
                 <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
+                  {instructor.beginnerLesson && (
+                    <span className="rounded-full bg-jade/10 px-2 py-0.5 text-jade-strong">
+                      Beginner lessons
+                    </span>
+                  )}
                   {instructor.privateLesson && (
                     <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                      Private Lessons
+                      Private lessons
                     </span>
                   )}
                   {instructor.groupLesson && (
                     <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                      Group Lessons
+                      Group lessons
+                    </span>
+                  )}
+                  {instructor.onlineLesson && (
+                    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                      Online
                     </span>
                   )}
                 </div>
@@ -379,12 +389,12 @@ export default async function CityPage({
                   </p>
                 )}
                 {instructor.website && (
-                  <p className="mt-2 text-sm">
+                  <p className="mt-1 text-sm">
                     <a
                       href={instructor.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline hover:no-underline"
+                      className="inline-flex min-h-10 items-center underline hover:no-underline"
                     >
                       Visit {instructor.name}&apos;s website
                     </a>
@@ -419,7 +429,7 @@ export default async function CityPage({
               <li key={nearby.slug}>
                 <Link
                   href={`/cities/${nearby.slug}`}
-                  className="inline-block rounded-full border border-line bg-surface px-3 py-1 text-sm text-zinc-700 transition-colors hover:border-jade dark:text-zinc-300"
+                  className="inline-flex min-h-10 items-center rounded-full border border-line bg-surface px-4 py-2 text-sm text-zinc-700 transition-colors hover:border-jade dark:text-zinc-300"
                 >
                   {nearby.name}, {nearby.state}
                 </Link>

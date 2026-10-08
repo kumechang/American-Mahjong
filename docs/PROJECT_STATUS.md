@@ -126,7 +126,7 @@ The pages the server can't read (bamgoodtime package pages, Calendly) are best c
 UI pass 2 (2026-10-08, following the frontend-design skill file at /mnt/skills/public/frontend-design/SKILL.md): home page rebuilt around
 real data (a "coming up in the next two weeks" list: one event per city, beginner-friendly first, from `src/lib/upcoming.ts`), left-aligned
 hero, display serif (Literata) for h1/h2, no all-caps eyebrows or dot-joined chip strings, "How it works" as a real numbered sequence.
-UI pass 3: `/cities` is a dense three-column list by state (no card per city, no all-caps state labels); page content is left-aligned with the header on every page (6xl container, `*:max-w-4xl/3xl` for text pages). Still open: mobile tap targets, instructor cards.
+UI pass 3: `/cities` is a dense three-column list by state (no card per city, no all-caps state labels); page content is left-aligned with the header on every page (6xl container, `*:max-w-4xl/3xl` for text pages). UI pass 4: tap targets (header nav, footer links, filter buttons, Details/website/nearby-city links) now at least 40px tall on a phone; instructor cards show beginner/private/group/online tags. A phone tap-size check script lives only in the session notes (Playwright: list a/button/summary under 40px at 390px).
 
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.

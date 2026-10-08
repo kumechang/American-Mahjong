@@ -25,7 +25,7 @@ export function VerifiedNote({
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:no-underline"
+            className="inline-flex min-h-8 items-center px-0.5 underline hover:no-underline"
           >
             Source
           </a>
