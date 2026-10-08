@@ -83,7 +83,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
               type="button"
               onClick={() => toggle(filter.key)}
               aria-pressed={isActive}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+              className={`min-h-10 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                 isActive
                   ? "border-emerald-700 bg-emerald-700 text-white"
                   : "border-line bg-surface text-zinc-700 hover:border-jade dark:text-zinc-300"
@@ -150,7 +150,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
                     href={club.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:no-underline"
+                    className="inline-flex min-h-10 items-center underline hover:no-underline"
                   >
                     Visit {club.name}&apos;s website
                   </a>

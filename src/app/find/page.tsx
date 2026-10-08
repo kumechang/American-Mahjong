@@ -107,7 +107,7 @@ export default async function FindPage() {
                       <li key={city.slug}>
                         <Link
                           href={`/cities/${city.slug}`}
-                          className="inline-block rounded-full border border-line px-3 py-1 text-sm transition-colors hover:border-jade"
+                          className="inline-flex min-h-10 items-center rounded-full border border-line px-4 py-2 text-sm transition-colors hover:border-jade"
                         >
                           {city.name}
                           <span className="ml-1 text-xs text-zinc-600 dark:text-zinc-400">

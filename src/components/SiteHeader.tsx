@@ -11,16 +11,16 @@ const NAV_LINKS = [
 export function SiteHeader() {
   return (
     <header className="border-b border-line bg-surface">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
+      <div className="mx-auto flex max-w-6xl flex-col px-6 py-2 sm:flex-row sm:items-center sm:justify-between">
+        <Link href="/" className="-ml-1 inline-flex min-h-11 items-center self-start px-1 text-lg font-semibold tracking-tight">
           American Mahjong Guide
         </Link>
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+        <nav className="-mx-2 flex flex-wrap text-sm font-medium sm:mx-0">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-zinc-600 transition-colors hover:text-black dark:text-zinc-400 dark:hover:text-white"
+              className="inline-flex min-h-11 items-center px-2.5 text-zinc-600 transition-colors hover:text-black sm:px-3 dark:text-zinc-400 dark:hover:text-white"
             >
               {link.label}
             </Link>

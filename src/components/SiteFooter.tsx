@@ -16,12 +16,17 @@ export function SiteFooter() {
           </Link>
           .
         </p>
-        <p className="mt-2">
-          <Link href="/privacy" className="underline hover:no-underline">
+        <p className="mt-2 flex flex-wrap gap-x-6">
+          <Link
+            href="/privacy"
+            className="inline-flex min-h-11 items-center underline hover:no-underline"
+          >
             Privacy Policy
           </Link>
-          {" \u00b7 "}
-          <Link href="/terms" className="underline hover:no-underline">
+          <Link
+            href="/terms"
+            className="inline-flex min-h-11 items-center underline hover:no-underline"
+          >
             Terms of Use
           </Link>
         </p>

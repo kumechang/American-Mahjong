@@ -98,7 +98,7 @@ export function CityHighlights({
               <a
                 href={start.href}
                 rel="noopener noreferrer"
-                className="font-medium text-jade underline hover:no-underline"
+                className="inline-flex min-h-10 items-center font-medium text-jade-strong underline hover:no-underline"
               >
                 Visit {start.kind === "club" ? "their" : "the"} website
               </a>

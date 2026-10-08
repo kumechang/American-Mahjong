@@ -73,7 +73,7 @@ function EventRow({ event }: { event: Event }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-1 font-medium text-jade underline hover:no-underline"
+              className="-my-1 ml-1 inline-flex min-h-10 items-center px-1 font-medium text-jade underline hover:no-underline"
             >
               Details<span className="sr-only"> for {event.name}</span>
             </a>
