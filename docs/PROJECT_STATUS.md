@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0175 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0176 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -141,7 +141,7 @@ may be gone; Soda City Mahj lists no events on its Bam Good Time page.
 Eventbrite support (2026-10-09): organizer pages (`/o/…`) and collections (`/cc/…`) are read from their embedded data (venue, start time,
 price, cancelled flag); the organizer is discovered from any Eventbrite event page a club already links to. First run: 17 new events
 (Cleveland 14 of which 6 ACTIVE from Southwest Cleveland Mahjong and 8 NEEDS_REVIEW from Cleveland Mahjong Collective, Columbus 2, Naples 1), `0175`.
-Calendly is the one booking service not yet covered (its pages are rendered in the browser).
+Calendly: the public booking API (`/api/booking/event_types/lookup` and `/calendar/range`) returns the open time slots without a browser; Linktree pages are read for their Calendly links; teachers (not only clubs) are now event owners. First run: 7 new events (Fort Lauderdale 5 from Your Mahjong Mama, Boise 2), `0176`. "Possibly gone" is judged across all of an owner's complete listings (Bam Good Time, Bookwhen, Eventbrite organizer), not per page.
 
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
