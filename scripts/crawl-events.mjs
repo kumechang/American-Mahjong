@@ -12,7 +12,9 @@
 //     an organizer is found from any Eventbrite event page a club already links to
 //   - Calendly event types (calendly.com/<profile>/<type>): open time slots from Calendly's public booking API;
 //     Linktree pages are read for their Calendly links
-//   - anything else: schema.org Event data (JSON-LD) found on the page (clubs only)
+//   - Meetup groups (meetup.com/<group>): upcoming events from the page's embedded data
+//   - WordPress sites with The Events Calendar (/wp-json/tribe/events/v1/events), then anything else:
+//     schema.org Event data (JSON-LD) found on the page (clubs only)
 //
 //   node scripts/crawl-events.mjs [--out-dir=data/inbox/crawl-YYYY-MM-DD-HHMM] [--today=YYYY-MM-DD]
 //
@@ -180,6 +182,58 @@ async function linktree(url) {
   return out;
 }
 
+// Meetup: the group's events page embeds its events (title, local start, venue, status).
+async function meetup(groupUrl) {
+  const slug = new URL(groupUrl).pathname.split("/").filter(Boolean)[0];
+  const html = await get(`https://www.meetup.com/${slug}/events/`);
+  const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) return [];
+  const ap = JSON.parse(m[1]).props?.pageProps?.__APOLLO_STATE__ ?? {};
+  const mahjongGroup = /mah/i.test(slug); // a general community group lists everything it does
+  const out = [];
+  for (const [k, e] of Object.entries(ap)) {
+    if (!k.startsWith("Event:") || e.status !== "ACTIVE" || e.eventType !== "PHYSICAL") continue;
+    const title = String(e.title ?? "");
+    if (OTHER_STYLES.test(title) || (!mahjongGroup && !/mah[\s-]?j/i.test(title))) continue;
+    const dm = String(e.dateTime).match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/);
+    if (!dm) continue;
+    const v = ap[e.venue?.__ref] ?? {};
+    const venue = v.name && v.name !== "Online event" ? [v.name, v.address, v.city, v.state].filter(Boolean).join(", ") : "";
+    const fee = Number(e.feeSettings?.amount);
+    out.push({ name: title, date: dm[1], time: dm[2], venue, price: Number.isFinite(fee) && fee > 0 ? fee : null, url: e.eventUrl, type: guessType(title) });
+  }
+  return out;
+}
+
+// WordPress "The Events Calendar": a documented JSON API. Returns null when the site doesn't offer it.
+async function tribe(siteUrl) {
+  const origin = new URL(siteUrl).origin;
+  if (/eventbrite|active\.com|facebook|instagram|meetup|google\./i.test(origin)) return null;
+  const out = [];
+  out.complete = true;
+  for (let page = 1; page <= 3; page++) {
+    let data;
+    try {
+      data = JSON.parse(await get(`${origin}/wp-json/tribe/events/v1/events?search=mah&start_date=${today}&per_page=50&page=${page}`));
+    } catch {
+      return page === 1 ? null : out;
+    }
+    if (!Array.isArray(data?.events)) return page === 1 ? null : out;
+    for (const e of data.events) {
+      const title = decode(String(e.title ?? "")).trim();
+      const text = `${title} ${e.description ?? ""}`;
+      const dm = String(e.start_date ?? "").match(/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})/);
+      if (!dm || e.all_day || !/mah[\s-]?j/i.test(title) || OTHER_STYLES.test(text.slice(0, 400))) continue;
+      const v = e.venue && !Array.isArray(e.venue) ? e.venue : {};
+      const venue = v.venue ? [decode(v.venue), v.address, v.city, v.stateprovince ?? v.state].filter(Boolean).join(", ") : "";
+      const cost = Number(String(e.cost ?? "").replace(/[^0-9.]/g, ""));
+      out.push({ name: title, date: dm[1], time: dm[2], venue, price: /free/i.test(String(e.cost)) ? 0 : Number.isFinite(cost) && cost > 0 ? cost : null, url: e.url, type: guessType(title) });
+    }
+    if (page >= (data.total_pages ?? 1)) break;
+  }
+  return out;
+}
+
 async function eventbriteOrg(url) {
   const html = await get(url);
   const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
@@ -280,6 +334,7 @@ function sourceFor(owner) {
     if (url.host === "bookwhen.com" && url.pathname.split("/")[1]) return { kind: "bookwhen", key: url.pathname.split("/")[1] };
     if (/(^|\.)eventbrite\.[a-z.]+$/.test(url.host) && /^\/(o|cc)\//.test(url.pathname)) return { kind: "ebrite", key: u };
     if (url.host === "linktr.ee") return { kind: "linktree", key: u };
+    if (/(^|\.)meetup\.com$/.test(url.host) && url.pathname.split("/").filter(Boolean)[0]) return { kind: "meetup", key: u };
     if (url.host === "calendly.com" && url.pathname.split("/").filter(Boolean).length >= 2) return { kind: "calendly", key: u };
   }
   if (owner.type === "instructor") return null; // teachers' own sites vary too much to read generically
@@ -294,7 +349,7 @@ const note = (city, text) => {
   results.get(city.slug).notes.push(text);
 };
 const seenSources = new Set();
-const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, ebrite: 3, jsonld: 4 };
+const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, meetup: 2, ebrite: 3, jsonld: 4 };
 const work = [...clubs, ...teachers].map((o) => ({ owner: o, src: sourceFor(o) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
 // Clubs that only link to single Eventbrite event pages: read the latest such page, find its organizer, crawl that.
 const withSource = new Set(work.filter((w) => w.src.kind !== "jsonld").map((w) => ownerKey(w.owner)));
@@ -326,7 +381,8 @@ for (const { owner, src } of work) {
       : src.kind === "ebrite" ? await eventbriteOrg(src.key)
       : src.kind === "calendly" ? await calendly(src.key)
       : src.kind === "linktree" ? await linktree(src.key)
-      : await jsonLd(src.key);
+      : src.kind === "meetup" ? await meetup(src.key)
+      : ((await tribe(src.key)) ?? (await jsonLd(src.key)));
     if (found.organizer && !crawledLinks.has(`${ownerKey(owner)}|${found.organizer}`)) {
       crawledLinks.add(`${ownerKey(owner)}|${found.organizer}`);
       work.push({ owner, src: { kind: "ebrite", key: found.organizer } });
@@ -354,7 +410,7 @@ for (const { owner, src } of work) {
     seenEvent.add(dupKey);
     // ACTIVE needs: an owner we already trust, a start time and a place. Structured data (JSON-LD),
     // Eventbrite and Calendly must name their own venue; the booking adapters may fall back to the club's address.
-    const own = ["jsonld", "ebrite", "calendly"].includes(src.kind);
+    const own = ["jsonld", "ebrite", "calendly", "meetup"].includes(src.kind);
     const complete = e.time && (own ? e.venue : e.venue || owner.address);
     const status = owner.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
@@ -367,7 +423,7 @@ for (const { owner, src } of work) {
     });
   }
   // remember what complete listings (not single event pages) showed, to spot events that vanished
-  if (["bgt", "bookwhen", "ebrite"].includes(src.kind) && maxSeen) {
+  if ((["bgt", "bookwhen", "ebrite"].includes(src.kind) || found.complete) && maxSeen) {
     const acc = listings.get(ok) ?? { owner, city, seen: new Set(), max: "" };
     for (const k of seenNow) acc.seen.add(k);
     if (maxSeen > acc.max) acc.max = maxSeen;
