@@ -149,6 +149,12 @@ that API (search "mah", American-style filter), falling back to JSON-LD. The cra
 (the importer overwrites a row with the same city + name + date), and gives each page a polite 1 request/second. First run: 134 new events in 13 cities
 (106 ACTIVE), `0177`. Louisville's Trager JCC and Keneseth Israel weekly games now have dated rows (NEEDS_REVIEW until their pages are confirmed as American).
 
+Club discovery (2026-10-09): `scripts/discover-clubs.mjs` + `.github/workflows/discover-clubs.yml` read 25 city pages a day from the Bam Good Time
+club directory (about 1,100 pages, a full pass in seven weeks), find club sites (`<club>.bamgoodtime.com`) not on our site, read their home page and events,
+and write researcher-style clubs.csv/events.csv (all NEEDS_REVIEW) with the club's own American/NMJL wording quoted. A PR opens only for leads in cities we
+already cover, or whose club says American/NMJL, or that list dated sessions; the rest is named in the job summary. Shared code lives in `scripts/lib/crawl-lib.mjs`.
+Trial (40 cities): Boston City Mahj, Brenham, Bryan, Bryant (14 events) looked worth checking.
+
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
 

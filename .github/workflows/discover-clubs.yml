@@ -1,0 +1,75 @@
+# 毎日、Bam Good Time のクラブ一覧(都市ごとのページ)を 25 都市ずつ読み、サイトにまだない団体を探す。
+# 見つかった団体は inbox/discover-… ブランチの PR にまとめる(全部 NEEDS_REVIEW。American / NMJL の確認は人か AI サーバーが行う)。
+# 起動は cron-job.org から workflow_dispatch。データベースには何も書かない。
+name: discover-clubs
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: "読む都市ページの数"
+        default: "25"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: discover-clubs
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: ローカル DB を作る
+        run: npx wrangler d1 migrations apply DB --local
+      - name: 探す
+        id: discover
+        env:
+          BATCH: ${{ inputs.batch }}
+        run: |
+          set +e
+          [[ "${BATCH:-25}" =~ ^[0-9]{1,3}$ ]] || { echo "不正な batch"; exit 1; }
+          id="discover-$(date -u +%Y-%m-%d-%H%M)"
+          node scripts/discover-clubs.mjs --batch="${BATCH:-25}" --out-dir="data/inbox/$id" | tee summary.md
+          rc=${PIPESTATUS[0]}
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+          if [ "$rc" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [ "$rc" -eq 0 ] || exit "$rc"
+          echo "found=true" >> "$GITHUB_OUTPUT"
+      - name: 検証して PR を作る
+        if: steps.discover.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ID: ${{ steps.discover.outputs.id }}
+        run: |
+          set +e
+          report="$PWD/pr-body.md"
+          echo "## Club discovery \`$ID\`" > "$report"
+          cat summary.md >> "$report"
+          for dir in data/inbox/$ID/*/; do
+            [ -f "$dir/clubs.csv" ] || continue
+            echo "" >> "$report"
+            echo "### \`$dir\`" >> "$report"
+            echo '```' >> "$report"
+            args=("--clubs=$dir/clubs.csv")
+            [ -f "$dir/events.csv" ] && args+=("--events=$dir/events.csv")
+            node scripts/validate-csv.mjs "${args[@]}" >> "$report" 2>&1
+            echo '```' >> "$report"
+          done
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "inbox/$ID"
+          git add "data/inbox/$ID"
+          git commit -m "Club discovery results $ID"
+          git push origin "inbox/$ID"
+          gh pr create --base main --head "inbox/$ID" --title "Inbox: inbox/$ID (club discovery)" --body-file "$report"
