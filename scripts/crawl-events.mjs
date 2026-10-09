@@ -316,6 +316,11 @@ const known = q(`SELECT name, eventDate, startTime, clubId, instructorId FROM Ev
 // our rows and the owner's own wording), or by owner + date + name when a time is missing.
 // names compared loosely: case, "@" vs "at", punctuation
 const norm = (n) => String(n).toLowerCase().replace(/@/g, " at ").replace(/[^a-z0-9]+/g, " ").trim();
+// The importer keys an event on city + name + date, and a second row with the same key overwrites the first.
+const slugify = (t) => String(t).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const eventSlug = (cityName, name, date) => `${slugify(cityName)}-${slugify(name)}-${date.replace(/-/g, "")}`;
+const takenSlugs = new Set(q(`SELECT slug FROM Event`).map((r) => r.slug.replace(/^event_/, "")));
+const clock12 = (t) => { const [h, m] = t.split(":").map(Number); return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`; };
 const hhmm = (t) => (t && /^\d{1,2}:\d{2}/.test(t) ? t.slice(0, 5).padStart(5, "0") : "");
 const knownKey = new Set();
 for (const e of known) {
@@ -342,7 +347,7 @@ function sourceFor(owner) {
   return site ? { kind: "jsonld", key: site } : null;
 }
 
-const horizonDate = new Date(Date.parse(today) + 270 * 864e5).toISOString().slice(0, 10);
+const horizonDate = new Date(Date.parse(today) + 60 * 864e5).toISOString().slice(0, 10);
 const results = new Map(); // citySlug -> {rows:[], notes:[]}
 const note = (city, text) => {
   if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
@@ -439,6 +444,20 @@ for (const { owner, city, seen, max } of listings.values()) {
     if (d <= max && !seen.has(`${d}|${norm(e.name)}`) && !(hhmm(e.startTime) && seen.has(`${d}|t${hhmm(e.startTime)}`))) {
       note(city, `Possibly gone: "${e.name}" on ${d} (${owner.name}) is not in ${owner.name}'s current listing`);
     }
+  }
+}
+
+// ---------- make event names unique (city + name + date) ----------
+for (const { city, rows } of results.values()) {
+  const used = new Set();
+  for (const r of rows) {
+    let name = r.name;
+    const taken = (n) => used.has(eventSlug(city.name, n, r.event_date)) || takenSlugs.has(eventSlug(city.name, n, r.event_date));
+    if (taken(name) && r.start_time) name = `${r.name} (${clock12(r.start_time)})`;
+    if (taken(name)) name = `${r.name} (${r.club_name || r.instructor_name})`;
+    for (let i = 2; taken(name); i++) name = `${r.name} (${i})`;
+    r.name = name;
+    used.add(eventSlug(city.name, name, r.event_date));
   }
 }
 
