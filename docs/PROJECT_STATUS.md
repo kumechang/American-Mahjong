@@ -155,6 +155,11 @@ and write researcher-style clubs.csv/events.csv (all NEEDS_REVIEW) with the club
 already cover, or whose club says American/NMJL, or that list dated sessions; the rest is named in the job summary. Shared code lives in `scripts/lib/crawl-lib.mjs`.
 Trial (40 cities): Boston City Mahj, Brenham, Bryan, Bryant (14 events) looked worth checking.
 
+AI nightly roles after the crawlers (2026-10-09): `build-nightly-prompt.mjs` plans a week as 4 nights of **verify** (the crawlers' NEEDS_REVIEW groups, in the cities
+closest to publishing, unpublished first: confirm American/NMJL on the group's own pages, quote it, promote to ACTIVE, or mark INACTIVE if another style/closed/members-only),
+2 nights of **cities** (new places, directory-crawler leads first, looking outside the platforms the crawlers read) and 1 night of **events** (only groups the crawlers can't read,
+labelled in the list). A mode with nothing to do is skipped. `--mode=` forces one.
+
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
 
