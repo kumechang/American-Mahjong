@@ -260,12 +260,14 @@ const ownerKey = (o) => `${o.type[0]}:${o.id}`;
 const known = q(`SELECT name, eventDate, startTime, clubId, instructorId FROM Event`);
 // An event we already have is recognised by owner + date + start time (names differ between
 // our rows and the owner's own wording), or by owner + date + name when a time is missing.
+// names compared loosely: case, "@" vs "at", punctuation
+const norm = (n) => String(n).toLowerCase().replace(/@/g, " at ").replace(/[^a-z0-9]+/g, " ").trim();
 const hhmm = (t) => (t && /^\d{1,2}:\d{2}/.test(t) ? t.slice(0, 5).padStart(5, "0") : "");
 const knownKey = new Set();
 for (const e of known) {
   const d = e.eventDate.slice(0, 10);
   for (const k of [e.clubId && `c:${e.clubId}`, e.instructorId && `i:${e.instructorId}`].filter(Boolean)) {
-    knownKey.add(`${k}|${d}|${e.name.toLowerCase()}`);
+    knownKey.add(`${k}|${d}|${norm(e.name)}`);
     if (hhmm(e.startTime)) knownKey.add(`${k}|${d}|t${hhmm(e.startTime)}`);
   }
 }
@@ -308,6 +310,7 @@ for (const [clubId, u] of ebByClub) {
   if (c && !withSource.has(ownerKey(c))) work.push({ owner: c, src: { kind: "jsonld", key: u } });
 }
 const crawledLinks = new Set();
+const listings = new Map();
 const seenEvent = new Set();
 for (const { owner, src } of work) {
   const city = cityById.get(owner.cityId);
@@ -340,12 +343,12 @@ for (const { owner, src } of work) {
   }
   if (src.kind !== "jsonld" && src.kind !== "linktree" && found.length === 0) note(city, `0 events parsed from ${id} for "${owner.name}" (nothing listed, or the page layout changed)`);
   const maxSeen = found.map((f) => f.date).sort().at(-1);
-  const seenNow = new Set(found.flatMap((f) => [`${f.date}|${f.name.toLowerCase()}`, ...(f.time ? [`${f.date}|t${f.time}`] : [])]));
+  const seenNow = new Set(found.flatMap((f) => [`${f.date}|${norm(f.name)}`, ...(f.time ? [`${f.date}|t${f.time}`] : [])]));
   const ok = ownerKey(owner);
   for (const e of found) {
     if (e.date < today) continue;
     if (e.date > horizonDate || NOT_A_SESSION.test(e.name)) continue;
-    if (knownKey.has(`${ok}|${e.date}|${e.name.toLowerCase()}`) || (e.time && knownKey.has(`${ok}|${e.date}|t${e.time}`))) continue;
+    if (knownKey.has(`${ok}|${e.date}|${norm(e.name)}`) || (e.time && knownKey.has(`${ok}|${e.date}|t${e.time}`))) continue;
     const dupKey = `${ok}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;
     seenEvent.add(dupKey);
@@ -363,13 +366,22 @@ for (const { owner, src } of work) {
       price: e.price ?? "", registration_url: e.url, source_url: e.url, last_verified_at: today, status,
     });
   }
-  // events we have for this owner that the page no longer lists (inside the window the page covers)
-  if (maxSeen && src.kind !== "linktree") {
-    const col = owner.type === "club" ? "clubId" : "instructorId";
-    const mine = q(`SELECT name, eventDate, startTime FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
-    for (const e of mine) {
-      const d = e.eventDate.slice(0, 10);
-      if (d <= maxSeen && !seenNow.has(`${d}|${e.name.toLowerCase()}`) && !(hhmm(e.startTime) && seenNow.has(`${d}|t${hhmm(e.startTime)}`))) note(city, `Possibly gone: "${e.name}" on ${d} (${owner.name}) is no longer listed at ${id}`);
+  // remember what complete listings (not single event pages) showed, to spot events that vanished
+  if (["bgt", "bookwhen", "ebrite"].includes(src.kind) && maxSeen) {
+    const acc = listings.get(ok) ?? { owner, city, seen: new Set(), max: "" };
+    for (const k of seenNow) acc.seen.add(k);
+    if (maxSeen > acc.max) acc.max = maxSeen;
+    listings.set(ok, acc);
+  }
+}
+// Events we have that none of the owner's complete listings shows any more (inside the dates they cover).
+for (const { owner, city, seen, max } of listings.values()) {
+  const col = owner.type === "club" ? "clubId" : "instructorId";
+  const mine = q(`SELECT name, eventDate, startTime FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
+  for (const e of mine) {
+    const d = e.eventDate.slice(0, 10);
+    if (d <= max && !seen.has(`${d}|${norm(e.name)}`) && !(hhmm(e.startTime) && seen.has(`${d}|t${hhmm(e.startTime)}`))) {
+      note(city, `Possibly gone: "${e.name}" on ${d} (${owner.name}) is not in ${owner.name}'s current listing`);
     }
   }
 }
