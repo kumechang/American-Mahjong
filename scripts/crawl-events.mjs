@@ -58,6 +58,8 @@ function guessType(name) {
   return "OTHER";
 }
 
+// listings that are enquiry forms or placeholders, not sessions people can attend
+const NOT_A_SESSION = /inquiry|date request|host a private|gift card|rental/i;
 const OTHER_STYLES = /riichi|hong kong|chinese|singapore|taiwan|japanese/i;
 const lastFetch = new Map();
 let pagesFetched = 0;
@@ -280,7 +282,7 @@ for (const { club, src } of work) {
   const seenNow = new Set(found.flatMap((f) => [`${f.date}|${f.name.toLowerCase()}`, ...(f.time ? [`${f.date}|t${f.time}`] : [])]));
   for (const e of found) {
     if (e.date < today) continue;
-    if (e.date > horizonDate || /rental/i.test(e.name)) continue;
+    if (e.date > horizonDate || NOT_A_SESSION.test(e.name)) continue;
     if (knownKey.has(`${club.id}|${e.date}|${e.name.toLowerCase()}`) || (e.time && knownKey.has(`${club.id}|${e.date}|t${e.time}`))) continue;
     const dupKey = `${club.id}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;
