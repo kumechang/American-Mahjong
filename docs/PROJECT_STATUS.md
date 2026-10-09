@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0178 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0179 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -157,6 +157,10 @@ Trial (40 cities): Boston City Mahj, Brenham, Bryan, Bryant (14 events) looked w
 First scheduled run (#106, offset 246): Bam Good Time lists every event twice (card + title link), so events.csv had each row doubled; `bamGoodTime()` now dedupes by event URL,
 drops a venue of just "Free", and skips sessions held at private homes. Imported as NEEDS_REVIEW (`0178`): Denver (Flatirons Flowers Mahjong + 3 clubs, 21 events) and Dallas (2 clubs).
 Left as archived leads for the AI cities night (not on the site yet): Evenings at the Table (Cumming, GA; Atlanta metro) and Dayton Ohio Mah Jongg (Dayton, OH).
+First timed runs (2026-10-10, `0179`): AI verify night promoted Naples' Paradise Coast Mahjong and Naples Mahjong to ACTIVE (their own sites say "American Mahjong"; no NMJL card named) and found one new event (Good Pour, NEEDS_REVIEW);
+the AI's other four Naples events were skipped because we already had richer rows for them. Louisville and Sarasota: nothing could be confirmed as American (reports archived; Selby Library names the NMJL card but its page stops at 2024).
+Crawler added 4 ACTIVE events (Cleveland, San Antonio, Tampa x1) and the crawler now ignores the same Meetup/Bam Good Time page when a club and its instructor both list it. Left out: a Columbia "Private Lesson" (not a public event, no named venue).
+Discovery re-found Cumming GA and Dayton OH (plus Cross Roads TX, North Texas Mahjong) -- all three cities are still not on the site.
 
 AI nightly roles after the crawlers (2026-10-09): `build-nightly-prompt.mjs` plans a week as 4 nights of **verify** (the crawlers' NEEDS_REVIEW groups, in the cities
 closest to publishing, unpublished first: confirm American/NMJL on the group's own pages, quote it, promote to ACTIVE, or mark INACTIVE if another style/closed/members-only),
