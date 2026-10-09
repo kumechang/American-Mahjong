@@ -218,8 +218,10 @@ for (const { club, src } of work) {
     const dupKey = `${club.id}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;
     seenEvent.add(dupKey);
-    const complete = e.time && (e.venue || club.address);
-    const status = club.status === "ACTIVE" && complete && src.kind !== "jsonld" ? "ACTIVE" : "NEEDS_REVIEW";
+    // ACTIVE needs: a club we already trust, a start time and a place. Structured data (JSON-LD)
+    // must name its own venue; the booking adapters may fall back to the club's address.
+    const complete = e.time && (src.kind === "jsonld" ? e.venue : e.venue || club.address);
+    const status = club.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
     results.get(city.slug).rows.push({
       name: e.name, city: city.name, state: city.state, event_date: e.date, start_time: e.time, end_time: "",
