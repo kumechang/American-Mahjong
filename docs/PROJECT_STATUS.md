@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0177 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0178 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -154,6 +154,9 @@ club directory (about 1,100 pages, a full pass in seven weeks), find club sites 
 and write researcher-style clubs.csv/events.csv (all NEEDS_REVIEW) with the club's own American/NMJL wording quoted. A PR opens only for leads in cities we
 already cover, or whose club says American/NMJL, or that list dated sessions; the rest is named in the job summary. Shared code lives in `scripts/lib/crawl-lib.mjs`.
 Trial (40 cities): Boston City Mahj, Brenham, Bryan, Bryant (14 events) looked worth checking.
+First scheduled run (#106, offset 246): Bam Good Time lists every event twice (card + title link), so events.csv had each row doubled; `bamGoodTime()` now dedupes by event URL,
+drops a venue of just "Free", and skips sessions held at private homes. Imported as NEEDS_REVIEW (`0178`): Denver (Flatirons Flowers Mahjong + 3 clubs, 21 events) and Dallas (2 clubs).
+Left as archived leads for the AI cities night (not on the site yet): Evenings at the Table (Cumming, GA; Atlanta metro) and Dayton Ohio Mah Jongg (Dayton, OH).
 
 AI nightly roles after the crawlers (2026-10-09): `build-nightly-prompt.mjs` plans a week as 4 nights of **verify** (the crawlers' NEEDS_REVIEW groups, in the cities
 closest to publishing, unpublished first: confirm American/NMJL on the group's own pages, quote it, promote to ACTIVE, or mark INACTIVE if another style/closed/members-only),

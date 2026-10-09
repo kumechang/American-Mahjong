@@ -68,6 +68,7 @@ export async function get(url) {
 export async function bamGoodTime(origin) {
   const html = await get(`${origin}/events`);
   const out = [];
+  const seen = new Set(); // the page links each event twice (card + title)
   const re = /<a\b[^>]*href="(\/events\/[0-9a-f-]{36})"[^>]*>([\s\S]*?)<\/a>/gi;
   let m;
   while ((m = re.exec(html))) {
@@ -84,7 +85,11 @@ export async function bamGoodTime(origin) {
       const t = (l[j] ?? "").match(/^(\d{1,2}):(\d{2}) ([AP]M)$/);
       if (t) { [, hh, mm, ap] = t; j++; }
     }
-    const venue = l[j] && !/^\$/.test(l[j]) && !/spots? left|Full|Waitlist|Sold out/i.test(l[j]) ? l[j] : "";
+    if (seen.has(m[1])) continue;
+    seen.add(m[1]);
+    const venue = l[j] && !/^\$/.test(l[j]) && !/^(free|spots? left|full|waitlist|sold out)\b|spots? left/i.test(l[j]) ? l[j] : "";
+    // private homes are never published (no home addresses on the site)
+    if (/\b(home|residence|house)\b/i.test(venue) && !/(nursing|senior|retirement|clubhouse|guest|lodge|ale|playhouse)/i.test(venue)) continue;
     const price = l.slice(j).map((x) => x.match(/^\$(\d+(?:\.\d{2})?)/)).find(Boolean);
     out.push({
       name: l[di - 1],
