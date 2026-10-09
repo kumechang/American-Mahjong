@@ -1,0 +1,67 @@
+# 毎日、登録済みの団体の予約ページ(Bam Good Time、Bookwhen、構造化データ)を巡回して、
+# まだサイトにない日付つきイベントを inbox/crawl-… ブランチの PR にまとめる。
+# 起動は cron-job.org から workflow_dispatch(GitHub の schedule は遅れるため使わない)。
+# データベースには何も書かない。取り込みは今までと同じ(PR を確認して取り込む)。
+name: crawl-events
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: crawl-events
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: ローカル DB を作る
+        run: npx wrangler d1 migrations apply DB --local
+      - name: 巡回する
+        id: crawl
+        run: |
+          set +e
+          id="crawl-$(date -u +%Y-%m-%d-%H%M)"
+          node scripts/crawl-events.mjs --out-dir="data/inbox/$id" | tee summary.md
+          rc=${PIPESTATUS[0]}
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+          if [ "$rc" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [ "$rc" -eq 0 ] || exit "$rc"
+          echo "found=true" >> "$GITHUB_OUTPUT"
+      - name: 検証して PR を作る
+        if: steps.crawl.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ID: ${{ steps.crawl.outputs.id }}
+        run: |
+          set +e
+          report="$PWD/pr-body.md"
+          echo "## Event crawler \`$ID\`" > "$report"
+          cat summary.md >> "$report"
+          for dir in data/inbox/$ID/*/; do
+            [ -f "$dir/events.csv" ] || continue
+            echo "" >> "$report"
+            echo "### \`$dir\`" >> "$report"
+            echo '```' >> "$report"
+            node scripts/validate-csv.mjs --events="$dir/events.csv" >> "$report" 2>&1
+            echo '```' >> "$report"
+          done
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "inbox/$ID"
+          git add "data/inbox/$ID"
+          git commit -m "Event crawler results $ID"
+          git push origin "inbox/$ID"
+          gh pr create --base main --head "inbox/$ID" --title "Inbox: inbox/$ID (event crawler)" --body-file "$report"
