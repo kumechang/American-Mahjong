@@ -95,6 +95,7 @@ for (const [clubId, u] of ebByClub) {
 const crawledLinks = new Set();
 const listings = new Map();
 const seenEvent = new Set();
+const seenUrl = new Set();
 for (const { owner, src } of work) {
   const city = cityById.get(owner.cityId);
   if (!city) continue;
@@ -136,6 +137,10 @@ for (const { owner, src } of work) {
     const dupKey = `${ok}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;
     seenEvent.add(dupKey);
+    // the same page can be listed by two owners (a club and its instructor): keep the first
+    const urlKey = `${e.url}|${e.date}|${e.time}`;
+    if (seenUrl.has(urlKey)) continue;
+    seenUrl.add(urlKey);
     // ACTIVE needs: an owner we already trust, a start time and a place. Structured data (JSON-LD),
     // Eventbrite and Calendly must name their own venue; the booking adapters may fall back to the club's address.
     const own = ["jsonld", "ebrite", "calendly", "meetup"].includes(src.kind);
