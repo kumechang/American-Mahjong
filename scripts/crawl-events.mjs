@@ -256,5 +256,8 @@ for (const { city, rows, notes } of results.values()) {
     `# ${city.name}, ${city.state}: event crawler (${today})\n\n## New events\n${rows.length ? rows.map((r) => `- ${r.event_date} ${r.start_time} ${r.name} (${r.club_name}) [${r.status}]`).join("\n") : "- none"}\n\n## Notes\n${notes.length ? notes.map((n) => `- ${n}`).join("\n") : "- none"}\n`,
   );
 }
-console.log(`# Event crawler ${today}\n\n- Pages fetched: ${pagesFetched}\n- New events: ${total} in ${[...results.values()].filter((r) => r.rows.length).length} cities\n- Cities with notes: ${[...results.values()].filter((r) => r.notes.length).map((r) => r.city.name).join(", ") || "none"}\n- Output: ${total || [...results.values()].some((r) => r.notes.length) ? outDir : "(nothing written)"}`);
-process.exit(total === 0 && ![...results.values()].some((r) => r.notes.length) ? 3 : 0);
+const noteLines = [...results.values()].flatMap((r) => r.notes.map((n) => `  - ${r.city.name}: ${n}`));
+console.log(`# Event crawler ${today}\n\n- Pages fetched: ${pagesFetched}\n- New events: ${total} in ${[...results.values()].filter((r) => r.rows.length).length} cities\n- Notes (${noteLines.length}):\n${noteLines.join("\n") || "  - none"}\n- Output: ${total ? outDir : "(nothing written)"}`);
+// Exit 3 = nothing new to import. Notes alone (a page that returned 0 events, an event that looks gone)
+// stay in the job summary; they don't open a PR.
+process.exit(total === 0 ? 3 : 0);

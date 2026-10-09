@@ -134,6 +134,10 @@ It reads each trusted club's own booking page with plain HTTP (no headless brows
 `data/inbox/crawl-<stamp>/<city>/events.csv` and lists "possibly gone" events in `report.md`. ACTIVE needs a club that is already ACTIVE, a start
 time and a named place. First trial run: 60 new events in 9 cities, imported as `0174` (Baltimore 17, Seattle 10, Houston 6, San Antonio 6, ...).
 
+Crawler PRs open only when there are new events; "possibly gone" and "0 events parsed" notes go to the job summary (first scheduled-style test
+run found none new and its notes-only PR #99 was noise). Known items from the notes: Kansas City Park Hill "Mahjong for Beginners" Oct 13
+may be gone; Soda City Mahj lists no events on its Bam Good Time page.
+
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
 
