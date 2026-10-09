@@ -10,7 +10,9 @@
 //   - Bookwhen (bookwhen.com/<account>): schedule page (event ids carry date and time)
 //   - Eventbrite organizer pages (/o/…) and collections (/cc/…): upcoming events from the page's embedded data;
 //     an organizer is found from any Eventbrite event page a club already links to
-//   - anything else: schema.org Event data (JSON-LD) found on the page
+//   - Calendly event types (calendly.com/<profile>/<type>): open time slots from Calendly's public booking API;
+//     Linktree pages are read for their Calendly links
+//   - anything else: schema.org Event data (JSON-LD) found on the page (clubs only)
 //
 //   node scripts/crawl-events.mjs [--out-dir=data/inbox/crawl-YYYY-MM-DD-HHMM] [--today=YYYY-MM-DD]
 //
@@ -26,7 +28,7 @@ const today = arg("today") ?? new Date().toISOString().slice(0, 10);
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
 const outDir = arg("out-dir") ?? `data/inbox/crawl-${stamp}`;
 const UA = "Mozilla/5.0 (compatible; MahjongMapBot/1.0; +https://mahjong-map.com/about)";
-const MAX_PAGES = 250;
+const MAX_PAGES = 400;
 
 const q = (sql) =>
   JSON.parse(
@@ -137,6 +139,47 @@ async function bookwhen(account) {
   return out;
 }
 
+// Calendly: each event type is a recurring offer; its open slots are the sessions.
+async function calendly(url) {
+  const [profile, slug] = new URL(url).pathname.split("/").filter(Boolean);
+  if (!profile || !slug) return [];
+  const api = "https://calendly.com/api/booking/event_types";
+  const type = JSON.parse(await get(`${api}/lookup?event_type_slug=${encodeURIComponent(slug)}&profile_slug=${encodeURIComponent(profile)}`));
+  if (!type.uuid) return [];
+  const out = [];
+  const tz = type.availability_timezone ?? "America/New_York";
+  for (let from = Date.parse(today); from < Date.parse(today) + 120 * 864e5; from += 31 * 864e5) {
+    const a = new Date(from).toISOString().slice(0, 10);
+    const b = new Date(Math.min(from + 30 * 864e5, Date.parse(today) + 120 * 864e5)).toISOString().slice(0, 10);
+    const r = JSON.parse(await get(`${api}/${type.uuid}/calendar/range?timezone=${encodeURIComponent(tz)}&diagnostics=false&range_start=${a}&range_end=${b}`));
+    for (const day of r.days ?? []) {
+      for (const sp of day.spots ?? []) {
+        const m = String(sp.start_time).match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/);
+        if (!m || sp.status !== "available") continue;
+        out.push({
+          name: type.name,
+          date: m[1],
+          time: m[2],
+          venue: type.name.includes("@") ? type.name.split("@").pop().trim() : "",
+          price: null,
+          url: `https://calendly.com/${profile}/${slug}/${m[1]}T${m[2].slice(0, 2)}`,
+          type: guessType(type.name),
+        });
+      }
+    }
+  }
+  return out;
+}
+
+// Linktree: no events of its own, but it links to the booking pages.
+async function linktree(url) {
+  const html = await get(url);
+  const links = [...new Set([...html.matchAll(/https:\/\/calendly\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_-]+)/g)].map((m) => `https://calendly.com/${m[1]}/${m[2]}`))];
+  const out = [];
+  out.links = links;
+  return out;
+}
+
 async function eventbriteOrg(url) {
   const html = await get(url);
   const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
@@ -211,27 +254,34 @@ async function jsonLd(url) {
 // ---------- sources from the database ----------
 const cities = q(`SELECT id, slug, name, state FROM City`);
 const cityById = new Map(cities.map((c) => [c.id, c]));
-const clubs = q(`SELECT id, name, cityId, website, sourceUrl, address, status FROM Club WHERE status != 'INACTIVE'`);
-const known = q(`SELECT name, eventDate, startTime, clubId FROM Event`);
-// An event we already have is recognised by club + date + start time (names differ between
-// our rows and the club's own wording), or by club + date + name when a time is missing.
+const clubs = q(`SELECT id, name, cityId, website, sourceUrl, address, status FROM Club WHERE status != 'INACTIVE'`).map((c) => ({ ...c, type: "club" }));
+const teachers = q(`SELECT id, name, cityId, website, sourceUrl, status FROM Instructor WHERE status != 'INACTIVE'`).map((t) => ({ ...t, address: null, type: "instructor" }));
+const ownerKey = (o) => `${o.type[0]}:${o.id}`;
+const known = q(`SELECT name, eventDate, startTime, clubId, instructorId FROM Event`);
+// An event we already have is recognised by owner + date + start time (names differ between
+// our rows and the owner's own wording), or by owner + date + name when a time is missing.
 const hhmm = (t) => (t && /^\d{1,2}:\d{2}/.test(t) ? t.slice(0, 5).padStart(5, "0") : "");
 const knownKey = new Set();
 for (const e of known) {
   const d = e.eventDate.slice(0, 10);
-  knownKey.add(`${e.clubId}|${d}|${e.name.toLowerCase()}`);
-  if (hhmm(e.startTime)) knownKey.add(`${e.clubId}|${d}|t${hhmm(e.startTime)}`);
+  for (const k of [e.clubId && `c:${e.clubId}`, e.instructorId && `i:${e.instructorId}`].filter(Boolean)) {
+    knownKey.add(`${k}|${d}|${e.name.toLowerCase()}`);
+    if (hhmm(e.startTime)) knownKey.add(`${k}|${d}|t${hhmm(e.startTime)}`);
+  }
 }
 
-function sourceFor(club) {
-  for (const u of [club.website, club.sourceUrl]) {
+function sourceFor(owner) {
+  for (const u of [owner.website, owner.sourceUrl]) {
     if (!u || !/^https?:\/\//.test(u)) continue;
     const url = new URL(u);
     if (/\.bamgoodtime\.com$/.test(url.host) && url.host !== "www.bamgoodtime.com") return { kind: "bgt", key: url.origin };
     if (url.host === "bookwhen.com" && url.pathname.split("/")[1]) return { kind: "bookwhen", key: url.pathname.split("/")[1] };
     if (/(^|\.)eventbrite\.[a-z.]+$/.test(url.host) && /^\/(o|cc)\//.test(url.pathname)) return { kind: "ebrite", key: u };
+    if (url.host === "linktr.ee") return { kind: "linktree", key: u };
+    if (url.host === "calendly.com" && url.pathname.split("/").filter(Boolean).length >= 2) return { kind: "calendly", key: u };
   }
-  const site = [club.website, club.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !/bamgoodtime\.com\/(clubs|mahjong-clubs)/.test(u));
+  if (owner.type === "instructor") return null; // teachers' own sites vary too much to read generically
+  const site = [owner.website, owner.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !/bamgoodtime\.com\/(clubs|mahjong-clubs)/.test(u));
   return site ? { kind: "jsonld", key: site } : null;
 }
 
@@ -242,10 +292,10 @@ const note = (city, text) => {
   results.get(city.slug).notes.push(text);
 };
 const seenSources = new Set();
-const order = { bgt: 0, bookwhen: 1, ebrite: 2, jsonld: 3 };
-const work = clubs.map((c) => ({ club: c, src: sourceFor(c) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
+const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, ebrite: 3, jsonld: 4 };
+const work = [...clubs, ...teachers].map((o) => ({ owner: o, src: sourceFor(o) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
 // Clubs that only link to single Eventbrite event pages: read the latest such page, find its organizer, crawl that.
-const withSource = new Set(work.filter((w) => w.src.kind !== "jsonld").map((w) => w.club.id));
+const withSource = new Set(work.filter((w) => w.src.kind !== "jsonld").map((w) => ownerKey(w.owner)));
 const ebEvents = q(`SELECT clubId, registrationUrl, sourceUrl, eventDate FROM Event WHERE clubId IS NOT NULL AND (registrationUrl LIKE '%eventbrite.%/e/%' OR sourceUrl LIKE '%eventbrite.%/e/%') ORDER BY eventDate DESC`);
 const ebByClub = new Map();
 for (const e of ebEvents) {
@@ -255,56 +305,71 @@ for (const e of ebEvents) {
 const clubById = new Map(clubs.map((c) => [c.id, c]));
 for (const [clubId, u] of ebByClub) {
   const c = clubById.get(clubId);
-  if (c && !withSource.has(clubId) && !work.some((w) => w.club.id === clubId && w.src.key === u)) work.push({ club: c, src: { kind: "jsonld", key: u } });
+  if (c && !withSource.has(ownerKey(c))) work.push({ owner: c, src: { kind: "jsonld", key: u } });
 }
-const crawledOrganizers = new Set();
+const crawledLinks = new Set();
 const seenEvent = new Set();
-for (const { club, src } of work) {
-  const city = cityById.get(club.cityId);
+for (const { owner, src } of work) {
+  const city = cityById.get(owner.cityId);
   if (!city) continue;
   const id = `${src.kind}:${src.key}`;
-  if (seenSources.has(`${club.id}:${id}`)) continue;
-  seenSources.add(`${club.id}:${id}`);
+  if (seenSources.has(`${ownerKey(owner)}:${id}`)) continue;
+  seenSources.add(`${ownerKey(owner)}:${id}`);
   let found = [];
   try {
-    found = src.kind === "bgt" ? await bamGoodTime(src.key) : src.kind === "bookwhen" ? await bookwhen(src.key) : src.kind === "ebrite" ? await eventbriteOrg(src.key) : await jsonLd(src.key);
-    if (found.organizer && !crawledOrganizers.has(`${club.id}|${found.organizer}`)) {
-      crawledOrganizers.add(`${club.id}|${found.organizer}`);
-      work.push({ club, src: { kind: "ebrite", key: found.organizer } });
+    found =
+      src.kind === "bgt" ? await bamGoodTime(src.key)
+      : src.kind === "bookwhen" ? await bookwhen(src.key)
+      : src.kind === "ebrite" ? await eventbriteOrg(src.key)
+      : src.kind === "calendly" ? await calendly(src.key)
+      : src.kind === "linktree" ? await linktree(src.key)
+      : await jsonLd(src.key);
+    if (found.organizer && !crawledLinks.has(`${ownerKey(owner)}|${found.organizer}`)) {
+      crawledLinks.add(`${ownerKey(owner)}|${found.organizer}`);
+      work.push({ owner, src: { kind: "ebrite", key: found.organizer } });
     }
-    if (src.kind === "ebrite") crawledOrganizers.add(`${club.id}|${src.key}`);
+    for (const link of found.links ?? []) {
+      if (crawledLinks.has(`${ownerKey(owner)}|${link}`)) continue;
+      crawledLinks.add(`${ownerKey(owner)}|${link}`);
+      work.push({ owner, src: { kind: "calendly", key: link } });
+    }
+    if (src.kind === "ebrite" || src.kind === "calendly") crawledLinks.add(`${ownerKey(owner)}|${src.key}`);
   } catch (e) {
-    if (src.kind !== "jsonld") note(city, `Could not read ${id} for "${club.name}": ${e.message}`);
+    if (src.kind !== "jsonld") note(city, `Could not read ${id} for "${owner.name}": ${e.message}`);
     continue;
   }
-  if (src.kind !== "jsonld" && found.length === 0) note(city, `0 events parsed from ${id} for "${club.name}" (page layout may have changed)`);
+  if (src.kind !== "jsonld" && src.kind !== "linktree" && found.length === 0) note(city, `0 events parsed from ${id} for "${owner.name}" (nothing listed, or the page layout changed)`);
   const maxSeen = found.map((f) => f.date).sort().at(-1);
   const seenNow = new Set(found.flatMap((f) => [`${f.date}|${f.name.toLowerCase()}`, ...(f.time ? [`${f.date}|t${f.time}`] : [])]));
+  const ok = ownerKey(owner);
   for (const e of found) {
     if (e.date < today) continue;
     if (e.date > horizonDate || NOT_A_SESSION.test(e.name)) continue;
-    if (knownKey.has(`${club.id}|${e.date}|${e.name.toLowerCase()}`) || (e.time && knownKey.has(`${club.id}|${e.date}|t${e.time}`))) continue;
-    const dupKey = `${club.id}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
+    if (knownKey.has(`${ok}|${e.date}|${e.name.toLowerCase()}`) || (e.time && knownKey.has(`${ok}|${e.date}|t${e.time}`))) continue;
+    const dupKey = `${ok}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;
     seenEvent.add(dupKey);
-    // ACTIVE needs: a club we already trust, a start time and a place. Structured data (JSON-LD)
-    // must name its own venue; the booking adapters may fall back to the club's address.
-    const complete = e.time && (src.kind === "jsonld" || src.kind === "ebrite" ? e.venue : e.venue || club.address);
-    const status = club.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
+    // ACTIVE needs: an owner we already trust, a start time and a place. Structured data (JSON-LD),
+    // Eventbrite and Calendly must name their own venue; the booking adapters may fall back to the club's address.
+    const own = ["jsonld", "ebrite", "calendly"].includes(src.kind);
+    const complete = e.time && (own ? e.venue : e.venue || owner.address);
+    const status = owner.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
     results.get(city.slug).rows.push({
       name: e.name, city: city.name, state: city.state, event_date: e.date, start_time: e.time, end_time: "",
-      venue: e.venue || club.address || "", club_name: club.name, instructor_name: "", event_type: e.type,
+      venue: e.venue || owner.address || "", club_name: owner.type === "club" ? owner.name : "", instructor_name: owner.type === "instructor" ? owner.name : "",
+      event_type: e.type,
       beginner_friendly: e.type === "LESSON" && /101|beginner|intro|learn/i.test(e.name) ? "TRUE" : "FALSE",
       price: e.price ?? "", registration_url: e.url, source_url: e.url, last_verified_at: today, status,
     });
   }
-  // events we have for this club that the page no longer lists (inside the window the page covers)
-  if (maxSeen) {
-    const mine = q(`SELECT name, eventDate, startTime FROM Event WHERE clubId='${club.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
+  // events we have for this owner that the page no longer lists (inside the window the page covers)
+  if (maxSeen && src.kind !== "linktree") {
+    const col = owner.type === "club" ? "clubId" : "instructorId";
+    const mine = q(`SELECT name, eventDate, startTime FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
     for (const e of mine) {
       const d = e.eventDate.slice(0, 10);
-      if (d <= maxSeen && !seenNow.has(`${d}|${e.name.toLowerCase()}`) && !(hhmm(e.startTime) && seenNow.has(`${d}|t${hhmm(e.startTime)}`))) note(city, `Possibly gone: "${e.name}" on ${d} (${club.name}) is no longer listed at ${id}`);
+      if (d <= maxSeen && !seenNow.has(`${d}|${e.name.toLowerCase()}`) && !(hhmm(e.startTime) && seenNow.has(`${d}|t${hhmm(e.startTime)}`))) note(city, `Possibly gone: "${e.name}" on ${d} (${owner.name}) is no longer listed at ${id}`);
     }
   }
 }
@@ -322,7 +387,7 @@ for (const { city, rows, notes } of results.values()) {
   }
   writeFileSync(
     `${dir}/report.md`,
-    `# ${city.name}, ${city.state}: event crawler (${today})\n\n## New events\n${rows.length ? rows.map((r) => `- ${r.event_date} ${r.start_time} ${r.name} (${r.club_name}) [${r.status}]`).join("\n") : "- none"}\n\n## Notes\n${notes.length ? notes.map((n) => `- ${n}`).join("\n") : "- none"}\n`,
+    `# ${city.name}, ${city.state}: event crawler (${today})\n\n## New events\n${rows.length ? rows.map((r) => `- ${r.event_date} ${r.start_time} ${r.name} (${r.club_name || r.instructor_name}) [${r.status}]`).join("\n") : "- none"}\n\n## Notes\n${notes.length ? notes.map((n) => `- ${n}`).join("\n") : "- none"}\n`,
   );
 }
 const noteLines = [...results.values()].flatMap((r) => r.notes.map((n) => `  - ${r.city.name}: ${n}`));
