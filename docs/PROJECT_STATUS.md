@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0173 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0174 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -127,6 +127,12 @@ UI pass 2 (2026-10-08, following the frontend-design skill file at /mnt/skills/p
 real data (a "coming up in the next two weeks" list: one event per city, beginner-friendly first, from `src/lib/upcoming.ts`), left-aligned
 hero, display serif (Literata) for h1/h2, no all-caps eyebrows or dot-joined chip strings, "How it works" as a real numbered sequence.
 UI pass 3: `/cities` is a dense three-column list by state (no card per city, no all-caps state labels); page content is left-aligned with the header on every page (6xl container, `*:max-w-4xl/3xl` for text pages). UI pass 4: tap targets (header nav, footer links, filter buttons, Details/website/nearby-city links) now at least 40px tall on a phone; instructor cards show beginner/private/group/online tags. UI pass 5: Learn index is one numbered list of guides (a real sequence); guide pages use a 42rem measure (about 70 characters), a plain "In this guide" list, a ruled glossary instead of a card per term, and plain previous/next links. A phone tap-size check script lives only in the session notes (Playwright: list a/button/summary under 40px at 390px).
+
+Event crawler (2026-10-09): `scripts/crawl-events.mjs` + `.github/workflows/crawl-events.yml` (started by cron-job.org, like nightly-research).
+It reads each trusted club's own booking page with plain HTTP (no headless browser was needed): Bam Good Time `/events`, Bookwhen schedule
+(event ids carry the date and time), and schema.org JSON-LD for other sites; compares by club + date + start time, writes only new events to
+`data/inbox/crawl-<stamp>/<city>/events.csv` and lists "possibly gone" events in `report.md`. ACTIVE needs a club that is already ACTIVE, a start
+time and a named place. First trial run: 60 new events in 9 cities, imported as `0174` (Baltimore 17, Seattle 10, Houston 6, San Antonio 6, ...).
 
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
