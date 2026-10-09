@@ -12,41 +12,38 @@ export const metadata: Metadata = {
 export default function LearnPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-4xl">
-      <p className="text-sm font-semibold uppercase tracking-widest text-jade">
-        Learn
-      </p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+      <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
         Learn American Mahjong
       </h1>
-      <p className="mt-3 max-w-2xl text-zinc-700 dark:text-zinc-300">
+      <p className="mt-3 max-w-2xl text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
         Start here if you&apos;re new. Read the guides in order, or jump to
-        the one you need — each takes just a few minutes.
+        the one you need. Each takes a few minutes.
       </p>
 
-      <ol className="mt-10 grid gap-4 sm:grid-cols-2">
+      <ol className="mt-10 divide-y divide-line border-y border-line">
         {TOPICS.map((topic, index) => {
           const full = LEARN_TOPICS[topic.slug];
           return (
             <li key={topic.slug}>
               <Link
                 href={`/learn/${topic.slug}`}
-                className="tile-card flex h-full gap-4 p-5 transition-shadow hover:shadow-md"
+                className="group flex gap-5 py-5 hover:bg-jade/5"
               >
                 <span
                   aria-hidden="true"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-jade/10 text-lg font-bold text-jade-strong"
+                  className="w-8 shrink-0 font-[family-name:var(--font-display)] text-3xl font-bold leading-none text-jade"
                 >
                   {index + 1}
                 </span>
                 <span>
-                  <span className="block font-semibold">{topic.title}</span>
-                  <span className="mt-1 block text-sm text-zinc-700 dark:text-zinc-300">
+                  <span className="block text-lg font-semibold text-jade-strong underline-offset-4 group-hover:underline">
+                    {topic.title}
+                  </span>
+                  <span className="mt-1 block text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
                     {topic.description}
                   </span>
-                  <span className="mt-2 block text-xs text-zinc-600 dark:text-zinc-400">
-                    {full
-                      ? `${readingMinutes(full)} min read`
-                      : "Coming soon"}
+                  <span className="mt-1 block text-sm text-muted">
+                    {full ? `${readingMinutes(full)} min read` : "Coming soon"}
                   </span>
                 </span>
               </Link>
@@ -55,15 +52,15 @@ export default function LearnPage() {
         })}
       </ol>
 
-      <section className="tile-card mt-12 p-6">
-        <h2 className="text-xl font-semibold">Ready to play?</h2>
-        <p className="mt-2 text-zinc-700 dark:text-zinc-300">
+      <section className="mt-12 border-l-4 border-jade pl-5">
+        <h2 className="text-2xl font-semibold">Ready to play?</h2>
+        <p className="mt-2 text-lg text-zinc-700 dark:text-zinc-300">
           Once you know the basics, find a beginner-friendly club, lesson or
           open play near you.
         </p>
         <Link
           href="/cities"
-          className="mt-4 inline-flex items-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-800"
+          className="mt-4 inline-flex min-h-11 items-center rounded-full bg-emerald-700 px-6 py-2.5 text-base font-medium text-white transition-colors hover:bg-emerald-800"
         >
           Find a place to play
         </Link>

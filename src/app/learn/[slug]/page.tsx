@@ -71,11 +71,11 @@ function LearnSectionBlock({ section }: { section: LearnSection }) {
           {section.heading}
         </h2>
       )}
-      <dl className="mt-4 space-y-3">
+      <dl className="mt-4 divide-y divide-line border-y border-line">
         {section.terms.map(({ term, definition }) => (
-          <div key={term} className="tile-card p-4">
-            <dt className="font-semibold text-jade-strong">{term}</dt>
-            <dd className="mt-1 leading-7 text-zinc-800 dark:text-zinc-200">
+          <div key={term} className="py-4">
+            <dt className="text-lg font-semibold text-jade-strong">{term}</dt>
+            <dd className="mt-1 text-lg leading-8 text-zinc-800 dark:text-zinc-200">
               {definition}
             </dd>
           </div>
@@ -99,7 +99,7 @@ export default async function LearnTopicPage({
 
   if (!topic) {
     return (
-      <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-3xl">
+      <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-[42rem]">
         <h1 className="text-3xl font-bold tracking-tight">{meta.title}</h1>
         <p className="mt-4 text-zinc-600 dark:text-zinc-400">
           This content is being written by our Mahjong domain expert and US
@@ -118,19 +118,21 @@ export default async function LearnTopicPage({
     .filter((h): h is string => Boolean(h));
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-3xl">
-      <p className="text-sm font-semibold uppercase tracking-widest text-jade">
-        <Link href="/learn" className="hover:underline">
-          Learn
-        </Link>{" "}
-        &middot; Guide {index + 1} of {LEARN_TOPIC_META.length}
+    <div className="mx-auto max-w-6xl px-6 py-16 *:max-w-[42rem]">
+      <p className="text-sm text-muted">
+        <Link
+          href="/learn"
+          className="inline-flex min-h-10 items-center text-jade-strong underline hover:no-underline"
+        >
+          All guides
+        </Link>
+        <span className="ml-3">
+          Guide {index + 1} of {LEARN_TOPIC_META.length}, {readingMinutes(topic)} min read
+        </span>
       </p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+      <h1 className="mt-1 text-3xl font-bold leading-tight sm:text-4xl">
         {topic.title}
       </h1>
-      <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-        {readingMinutes(topic)} min read
-      </p>
       <p className="mt-5 text-xl leading-8 text-zinc-800 dark:text-zinc-200">
         {topic.intro}
       </p>
@@ -138,17 +140,15 @@ export default async function LearnTopicPage({
       {headings.length >= 3 && (
         <nav
           aria-label="On this page"
-          className="tile-card mt-8 p-5"
+          className="mt-8 border-l-4 border-jade pl-4"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-jade">
-            On this page
-          </p>
-          <ul className="mt-2 space-y-1 text-sm">
+          <p className="text-base font-semibold">In this guide</p>
+          <ul className="mt-1 text-base">
             {headings.map((heading) => (
               <li key={heading}>
                 <a
                   href={`#${headingId(heading)}`}
-                  className="underline hover:no-underline"
+                  className="inline-flex min-h-10 items-center underline hover:no-underline"
                 >
                   {heading}
                 </a>
@@ -162,9 +162,9 @@ export default async function LearnTopicPage({
         <LearnSectionBlock key={i} section={section} />
       ))}
 
-      <section className="tile-card mt-14 p-6">
-        <h2 className="text-xl font-semibold">Ready to play?</h2>
-        <p className="mt-2 text-zinc-700 dark:text-zinc-300">
+      <section className="mt-14 border-t border-line pt-8">
+        <h2 className="text-2xl font-semibold">Ready to play?</h2>
+        <p className="mt-2 text-lg text-zinc-700 dark:text-zinc-300">
           Find a beginner-friendly club, lesson or open play near you.
         </p>
         <Link
@@ -177,16 +177,14 @@ export default async function LearnTopicPage({
 
       <nav
         aria-label="More guides"
-        className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between"
+        className="mt-10 grid gap-3 border-t border-line pt-6 sm:grid-cols-2"
       >
         {prev ? (
           <Link
             href={`/learn/${prev.slug}`}
-            className="tile-card block p-4 text-sm sm:max-w-[48%]"
+            className="block rounded-xl border border-line p-4 hover:border-jade"
           >
-            <span className="block text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
-              &larr; Previous
-            </span>
+            <span className="block text-sm text-muted">Previous guide</span>
             <span className="font-semibold">{prev.title}</span>
           </Link>
         ) : (
@@ -195,11 +193,9 @@ export default async function LearnTopicPage({
         {next && (
           <Link
             href={`/learn/${next.slug}`}
-            className="tile-card block p-4 text-sm sm:max-w-[48%] sm:text-right"
+            className="block rounded-xl border border-line p-4 hover:border-jade sm:text-right"
           >
-            <span className="block text-xs uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
-              Next &rarr;
-            </span>
+            <span className="block text-sm text-muted">Next guide</span>
             <span className="font-semibold">{next.title}</span>
           </Link>
         )}
