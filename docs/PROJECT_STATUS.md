@@ -166,6 +166,9 @@ Discovery re-found Cumming GA and Dayton OH (plus Cross Roads TX, North Texas Ma
 New cities (`0181`, unpublished): Cumming GA (Evenings at the Table, 5 events), Dayton OH (Dayton Ohio Mah Jongg, 1 event) and Little Elm TX (North Texas Mahjong; Bam Good Time files it under Cross Roads,
 but its sessions are at TinMan Social in Little Elm and Bella Mia Winery in Pilot Point). Each club says "American" on its own page; all rows are NEEDS_REVIEW until the AI verify night confirms them.
 `build-nightly-prompt.mjs` now counts a group's pending dated sessions towards the five rows, so Cumming and Little Elm are queued for verification first.
+Discovery speed (2026-10-10): default is now 100 city pages per run (about 5 minutes, a full pass in 12 days; the lead cap is 150 so no city in a window is skipped). `--runs-per-day=N`
+(workflow input `runs_per_day`) gives each of N runs a day its own slice by UTC hour, so cron-job.org can start it more often: for a one-off fast first pass use hourly with `batch=50`, `runs_per_day=24`
+(24 slices of 50 = one full pass per day), then go back to once a day (or weekly). The cron-job.org request body then needs `{"ref":"main","inputs":{"batch":"50","runs_per_day":"24"}}`.
 Discovery fix: the daily window used `dayOfYear * 25 % (page count)`, so the growing page count shifted the windows and the same cities were read two days running; it now uses a fixed span (page count rounded up to 100),
 and leads already archived under `data/inbox/discover-*` are skipped (Cumming, Dayton and Cross Roads kept coming back because those cities are not in the database). Troop Mahjong (San Antonio) and Tucson Chinese Cultural Center / Cynthia A. still unconfirmed.
 
