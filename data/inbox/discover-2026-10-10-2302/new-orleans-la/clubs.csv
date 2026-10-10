@@ -1,0 +1,3 @@
+name,city,state,description,address,website,phone,email,latitude,longitude,beginner_friendly,lessons_available,open_play,social_play,women_only,free,price,schedule,source_url,last_verified_at,status
+MahjMarine,New Orleans,LA,American/NMJL not stated on the club's page.,,https://mahjmarine.bamgoodtime.com,,,,,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,,"10 upcoming session(s) listed, next 2026-10-23",https://mahjmarine.bamgoodtime.com,2026-10-10,NEEDS_REVIEW
+NOLA Mahj,New Orleans,LA,American/NMJL not stated on the club's page.,,https://nola-mahj.bamgoodtime.com,,,,,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,,No upcoming sessions listed,https://nola-mahj.bamgoodtime.com,2026-10-10,NEEDS_REVIEW
