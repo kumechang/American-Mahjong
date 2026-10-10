@@ -12,7 +12,7 @@
 // The batch rotates with the day of the year (1,000+ city pages, 25 a day, so a full
 // pass takes about seven weeks). Needs the local D1. Exit code 3 = nothing new.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readdirSync, readFileSync, existsSync } from "node:fs";
 import { arg, today, q, get, lines, decode, csvCell, pages, bamGoodTime, OTHER_STYLES } from "./lib/crawl-lib.mjs";
 
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
@@ -33,14 +33,27 @@ for (const t of ["Club", "Instructor"]) {
     }
   }
 }
+// leads an earlier run already archived (cities not on the site yet never reach the database)
+if (existsSync("data/inbox")) {
+  for (const d of readdirSync("data/inbox").filter((x) => x.startsWith("discover-"))) {
+    for (const c of readdirSync(`data/inbox/${d}`, { withFileTypes: true }).filter((x) => x.isDirectory())) {
+      const f = `data/inbox/${d}/${c.name}/clubs.csv`;
+      if (!existsSync(f)) continue;
+      for (const m of readFileSync(f, "utf8").matchAll(/https:\/\/[a-z0-9-]+\.bamgoodtime\.com/g)) knownOrigins.add(m[0].toLowerCase());
+    }
+  }
+}
 const ourCities = new Set(q(`SELECT name, state FROM City`).map((c) => `${norm(c.name)}|${c.state}`));
 
 // ---------- the directory ----------
 const index = await get("https://bamgoodtime.com/mahjong-clubs");
 const cityPaths = [...new Set([...index.matchAll(/href="(\/mahjong-clubs\/[a-z0-9-]+-[a-z]{2})"/g)].map((m) => m[1]))].sort();
 const dayOfYear = Math.floor((Date.parse(today) - Date.parse(today.slice(0, 4) + "-01-01")) / 864e5) + 1;
-const start = arg("offset") != null ? Number(arg("offset")) : (dayOfYear * batch) % cityPaths.length;
-const todays = Array.from({ length: Math.min(batch, cityPaths.length) }, (_, i) => cityPaths[(start + i) % cityPaths.length]);
+// Fixed-size cycle (the directory grows a few pages a week, which would otherwise shift every window):
+// each day reads its own slice, and the slices repeat every span/batch days.
+const span = Math.ceil(cityPaths.length / 100) * 100;
+const start = arg("offset") != null ? Number(arg("offset")) : (dayOfYear * batch) % span;
+const todays = cityPaths.slice(start, start + batch);
 
 const SKIP_SUB = new Set(["www", "shop", "app", "api", "blog", "mahjic"]);
 const leads = []; // {club, city, state, origin, american, events:[...]}
