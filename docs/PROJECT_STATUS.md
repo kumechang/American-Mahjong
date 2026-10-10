@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0180 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0181 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -163,6 +163,9 @@ Crawler added 4 ACTIVE events (Cleveland, San Antonio, Tampa x1) and the crawler
 Discovery re-found Cumming GA and Dayton OH (plus Cross Roads TX, North Texas Mahjong) -- all three cities are still not on the site.
 2026-10-10 evening runs (`0180`): 4 ACTIVE events (Birmingham O'Neal Library 10/19, Baltimore Tiles Social Club, Houston HCRJ, Phoenix Mahjong for People who Work). Not imported: Katie Moellering stays NEEDS_REVIEW
 (library staff member named on the library's event page, not an independent teacher), Columbia "Private Lesson" (crawler now skips private lessons), Tampa's instructor-side copy of an event we already have (crawler now also checks event page + date + time across all owners).
+New cities (`0181`, unpublished): Cumming GA (Evenings at the Table, 5 events), Dayton OH (Dayton Ohio Mah Jongg, 1 event) and Little Elm TX (North Texas Mahjong; Bam Good Time files it under Cross Roads,
+but its sessions are at TinMan Social in Little Elm and Bella Mia Winery in Pilot Point). Each club says "American" on its own page; all rows are NEEDS_REVIEW until the AI verify night confirms them.
+`build-nightly-prompt.mjs` now counts a group's pending dated sessions towards the five rows, so Cumming and Little Elm are queued for verification first.
 Discovery fix: the daily window used `dayOfYear * 25 % (page count)`, so the growing page count shifted the windows and the same cities were read two days running; it now uses a fixed span (page count rounded up to 100),
 and leads already archived under `data/inbox/discover-*` are skipped (Cumming, Dayton and Cross Roads kept coming back because those cities are not in the database). Troop Mahjong (San Antonio) and Tucson Chinese Cultural Center / Cynthia A. still unconfirmed.
 

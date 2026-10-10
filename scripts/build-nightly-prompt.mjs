@@ -106,7 +106,11 @@ const verifyAll = cities
     return { c, act, review };
   })
   .filter((x) => x.review.length > 0 && (x.act < MIN_ROWS || atRiskAll.some((r) => r.c.id === x.c.id)))
-  .map((x) => ({ ...x, reachable: x.act + Math.min(x.review.length, MIN_ROWS) >= MIN_ROWS }))
+  .map((x) => {
+    // confirming a group also lets its dated sessions go ACTIVE, so they count towards the five rows
+    const dated = x.review.reduce((n, o) => n + (pendingEvents.get(`${o.type}:${o.id}`) ?? 0), 0);
+    return { ...x, reachable: x.act + Math.min(x.review.length + dated, MIN_ROWS) >= MIN_ROWS };
+  })
   .sort((a, b) => Number(b.reachable) - Number(a.reachable) || Number(a.c.published) - Number(b.c.published) || b.act - a.act || b.review.length - a.review.length);
 const verifyQueue = [...verifyAll.filter((x) => !recent.has(x.c.slug)), ...verifyAll.filter((x) => recent.has(x.c.slug))];
 
