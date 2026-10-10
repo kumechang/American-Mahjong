@@ -7,7 +7,7 @@
 // American / NMJL play. Nothing is trusted automatically: a person (or the research
 // server) confirms the variant before a row becomes ACTIVE. Never writes to the database.
 //
-//   node scripts/discover-clubs.mjs [--batch=25] [--offset=N] [--out-dir=data/inbox/discover-…]
+//   node scripts/discover-clubs.mjs [--batch=100] [--runs-per-day=1] [--offset=N] [--out-dir=data/inbox/discover-…]
 //
 // The batch rotates with the day of the year (1,000+ city pages, 25 a day, so a full
 // pass takes about seven weeks). Needs the local D1. Exit code 3 = nothing new.
@@ -18,7 +18,7 @@ import { arg, today, q, get, lines, decode, csvCell, pages, bamGoodTime, OTHER_S
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
 const outDir = arg("out-dir") ?? `data/inbox/discover-${stamp}`;
 const batch = Number(arg("batch") ?? 25);
-const MAX_NEW_CLUBS = 40;
+const MAX_NEW_CLUBS = 150; // a safety stop; a lower cap would silently skip the rest of the day's cities
 const slugify = (t) => String(t).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
@@ -52,7 +52,10 @@ const dayOfYear = Math.floor((Date.parse(today) - Date.parse(today.slice(0, 4) +
 // Fixed-size cycle (the directory grows a few pages a week, which would otherwise shift every window):
 // each day reads its own slice, and the slices repeat every span/batch days.
 const span = Math.ceil(cityPaths.length / 100) * 100;
-const start = arg("offset") != null ? Number(arg("offset")) : (dayOfYear * batch) % span;
+// --runs-per-day=N: when the job is started N times a day, each run gets its own slice (UTC hour decides which slot).
+const runsPerDay = Math.max(1, Number(arg("runs-per-day") ?? 1));
+const slot = Math.min(runsPerDay - 1, Math.floor(new Date().getUTCHours() / (24 / runsPerDay)));
+const start = arg("offset") != null ? Number(arg("offset")) : ((dayOfYear * runsPerDay + slot) * batch) % span;
 const todays = cityPaths.slice(start, start + batch);
 
 const SKIP_SUB = new Set(["www", "shop", "app", "api", "blog", "mahjic"]);
