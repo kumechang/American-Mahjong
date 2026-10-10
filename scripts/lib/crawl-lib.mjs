@@ -40,7 +40,7 @@ export function guessType(name) {
 }
 
 // listings that are enquiry forms or placeholders, not sessions people can attend
-export const NOT_A_SESSION = /inquiry|date request|host a private|gift card|rental/i;
+export const NOT_A_SESSION = /inquiry|date request|host a private|private (lesson|session|event|party)|gift card|rental/i;
 export const OTHER_STYLES = /riichi|hong kong|chinese|singapore|taiwan|japanese/i;
 const lastFetch = new Map();
 let pagesFetched = 0;

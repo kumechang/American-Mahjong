@@ -34,7 +34,9 @@ const cityById = new Map(cities.map((c) => [c.id, c]));
 const clubs = q(`SELECT id, name, cityId, website, sourceUrl, address, status FROM Club WHERE status != 'INACTIVE'`).map((c) => ({ ...c, type: "club" }));
 const teachers = q(`SELECT id, name, cityId, website, sourceUrl, status FROM Instructor WHERE status != 'INACTIVE'`).map((t) => ({ ...t, address: null, type: "instructor" }));
 const ownerKey = (o) => `${o.type[0]}:${o.id}`;
-const known = q(`SELECT name, eventDate, startTime, clubId, instructorId FROM Event`);
+const known = q(`SELECT name, eventDate, startTime, clubId, instructorId, sourceUrl FROM Event`);
+// the same event page, date and time already stored under any owner (club or instructor)
+const knownUrl = new Set(known.filter((e) => e.sourceUrl).map((e) => `${e.sourceUrl}|${e.eventDate.slice(0, 10)}|${(e.startTime ?? "").slice(0, 5)}`));
 // An event we already have is recognised by owner + date + start time (names differ between
 // our rows and the owner's own wording), or by owner + date + name when a time is missing.
 // names compared loosely: case, "@" vs "at", punctuation
@@ -139,7 +141,7 @@ for (const { owner, src } of work) {
     seenEvent.add(dupKey);
     // the same page can be listed by two owners (a club and its instructor): keep the first
     const urlKey = `${e.url}|${e.date}|${e.time}`;
-    if (seenUrl.has(urlKey)) continue;
+    if (seenUrl.has(urlKey) || knownUrl.has(urlKey)) continue;
     seenUrl.add(urlKey);
     // ACTIVE needs: an owner we already trust, a start time and a place. Structured data (JSON-LD),
     // Eventbrite and Calendly must name their own venue; the booking adapters may fall back to the club's address.

@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0179 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0180 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -161,6 +161,10 @@ First timed runs (2026-10-10, `0179`): AI verify night promoted Naples' Paradise
 the AI's other four Naples events were skipped because we already had richer rows for them. Louisville and Sarasota: nothing could be confirmed as American (reports archived; Selby Library names the NMJL card but its page stops at 2024).
 Crawler added 4 ACTIVE events (Cleveland, San Antonio, Tampa x1) and the crawler now ignores the same Meetup/Bam Good Time page when a club and its instructor both list it. Left out: a Columbia "Private Lesson" (not a public event, no named venue).
 Discovery re-found Cumming GA and Dayton OH (plus Cross Roads TX, North Texas Mahjong) -- all three cities are still not on the site.
+2026-10-10 evening runs (`0180`): 4 ACTIVE events (Birmingham O'Neal Library 10/19, Baltimore Tiles Social Club, Houston HCRJ, Phoenix Mahjong for People who Work). Not imported: Katie Moellering stays NEEDS_REVIEW
+(library staff member named on the library's event page, not an independent teacher), Columbia "Private Lesson" (crawler now skips private lessons), Tampa's instructor-side copy of an event we already have (crawler now also checks event page + date + time across all owners).
+Discovery fix: the daily window used `dayOfYear * 25 % (page count)`, so the growing page count shifted the windows and the same cities were read two days running; it now uses a fixed span (page count rounded up to 100),
+and leads already archived under `data/inbox/discover-*` are skipped (Cumming, Dayton and Cross Roads kept coming back because those cities are not in the database). Troop Mahjong (San Antonio) and Tucson Chinese Cultural Center / Cynthia A. still unconfirmed.
 
 AI nightly roles after the crawlers (2026-10-09): `build-nightly-prompt.mjs` plans a week as 4 nights of **verify** (the crawlers' NEEDS_REVIEW groups, in the cities
 closest to publishing, unpublished first: confirm American/NMJL on the group's own pages, quote it, promote to ACTIVE, or mark INACTIVE if another style/closed/members-only),
