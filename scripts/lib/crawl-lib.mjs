@@ -87,9 +87,13 @@ export async function bamGoodTime(origin) {
     }
     if (seen.has(m[1])) continue;
     seen.add(m[1]);
-    const venue = l[j] && !/^\$/.test(l[j]) && !/^(free|spots? left|full|waitlist|sold out)\b|spots? left/i.test(l[j]) ? l[j] : "";
+    // after the time: [•] [host club] location, then the price. The location is the last line before the price.
+    let end = j;
+    while (end < l.length && !/^\$/.test(l[end]) && !/^(part of:?|series|free)$/i.test(l[end])) end++;
+    const cands = l.slice(j, end).filter((x) => !/^[•·]$/.test(x) && !/spots? left|^(full|waitlist|sold out|open|register externally|external)\b/i.test(x));
+    const venue = cands.at(-1) ?? "";
     // private homes are never published (no home addresses on the site)
-    if (/\b(home|residence|house)\b/i.test(venue) && !/(nursing|senior|retirement|clubhouse|guest|lodge|ale|playhouse)/i.test(venue)) continue;
+    if (/\b(home|residence)\b|private house/i.test(cands.join(" ")) && !/(nursing|senior|retirement|assisted)/i.test(venue)) continue;
     const price = l.slice(j).map((x) => x.match(/^\$(\d+(?:\.\d{2})?)/)).find(Boolean);
     out.push({
       name: l[di - 1],

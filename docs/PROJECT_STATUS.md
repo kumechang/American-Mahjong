@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0184 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0185 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -176,6 +176,13 @@ same-day namesake events distinct (Vienna and Wilmette had 7 collisions).
 Vienna VA and Wilmette IL published by direct check (`0184`, 2026-10-11): The Bamboo Room labels its open play "NMJL American" and teaches American mahjong (44 dated sessions ACTIVE); Third Coast Mahjong teaches
 American-style play and the NMJL card (61 sessions ACTIVE). Left out: two non-mahjong rows at The Bamboo Room (a fantasy-football league, an offsite lunch club). Lakeside Mahjong (Wilmette, 3 sessions) stays NEEDS_REVIEW
 because its page does not say American. Event names were cleaned (ALL CAPS to title case, price removed from the name). Published cities: 56.
+13 more cities published by direct check (`0185`, 2026-10-11): Opelika AL, Rye NY, New Bedford MA, Roswell GA, Panama City FL, Newburyport MA, Portsmouth NH, Youngsville LA, Whitehouse Station NJ, Salem AR,
+Little Elm TX, Cumming GA, Round Rock TX. Each club's own pages name American Mahjong or sell/ask for the NMJL card. Event rows are ACTIVE only with a start time and a named venue; rows without one
+(Portsmouth "or another location", Round Rock "address to follow", Salem "Free (donations welcome)", Cumming league makeup, three Whitehouse Station guided plays) stay NEEDS_REVIEW. Not published, still NEEDS_REVIEW:
+Park Ridge IL (North Shore Mahjong: club is American but its sessions are in Highland Park and Glenview, so the city name needs a decision), Wayzata MN (sessions at a private residence), Queen Creek AZ and Truckee CA
+(session addresses look like homes), Tyrone GA and Nashville GA (street address only), Wyckoff NJ (lessons in other towns), and Washington NC, Newnan GA, Williston SC, Navarre FL, Palmetto GA (no American wording found).
+Crawler fix: Bam Good Time lists "date - time - [host club] - location - price"; the parser now takes the last line before the price as the location, so "Private Residence" is caught and "-" or the host club name is no longer used as a venue.
+Published cities: 69.
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
