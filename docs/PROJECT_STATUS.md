@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0181 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0182 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -169,6 +169,11 @@ but its sessions are at TinMan Social in Little Elm and Bella Mia Winery in Pilo
 Discovery speed (2026-10-10): default is now 100 city pages per run (about 5 minutes, a full pass in 12 days; the lead cap is 150 so no city in a window is skipped). `--runs-per-day=N`
 (workflow input `runs_per_day`) gives each of N runs a day its own slice by UTC hour, so cron-job.org can start it more often: for a one-off fast first pass use hourly with `batch=50`, `runs_per_day=24`
 (24 slices of 50 = one full pass per day), then go back to once a day (or weekly). The cron-job.org request body then needs `{"ref":"main","inputs":{"batch":"50","runs_per_day":"24"}}`.
+Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
+run number (`--step=${{ github.run_number }}`), so every start reads the next slice however often cron-job.org calls it; `runs_per_day` is kept as an ignored input so an old request body still works.
+Imported from the two distinct windows (nashville..park ridge, pensacola..salem): 44 clubs and 197 dated sessions, all NEEDS_REVIEW; 16 new unpublished cities (those with 5+ dated sessions or an American-stated club:
+Nashville GA, Navarre, New Bedford, Newburyport, Newnan, North Easton, Opelika, Palmetto, Panama City, Park Ridge, Portsmouth NH, Queen Creek, Roswell, Round Rock, Rye, Salem AR); the rest stay as leads in `data/inbox`.
+Skipped: Oceanside BC (Canada). Saint Louis was filed under the existing St. Louis page.
 Discovery fix: the daily window used `dayOfYear * 25 % (page count)`, so the growing page count shifted the windows and the same cities were read two days running; it now uses a fixed span (page count rounded up to 100),
 and leads already archived under `data/inbox/discover-*` are skipped (Cumming, Dayton and Cross Roads kept coming back because those cities are not in the database). Troop Mahjong (San Antonio) and Tucson Chinese Cultural Center / Cynthia A. still unconfirmed.
 
