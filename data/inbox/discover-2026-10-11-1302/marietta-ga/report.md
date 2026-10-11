@@ -1,0 +1,10 @@
+# Marietta, GA: club discovery (2026-10-11)
+
+**This city is not on the site yet** (and may be a suburb of a larger metro: check which metro page it belongs to).
+
+## Clubs found on Bam Good Time
+- Black Girls Mahjong, Too!- ATL Community (https://black-girls-mahjong-too-atl-community.bamgoodtime.com): says: "🀄 American Mahjong and Hong Kong Mahjong tables"; 2 upcoming event(s)
+- Mahj and Mingle (https://mahj-and-mingle.bamgoodtime.com): American/NMJL not stated; 1 upcoming event(s)
+
+## Next step
+Confirm American / NMJL on each club's own page, then promote to ACTIVE. Rows here are NEEDS_REVIEW by design.

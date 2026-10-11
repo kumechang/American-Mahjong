@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 export const arg = (n) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3);
 export const today = arg("today") ?? new Date().toISOString().slice(0, 10);
 export const UA = "Mozilla/5.0 (compatible; MahjongMapBot/1.0; +https://mahjong-map.com/about)";
-const MAX_PAGES = 400;
+const MAX_PAGES = 1500;
 
 export const q = (sql) =>
   JSON.parse(
@@ -40,7 +40,7 @@ export function guessType(name) {
 }
 
 // listings that are enquiry forms or placeholders, not sessions people can attend
-export const NOT_A_SESSION = /inquiry|date request|host a private|private (lesson|session|event|party)|gift card|rental/i;
+export const NOT_A_SESSION = /inquiry|date request|host a private|private (lesson|session|event|party)|gift card|rental|fantasy football|lunch bunch|gives back/i;
 export const OTHER_STYLES = /riichi|hong kong|chinese|singapore|taiwan|japanese/i;
 const lastFetch = new Map();
 let pagesFetched = 0;
