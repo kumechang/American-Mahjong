@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0186 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0187 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -185,6 +185,12 @@ Crawler fix: Bam Good Time lists "date - time - [host club] - location - price";
 Published cities: 69.
 North Shore IL published (`0186`, 2026-10-11): the Park Ridge city row was renamed to the wider "North Shore" because North Shore Mahjong's 17 sessions are at venues in Highland Park and Glenview (cafes, a tavern, a boutique).
 American wording is on the club's own pages. Published cities: 70.
+Refresh of published cities under five rows (`0187`, 2026-10-11): 9 cities were under the rule, 3 are left (New Orleans, St. Louis, Tucson at 4). Dated sessions were read from the owners' own calendars:
+Chicago +16 (The Mahjong Society calendar; "Mahjong & Money" and a Dec 8 row whose text still says Nov 10 stay NEEDS_REVIEW), Omaha +10 (Club Mahj at Stories Coffee Co. and Revival House; One Bam at Vino Mas Eagle Run; its beginner class and guided play
+are at private homes and were left out), Los Angeles +1 (LA LA Mahjong at The New Deal, Burbank), Charleston +6 (Holy Mahj Beginners Series at The Card Room, from the Shopify product variants; Nov 30 has no time). Promoted to ACTIVE:
+317 Mahj Collective (its Linktree says "American Mahjong lessons and events"), The Traveling Mahj (NMJL gameplay rules), and three Mahjong Social Club Jax sessions (the live booking page lists them as open but prints no year).
+102 past-dated ACTIVE events were set to INACTIVE. Still open: New Orleans (MahjMarine's 10 Mahjong 101 sessions at The Rink do not say American; Fleur de Mahj sells leagues without dates in its product data), St. Louis (Magpie's
+Oct 28 open play has no venue; Clover Club books through a widget), Tucson (tucsonjcc.org needs a browser).
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
