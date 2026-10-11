@@ -109,9 +109,11 @@ const verifyAll = cities
   .map((x) => {
     // confirming a group also lets its dated sessions go ACTIVE, so they count towards the five rows
     const dated = x.review.reduce((n, o) => n + (pendingEvents.get(`${o.type}:${o.id}`) ?? 0), 0);
-    return { ...x, reachable: x.act + Math.min(x.review.length + dated, MIN_ROWS) >= MIN_ROWS };
+    return { ...x, dated, reachable: x.act + Math.min(x.review.length + dated, MIN_ROWS) >= MIN_ROWS };
   })
-  .sort((a, b) => Number(b.reachable) - Number(a.reachable) || Number(a.c.published) - Number(b.c.published) || b.act - a.act || b.review.length - a.review.length);
+  // 1) published cities about to fall under five rows, 2) the rest; inside each: ones that can reach five, then most dated sessions waiting
+  .map((x) => ({ ...x, atRisk: Boolean(x.c.published) && atRiskAll.some((r) => r.c.id === x.c.id) }))
+  .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(b.reachable) - Number(a.reachable) || b.dated - a.dated || b.act - a.act || b.review.length - a.review.length);
 const verifyQueue = [...verifyAll.filter((x) => !recent.has(x.c.slug)), ...verifyAll.filter((x) => recent.has(x.c.slug))];
 
 // ---------- discovery leads: places the directory crawler found whose club says it plays American mahjong ----------

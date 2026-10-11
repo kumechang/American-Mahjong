@@ -169,6 +169,8 @@ but its sessions are at TinMan Social in Little Elm and Bella Mia Winery in Pilo
 Discovery speed (2026-10-10): default is now 100 city pages per run (about 5 minutes, a full pass in 12 days; the lead cap is 150 so no city in a window is skipped). `--runs-per-day=N`
 (workflow input `runs_per_day`) gives each of N runs a day its own slice by UTC hour, so cron-job.org can start it more often: for a one-off fast first pass use hourly with `batch=50`, `runs_per_day=24`
 (24 slices of 50 = one full pass per day), then go back to once a day (or weekly). The cron-job.org request body then needs `{"ref":"main","inputs":{"batch":"50","runs_per_day":"24"}}`.
+Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
+(North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
 run number (`--step=${{ github.run_number }}`), so every start reads the next slice however often cron-job.org calls it; `runs_per_day` is kept as an ignored input so an old request body still works.
 Imported from the two distinct windows (nashville..park ridge, pensacola..salem): 44 clubs and 197 dated sessions, all NEEDS_REVIEW; 16 new unpublished cities (those with 5+ dated sessions or an American-stated club:
