@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0189 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0190 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -198,6 +198,11 @@ Published after reading each club's own pages (all name American Mahjong or the 
 or a "house"): Knightdale NC, Grafton MA, Elgin IL, Gilbert AZ, Jacksonville NC, Knoxville TN, Goldsboro NC (2 clubs), Mobile AL (2 clubs), Clinton MO, Franklin TN, Chelsea AL, Aurora CO, Bryant AR, Georgetown TX,
 Lees Summit MO, Marble Falls TX. Checked and held: Carlisle PA, Island Park NY, Friendswood TX, Layton UT, Angleton TX, Berlin MD (venues missing or street-address only), Billings MT, Fort Myers FL, Belmont MA (events are in
 Chatham), Liberty MO (Kansas City group), Lucedale MS, Johns Island SC, Columbus GA (house venue), and seven clubs with no American wording. Published cities: 86.
+Washington NC published (`0190`, 2026-10-11): Mahjongg by MawJayne's pages say NMJL playing cards are provided on site; 12 dated table-time sessions at Beaufort Marketplace, 4525 Hwy 264, Washington. Published cities: 87.
+Third pass over the remaining 66 unpublished cities (owner pages read directly, 17 Bam Good Time clubs with sessions): nothing else is publishable yet. COMO Mahjong (Columbia MO, 63 sessions) has no American wording
+(only a "Charleston Club" membership name); Mid Mo Mahjong's sessions are in Blue Springs (Kansas City area); Bend OR, Cherry Hill NJ, Brenham TX, Havre De Grace MD and Margate FL have American wording but venues that are
+street-address only, "to be announced" or "free (donations welcome)", so fewer than four sessions qualify. Louisville KY, Sarasota FL, Naples FL (4 ACTIVE) and Pittsburgh PA have owners but none states American on its own pages.
+The 40-odd bambuddies.org / orderofthetile.com rows (Pittsburgh, Cincinnati, Milwaukee) have no page of their own to read. Next step for these: contact the owners, or add a browser-based reader for sites that render with JavaScript.
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
