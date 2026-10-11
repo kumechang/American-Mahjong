@@ -1,0 +1,3 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Monday Open Play,Wheatland,WY,2026-10-12,18:30,,867 Gilchrist St,East Wind Lounge,,OPEN_PLAY,FALSE,15,https://east-wind-lounge.bamgoodtime.com/events/abfea9cf-4c49-40fa-879a-b74a8ab401ca,https://east-wind-lounge.bamgoodtime.com/events/abfea9cf-4c49-40fa-879a-b74a8ab401ca,2026-10-11,NEEDS_REVIEW
+Monster Mash Mahjong,Wheatland,WY,2026-10-14,18:30,,867 Gilchrist St,East Wind Lounge,,OTHER,FALSE,35,https://east-wind-lounge.bamgoodtime.com/events/3542a306-9f47-4ce1-a406-00b995356865,https://east-wind-lounge.bamgoodtime.com/events/3542a306-9f47-4ce1-a406-00b995356865,2026-10-11,NEEDS_REVIEW

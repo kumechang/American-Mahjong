@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0182 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0183 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -169,6 +169,10 @@ but its sessions are at TinMan Social in Little Elm and Bella Mia Winery in Pilo
 Discovery speed (2026-10-10): default is now 100 city pages per run (about 5 minutes, a full pass in 12 days; the lead cap is 150 so no city in a window is skipped). `--runs-per-day=N`
 (workflow input `runs_per_day`) gives each of N runs a day its own slice by UTC hour, so cron-job.org can start it more often: for a one-off fast first pass use hourly with `batch=50`, `runs_per_day=24`
 (24 slices of 50 = one full pass per day), then go back to once a day (or weekly). The cron-job.org request body then needs `{"ref":"main","inputs":{"batch":"50","runs_per_day":"24"}}`.
+North Easton MA published by direct check (`0183`, 2026-10-11): the club's own pages say "American Mah Jongg" and teach the National Mah Jongg League card; 32 dated Beginners Open/Guided Play sessions
+(Mon/Wed 6 PM, The Loft at MIMI + Clutch, $20) are ACTIVE. First published city that came out of the discovery crawler. Also from the end of the first discovery pass (#126, #128): 18 clubs and 186 sessions imported as
+NEEDS_REVIEW (Tampa, Tucson, Wichita KS plus 10 new unpublished cities: Truckee, Tyrone, Vienna VA, Washington NC, Wayzata, Whitehouse Station, Williston, Wilmette, Wyckoff, Youngsville). Discovery now makes
+same-day namesake events distinct (Vienna and Wilmette had 7 collisions).
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own

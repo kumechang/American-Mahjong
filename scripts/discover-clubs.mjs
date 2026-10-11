@@ -43,6 +43,9 @@ if (existsSync("data/inbox")) {
     }
   }
 }
+const eventSlug = (cityName, name, date) => `${slugify(cityName)}-${slugify(name)}-${date.replace(/-/g, "")}`;
+const takenSlugs = new Set(q(`SELECT slug FROM Event`).map((r) => r.slug.replace(/^event_/, "")));
+const clock12 = (t) => { const [h, m] = t.split(":").map(Number); return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`; };
 const ourCities = new Set(q(`SELECT name, state FROM City`).map((c) => `${norm(c.name)}|${c.state}`));
 
 // ---------- the directory ----------
@@ -131,6 +134,17 @@ for (const [key, list] of byCity) {
     event_type: e.type, beginner_friendly: e.type === "LESSON" && /101|beginner|intro|learn/i.test(e.name) ? "TRUE" : "FALSE", price: e.price ?? "",
     registration_url: e.url, source_url: e.url, last_verified_at: today, status: "NEEDS_REVIEW",
   })));
+  // the importer keys an event on city + name + date: make same-day namesakes distinct (time, then club, then a number)
+  const usedSlugs = new Set();
+  for (const r of eventRows) {
+    const taken = (n) => usedSlugs.has(eventSlug(r.city, n, r.event_date)) || takenSlugs.has(eventSlug(r.city, n, r.event_date));
+    let name = r.name;
+    if (taken(name) && r.start_time) name = `${r.name} (${clock12(r.start_time)})`;
+    if (taken(name)) name = `${r.name} (${r.club_name})`;
+    for (let i = 2; taken(name); i++) name = `${r.name} (${i})`;
+    r.name = name;
+    usedSlugs.add(eventSlug(r.city, name, r.event_date));
+  }
   if (eventRows.length) writeFileSync(`${dir}/events.csv`, [EVENT_H.join(","), ...eventRows.map((r) => EVENT_H.map((h) => csvCell(r[h])).join(","))].join("\n") + "\n");
   const known = ourCities.has(`${norm(list[0].city)}|${list[0].state}`);
   writeFileSync(
