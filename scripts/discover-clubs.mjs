@@ -7,7 +7,7 @@
 // American / NMJL play. Nothing is trusted automatically: a person (or the research
 // server) confirms the variant before a row becomes ACTIVE. Never writes to the database.
 //
-//   node scripts/discover-clubs.mjs [--batch=100] [--runs-per-day=1] [--offset=N] [--out-dir=data/inbox/discover-…]
+//   node scripts/discover-clubs.mjs [--batch=100] [--step=N] [--offset=N] [--out-dir=data/inbox/discover-…]
 //
 // The batch rotates with the day of the year (1,000+ city pages, 25 a day, so a full
 // pass takes about seven weeks). Needs the local D1. Exit code 3 = nothing new.
@@ -55,7 +55,9 @@ const span = Math.ceil(cityPaths.length / 100) * 100;
 // --runs-per-day=N: when the job is started N times a day, each run gets its own slice (UTC hour decides which slot).
 const runsPerDay = Math.max(1, Number(arg("runs-per-day") ?? 1));
 const slot = Math.min(runsPerDay - 1, Math.floor(new Date().getUTCHours() / (24 / runsPerDay)));
-const start = arg("offset") != null ? Number(arg("offset")) : ((dayOfYear * runsPerDay + slot) * batch) % span;
+// --step=N (the workflow passes its run number) gives every run its own slice however often it is started.
+const step = arg("step") != null ? Number(arg("step")) : dayOfYear * runsPerDay + slot;
+const start = arg("offset") != null ? Number(arg("offset")) : (step * batch) % span;
 const todays = cityPaths.slice(start, start + batch);
 
 const SKIP_SUB = new Set(["www", "shop", "app", "api", "blog", "mahjic"]);
