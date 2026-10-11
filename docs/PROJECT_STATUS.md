@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0185 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0186 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -183,6 +183,8 @@ Park Ridge IL (North Shore Mahjong: club is American but its sessions are in Hig
 (session addresses look like homes), Tyrone GA and Nashville GA (street address only), Wyckoff NJ (lessons in other towns), and Washington NC, Newnan GA, Williston SC, Navarre FL, Palmetto GA (no American wording found).
 Crawler fix: Bam Good Time lists "date - time - [host club] - location - price"; the parser now takes the last line before the price as the location, so "Private Residence" is caught and "-" or the host club name is no longer used as a venue.
 Published cities: 69.
+North Shore IL published (`0186`, 2026-10-11): the Park Ridge city row was renamed to the wider "North Shore" because North Shore Mahjong's 17 sessions are at venues in Highland Park and Glenview (cafes, a tavern, a boutique).
+American wording is on the club's own pages. Published cities: 70.
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
