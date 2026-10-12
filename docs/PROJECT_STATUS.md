@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0195 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0196 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -243,6 +243,12 @@ labelled in the list). A mode with nothing to do is skipped. `--mode=` forces on
 
 Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `inbox/<id>` PR and deletes the branch once
 `data/inbox/<id>/` is in `main`. So the routine is: the import PR archives the raw folder; the inbox PR closes itself.
+
+## Crawler guards added 2026-10-12
+- `data/venue-denylist.txt`: address fragments of private homes; `crawl-events.mjs` drops any session whose venue matches.
+- Session titles with "'s Home" / "Private Residence" are skipped (`NOT_A_SESSION`).
+- A title that says "evening/night" with a start before noon (or "morning" at 5 pm or later) is kept as NEEDS_REVIEW (source typo, e.g. Mahj Atelier "Evening" lessons listed at 6:30 AM).
+- The nightly prompt builder skips discovery leads whose club website is already in the DB and leads outside the 50 states + DC.
 
 ## How to resume
 ```bash

@@ -130,6 +130,11 @@ function parseCsv(text) {
   const [head, ...body] = rows;
   return body.filter((r) => r.length === head.length).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i]])));
 }
+// a lead is skipped when its club is already in the database (a city can be filed under another name,
+// e.g. Cross Roads → Little Elm) or when the state is not one of the 50 states or DC (Canada is out of scope)
+const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
+const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, "").toLowerCase(); } catch { return null; } };
+const ownedHosts = new Set(owners.flatMap((o) => [o.website, o.sourceUrl].map(hostOf)).filter((h) => h && !DIRECTORY_ONLY.test(h)));
 const leadPlaces = new Map(); // "City, ST" -> leads
 if (existsSync("data/inbox")) {
   for (const run of readdirSync("data/inbox").filter((d) => d.startsWith("discover-"))) {
@@ -138,7 +143,8 @@ if (existsSync("data/inbox")) {
       if (!existsSync(f)) continue;
       for (const r of parseCsv(readFileSync(f, "utf8"))) {
         const key = `${r.city}, ${r.state}`;
-        if (known.has(key.toLowerCase())) continue;
+        if (known.has(key.toLowerCase()) || !US_STATES.has(r.state)) continue;
+        if (ownedHosts.has(hostOf(r.website))) continue;
         if (!leadPlaces.has(key)) leadPlaces.set(key, []);
         leadPlaces.get(key).push({ name: r.name, website: r.website, american: /Site says:/.test(r.description) });
       }

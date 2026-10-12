@@ -1,0 +1,3 @@
+name,city,state,description,address,website,phone,email,latitude,longitude,beginner_friendly,lessons_available,open_play,social_play,women_only,free,price,schedule,source_url,last_verified_at,status
+Island Mahjong Club,San Francisco,CA,American/NMJL not stated on the club's page.,,https://island.bamgoodtime.com,,,,,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,,No upcoming sessions listed,https://island.bamgoodtime.com,2026-10-12,NEEDS_REVIEW
+Mahjic Demo Club,San Francisco,CA,American/NMJL not stated on the club's page.,,https://mahjic-demo.bamgoodtime.com,,,,,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,,No upcoming sessions listed,https://mahjic-demo.bamgoodtime.com,2026-10-12,NEEDS_REVIEW
