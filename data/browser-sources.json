@@ -4,5 +4,26 @@
     "urls": [
       "https://tucsonjcc.org/?s=mah+jongg"
     ]
+  },
+  {
+    "owner": "The Mahjong Society",
+    "kind": "calendar",
+    "urls": [
+      "https://themahjongsociety.com/event-calendar"
+    ]
+  },
+  {
+    "owner": "The Lucky Sparrow / Emily Cox",
+    "kind": "calendar",
+    "urls": [
+      "https://www.theluckysparrow.com/events"
+    ]
+  },
+  {
+    "owner": "MahjongRVA",
+    "kind": "calendar",
+    "urls": [
+      "https://www.mahjongrva.com/calendar"
+    ]
   }
 ]

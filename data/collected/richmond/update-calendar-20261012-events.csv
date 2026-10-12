@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Open Play @ Bar West!,Richmond,VA,2026-11-08,15:00,,Bar West,,The Lucky Sparrow / Emily Cox,OPEN_PLAY,FALSE,25,https://www.theluckysparrow.com/events,https://www.theluckysparrow.com/events,2026-10-12,ACTIVE
+Community Open Play,Richmond,VA,2026-10-27,17:30,,Wegmans,MahjongRVA,,OPEN_PLAY,FALSE,,https://www.mahjongrva.com/calendar,https://www.mahjongrva.com/calendar,2026-10-12,ACTIVE
+Community Open Play,Richmond,VA,2026-11-19,17:30,,Wegmans,MahjongRVA,,OPEN_PLAY,FALSE,,https://www.mahjongrva.com/calendar,https://www.mahjongrva.com/calendar,2026-10-12,ACTIVE

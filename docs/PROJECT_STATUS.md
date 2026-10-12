@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0192 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0193 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -212,6 +212,10 @@ Headless-browser reader (2026-10-12, `0192`): `render()` / `browserEvents()` in 
 (1 page per host per second, shared page cap) and an honest `MahjongMapBot/1.0 (+https://mahjong-map.com/about)` user agent; it avoids the "Mozilla/5.0 (compatible; ...)" form that tucsonjcc.org's firewall blocks outright.
 First source: Tucson J Mah Jongg (search listing `?s=mah+jongg`, since its programs page keeps the schedule in tabs): +16 ACTIVE sessions (Intro to Mahj, Next Level Mahj, Tuesday Open Play), so Tucson is back above five.
 Looked at and not worth reading this way: Fleur de Mahj (a table-rental grid, no class dates), Mahjong Smiles (home-hosted series, venue by registration), Clover Club (booking widget shows prices, not dates).
+Calendar-widget reader (2026-10-12, `0193`): several studios' own sites share one event-list widget ("Oct / 13 / <title> / Tuesday, October 13, 2026 / 6:00 PM / 8:00 PM / <venue> / (map) / Google Calendar / ICS ...").
+`widgetCalendar()` reads it with a plain request; owners are listed in `data/browser-sources.json` with `"kind": "calendar"` (The Mahjong Society, The Lucky Sparrow, MahjongRVA). ACTIVE needs a time and either the
+entry's venue or an owner address with a street number (a bare "Richmond, VA" no longer counts). Richmond VA: +3 ACTIVE sessions (Wegmans open play x2, Bar West open play), back above five. Chicago's calendar is now kept
+current by the crawler too. Cities still under five: New Orleans and St. Louis (4 each).
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own

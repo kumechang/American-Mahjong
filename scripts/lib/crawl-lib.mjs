@@ -379,3 +379,26 @@ export async function browserEvents(url, horizon) {
   const ld = jsonLdFromHtml(html, url);
   return ld.length ? ld : datedTextEvents(text, url, horizon);
 }
+
+// Calendar widget used by several studios' own sites (The Mahjong Society, The Lucky Sparrow, MahjongRVA ...). Each entry reads, after HTML is
+// flattened to lines: "Oct" "13" <title> "Tuesday, October 13, 2026" "6:00 PM" "8:00 PM" [<venue>] "(map)" "Google Calendar" "ICS" <description> "View Event →".
+// A page like that is the owner's own event list, so every entry counts (no "mahjong" word needed in the title).
+export function widgetEvents(t, url) {
+  const out = [];
+  for (let i = 1; i < t.length - 3; i++) {
+    const d = t[i].match(/^(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day, ([A-Z][a-z]+) (\d{1,2}), (\d{4})$/);
+    if (!d || !MONTHS[d[1].toLowerCase()] || !/^\d{1,2}:\d\d [AP]M$/.test(t[i + 1])) continue;
+    let j = i + 2;
+    if (/^\d{1,2}:\d\d [AP]M$/.test(t[j])) j++;
+    const venue = t[j] && !/^(\(map\)|Google Calendar|ICS)$/.test(t[j]) ? t[j] : "";
+    const desc = [];
+    for (let k = j; k < t.length && t[k] !== "View Event →" && desc.length < 60; k++) desc.push(t[k]);
+    const m1 = t[i + 1].match(/(\d{1,2}):(\d\d) ([AP]M)/);
+    const price = (desc.join(" ").match(/\$(\d+(?:\.\d\d)?)/) ?? [])[1];
+    out.push({ name: t[i - 1], date: `${d[3]}-${pad(MONTHS[d[1].toLowerCase()])}-${pad(d[2])}`, time: to24(m1[1], m1[2], m1[3]), venue: decode(venue), price: price ? Number(price) : null, url, type: /open play|guided play|social|mixer/i.test(t[i - 1]) ? "OPEN_PLAY" : /101|102|103|class|lesson|learn|beginner|intro|strategy/i.test(`${t[i - 1]} ${desc.slice(0, 8).join(" ")}`) ? "LESSON" : guessType(t[i - 1]) });
+  }
+  return out;
+}
+export async function widgetCalendar(url) {
+  return widgetEvents(lines(await get(url)), url);
+}
