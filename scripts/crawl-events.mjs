@@ -23,7 +23,7 @@
 // a User-Agent that says who we are, a hard cap on pages per run.
 
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
-import { arg, today, UA, q, decode, lines, csvCell, MONTHS, pad, to24, guessType, get, pages, bamGoodTime, bookwhen, calendly, linktree, meetup, tribe, eventbriteOrg, jsonLd, browserEvents, closeBrowser, OTHER_STYLES, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
+import { arg, today, UA, q, decode, lines, csvCell, MONTHS, pad, to24, guessType, get, pages, bamGoodTime, bookwhen, calendly, linktree, meetup, tribe, eventbriteOrg, jsonLd, browserEvents, widgetCalendar, closeBrowser, OTHER_STYLES, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
 
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
 const outDir = arg("out-dir") ?? `data/inbox/crawl-${stamp}`;
@@ -79,14 +79,14 @@ const note = (city, text) => {
   results.get(city.slug).notes.push(text);
 };
 const seenSources = new Set();
-const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, meetup: 2, ebrite: 3, jsonld: 4, browser: 5 };
+const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, meetup: 2, ebrite: 3, jsonld: 4, browser: 5, calendar: 5 };
 const work = [...clubs, ...teachers].map((o) => ({ owner: o, src: sourceFor(o) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
 // Sites that only show their schedule after JavaScript runs: read with a headless browser (data/browser-sources.json).
 const browserSources = existsSync("data/browser-sources.json") ? JSON.parse(readFileSync("data/browser-sources.json", "utf8")) : [];
 for (const b of browserSources) {
   const owner = [...clubs, ...teachers].find((o) => o.name.toLowerCase() === b.owner.toLowerCase());
   if (!owner) continue;
-  for (const u of b.urls) work.push({ owner, src: { kind: "browser", key: u } });
+  for (const u of b.urls) work.push({ owner, src: { kind: b.kind === "calendar" ? "calendar" : "browser", key: u } });
 }
 // Clubs that only link to single Eventbrite event pages: read the latest such page, find its organizer, crawl that.
 const withSource = new Set(work.filter((w) => w.src.kind !== "jsonld").map((w) => ownerKey(w.owner)));
@@ -122,6 +122,7 @@ for (const { owner, src } of work) {
       : src.kind === "linktree" ? await linktree(src.key)
       : src.kind === "meetup" ? await meetup(src.key)
       : src.kind === "browser" ? await browserEvents(src.key, horizonDate)
+      : src.kind === "calendar" ? await widgetCalendar(src.key)
       : ((await tribe(src.key)) ?? (await jsonLd(src.key)));
     if (found.organizer && !crawledLinks.has(`${ownerKey(owner)}|${found.organizer}`)) {
       crawledLinks.add(`${ownerKey(owner)}|${found.organizer}`);
@@ -155,7 +156,7 @@ for (const { owner, src } of work) {
     // ACTIVE needs: an owner we already trust, a start time and a place. Structured data (JSON-LD),
     // Eventbrite and Calendly must name their own venue; the booking adapters may fall back to the club's address.
     const own = ["jsonld", "ebrite", "calendly", "meetup"].includes(src.kind);
-    const complete = e.time && (own ? e.venue : e.venue || owner.address);
+    const complete = e.time && (own ? e.venue : e.venue || (/\d/.test(owner.address ?? "") ? owner.address : ""));
     const status = owner.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
     results.get(city.slug).rows.push({
