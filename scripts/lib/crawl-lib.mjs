@@ -263,7 +263,24 @@ export async function eventbriteOrg(url) {
 }
 
 export async function jsonLd(url) {
-  return jsonLdFromHtml(await get(url), url);
+  const html = await get(url);
+  const first = jsonLdFromHtml(html, url);
+  if (first.length || !/mah/i.test(html)) return first;
+  // the schedule often lives on a subpage ("Events", "Classes", "Calendar"): follow up to three such links from the home page
+  const out = [];
+  const origin = new URL(url).origin;
+  for (const m of html.matchAll(/href="([^"#?]*(?:event|calendar|schedule|class|workshop|lesson)[^"#?]*)"/gi)) {
+    let u; try { u = new URL(m[1], url).toString(); } catch { continue; }
+    if (u.startsWith(origin) && u !== url && !/\.(jpe?g|png|gif|pdf|css|js|ics)(\?|$)/i.test(u) && !out.includes(u)) out.push(u);
+    if (out.length >= 3) break;
+  }
+  for (const u of out) {
+    try { const sub = jsonLdFromHtml(await get(u), u); if (sub.length) return sub; } catch { /* 404 and the like */ }
+  }
+  // a calendar feed linked from the home page
+  const feed = (html.match(/(?:href|src)="((?:webcal:|https?:)[^"]*\.ics[^"]*)"/i) ?? [])[1];
+  if (feed) { try { const ev = await icsEvents(feed.replace(/&amp;/g, "&")); if (ev.length) return ev; } catch { /* unreadable feed */ } }
+  return first;
 }
 export function jsonLdFromHtml(html, url) {
   const out = [];
@@ -407,4 +424,75 @@ export async function widgetCalendar(url, all = false, include = "") {
   const firstSeen = new Set();
   for (const e of ev) { if (e.price >= 150) { const k = `${e.name}|${e.price}`; if (firstSeen.has(k)) e.price = null; else firstSeen.add(k); } }
   return ev.filter((e) => all || (/mah/i.test(`${e.name} ${e.desc}`) && !OTHER_STYLES.test(`${e.name} ${e.desc.slice(0, 200)}`)));
+}
+
+
+// ---------- iCalendar (.ics / webcal:) feeds ----------
+// Times with a TZID (or a UTC time on a feed that declares X-WR-TIMEZONE) become local times; all-day entries, cancelled
+// entries and anything else we cannot place in a local time are skipped. Weekly rules (BYDAY, INTERVAL, COUNT, UNTIL) are
+// expanded inside the crawl window; other recurrence rules are skipped rather than guessed.
+const icsUnescape = (v) => v.replace(/\\n/gi, " ").replace(/\\([,;\\])/g, "$1").replace(/\s+/g, " ").trim();
+function localParts(utcMs, tz) {
+  const f = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+  const p = Object.fromEntries(f.formatToParts(new Date(utcMs)).map((x) => [x.type, x.value]));
+  return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}` };
+}
+export function parseIcs(text, url, horizon, all = false) {
+  const raw = text.replace(/\r\n?/g, "\n").replace(/\n[ \t]/g, "").split("\n");
+  const calTz = (raw.find((l) => /^X-WR-TIMEZONE:/i.test(l)) ?? "").split(":")[1]?.trim();
+  const out = [];
+  let ev = null;
+  for (const line of raw) {
+    if (line === "BEGIN:VEVENT") { ev = { ex: [] }; continue; }
+    if (line === "END:VEVENT") {
+      const e = ev; ev = null;
+      if (!e?.start || /CANCELLED/i.test(e.status ?? "")) continue;
+      const text2 = `${e.name} ${e.desc ?? ""}`;
+      if (!all && !/mah/i.test(text2)) continue;
+      if (OTHER_STYLES.test(text2.slice(0, 400))) continue;
+      const dates = [];
+      if (e.rrule) {
+        const r = Object.fromEntries(e.rrule.split(";").map((x) => x.split("=")));
+        if (r.FREQ !== "WEEKLY") { if (!r.FREQ) dates.push(e.start.date); }
+        else {
+          const days = (r.BYDAY ?? "").split(",").filter(Boolean).map((d) => ["SU", "MO", "TU", "WE", "TH", "FR", "SA"].indexOf(d.slice(-2)));
+          const startMs = Date.parse(e.start.date), until = r.UNTIL ? Date.parse(`${r.UNTIL.slice(0, 4)}-${r.UNTIL.slice(4, 6)}-${r.UNTIL.slice(6, 8)}`) : Infinity;
+          const step = Number(r.INTERVAL ?? 1); let n = 0;
+          for (let t = startMs; t <= Math.min(until, Date.parse(horizon ?? "2100-01-01")) && n < 400; t += 864e5) {
+            const wk = Math.floor((t - startMs) / 864e5 / 7);
+            const dow = new Date(t).getUTCDay();
+            if (wk % step === 0 && (days.length ? days.includes(dow) : dow === new Date(startMs).getUTCDay())) { n++; if (r.COUNT && n > Number(r.COUNT)) break; dates.push(new Date(t).toISOString().slice(0, 10)); }
+          }
+        }
+      } else dates.push(e.start.date);
+      for (const date of dates) {
+        if (date < today || (horizon && date > horizon) || e.ex.includes(date)) continue;
+        out.push({ name: icsUnescape(e.name), date, time: e.start.time, venue: decode(icsUnescape(e.loc ?? "")), price: null, url: e.url || url, type: /open play|guided play|social|mixer/i.test(e.name) ? "OPEN_PLAY" : /101|102|103|class|lesson|learn|beginner|intro|strategy|workshop/i.test(text2.slice(0, 300)) ? "LESSON" : guessType(e.name) });
+      }
+      continue;
+    }
+    if (!ev) continue;
+    const m = line.match(/^([A-Z-]+)((?:;[^:]*)*):(.*)$/);
+    if (!m) continue;
+    const [, key, params, val] = m;
+    if (key === "SUMMARY") ev.name = val;
+    else if (key === "DESCRIPTION") ev.desc = icsUnescape(val).slice(0, 400);
+    else if (key === "LOCATION") ev.loc = val;
+    else if (key === "URL") ev.url = val;
+    else if (key === "STATUS") ev.status = val;
+    else if (key === "RRULE") ev.rrule = val;
+    else if (key === "EXDATE") for (const d of val.split(",")) ev.ex.push(`${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`);
+    else if (key === "DTSTART") {
+      const d = val.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})\d{2})?(Z)?$/);
+      if (!d || /VALUE=DATE(?!-)/.test(params) || !d[4]) continue; // all-day
+      if (d[6]) { // UTC: only usable when the feed names its time zone
+        if (!calTz) continue;
+        try { ev.start = localParts(Date.UTC(+d[1], +d[2] - 1, +d[3], +d[4], +d[5]), calTz); } catch { /* unknown zone */ }
+      } else ev.start = { date: `${d[1]}-${d[2]}-${d[3]}`, time: `${d[4]}:${d[5]}` };
+    }
+  }
+  return out;
+}
+export async function icsEvents(url, horizon, all = false) {
+  return parseIcs(await get(url.replace(/^webcal:/i, "https:")), url, horizon, all);
 }
