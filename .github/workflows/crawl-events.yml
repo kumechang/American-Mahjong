@@ -25,6 +25,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: ブラウザを入れる(JavaScript で日程を出すサイト用。data/browser-sources.json)
+        run: npx playwright-core install --with-deps chromium
       - name: ローカル DB を作る
         run: npx wrangler d1 migrations apply DB --local
       - name: 巡回する

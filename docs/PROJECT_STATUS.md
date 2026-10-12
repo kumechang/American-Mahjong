@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0191 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0192 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -206,6 +206,12 @@ The 40-odd bambuddies.org / orderofthetile.com rows (Pittsburgh, Cincinnati, Mil
 Street-address-only venues (accepted 2026-10-12 when the address is a business, checked by address search): Island Park NY published (`0191`): MJ Social, 203 Long Beach Road is a commercial building (LoopNet), 41 dated sessions ACTIVE.
 Still held after the address check: Bend OR (698 NW York Dr is a residential lot), Layton UT (Derus Way is a residential street), Friendswood TX (Anna Lane) and Angleton TX (Oak Ridge Dr) look like homes; Merchantville NJ (22 N Centre St
 is a mixed-use building) and Havre De Grace MD (120 S Union Ave) could not be confirmed and each has fewer than four qualifying sessions. Published cities: 88.
+Headless-browser reader (2026-10-12, `0192`): `render()` / `browserEvents()` in `scripts/lib/crawl-lib.mjs` load a page in Chromium (playwright-core), read JSON-LD events if the page has any, otherwise dated blocks of text
+("<title> / <date or date range> / <time> / <weekdays>", ranges with weekdays are expanded into sessions inside the 60-day window; mahjong blocks only, explicit year and start time required). Sites are listed in
+`data/browser-sources.json` (`{"owner": "<club or teacher name>", "urls": [...]}`), run on their own with `node scripts/crawl-events.mjs --only=browser`, and the crawl workflow installs Chromium first. Same politeness as the plain crawler
+(1 page per host per second, shared page cap) and an honest `MahjongMapBot/1.0 (+https://mahjong-map.com/about)` user agent; it avoids the "Mozilla/5.0 (compatible; ...)" form that tucsonjcc.org's firewall blocks outright.
+First source: Tucson J Mah Jongg (search listing `?s=mah+jongg`, since its programs page keeps the schedule in tabs): +16 ACTIVE sessions (Intro to Mahj, Next Level Mahj, Tuesday Open Play), so Tucson is back above five.
+Looked at and not worth reading this way: Fleur de Mahj (a table-rental grid, no class dates), Mahjong Smiles (home-hosted series, venue by registration), Clover Club (booking widget shows prices, not dates).
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own

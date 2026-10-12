@@ -263,7 +263,9 @@ export async function eventbriteOrg(url) {
 }
 
 export async function jsonLd(url) {
-  const html = await get(url);
+  return jsonLdFromHtml(await get(url), url);
+}
+export function jsonLdFromHtml(html, url) {
   const out = [];
   const walk = (n) => {
     if (Array.isArray(n)) return n.forEach(walk);
@@ -293,3 +295,87 @@ export async function jsonLd(url) {
   return out;
 }
 
+
+
+// ---------- sites that only show their schedule after JavaScript runs ----------
+// A headless Chromium (playwright-core) loads the page, then the schedule is read from JSON-LD
+// or, failing that, from dated blocks of text. Same politeness as get(): 1 page per host per second,
+// the shared page cap, an identifying User-Agent. Owners are listed in data/browser-sources.json.
+let browserPromise = null;
+async function browser() {
+  browserPromise ??= (async () => {
+    const { chromium } = await import("playwright-core");
+    const args = ["--no-sandbox"];
+    // only for sandboxes whose outbound TLS is re-signed by an egress proxy: trust that one CA by its key hash
+    if (process.env.CA_SPKI) args.push(`--ignore-certificate-errors-spki-list=${process.env.CA_SPKI}`);
+    return chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined, proxy: process.env.PW_PROXY ? { server: process.env.PW_PROXY } : undefined, args });
+  })();
+  return browserPromise;
+}
+export async function closeBrowser() {
+  if (browserPromise) await (await browserPromise).close().catch(() => {});
+  browserPromise = null;
+}
+export async function render(url) {
+  if (pagesFetched >= MAX_PAGES) throw new Error("page cap reached");
+  const host = new URL(url).host;
+  const wait = 1000 - (Date.now() - (lastFetch.get(host) ?? 0));
+  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+  lastFetch.set(host, Date.now());
+  pagesFetched++;
+  const page = await (await browser()).newPage({ userAgent: "MahjongMapBot/1.0 (+https://mahjong-map.com/about)" }); // honest, but without the "Mozilla/5.0 (compatible; ...)" prefix some firewalls block outright
+  try {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
+    await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
+    await page.waitForTimeout(3000);
+    const html = await page.content();
+    const text = await page.evaluate(() => document.body.innerText);
+    return { html, lines: text.split("\n").map((l) => l.replace(/\s+/g, " ").trim()).filter(Boolean) };
+  } finally {
+    await page.close();
+  }
+}
+
+const DATE_RE = /(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\.? +(\d{1,2})(?:st|nd|rd|th)?,? +(\d{4})/gi;
+const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+const HAS_DATE = new RegExp(DATE_RE.source, "i");
+const iso = (m, d, y) => `${y}-${pad(MONTHS[Object.keys(MONTHS).find((k) => k.startsWith(m.toLowerCase().slice(0, 3)))])}-${pad(d)}`;
+// Dated blocks of text: "<title> / <date or date range> / <time> / <weekdays>". A range with weekdays is expanded
+// into its sessions inside the crawl window. Only blocks that talk about mahjong, with an explicit year and a start time.
+export function datedTextEvents(lines, url, horizon) {
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    const ds = [...lines[i].matchAll(DATE_RE)];
+    if (!ds.length || lines[i].length > 80) continue;
+    const near = lines.slice(Math.max(0, i - 2), i + 6).join(" ");
+    if (!/mah/i.test(near) || OTHER_STYLES.test(near)) continue;
+    let ti = i - 1;
+    while (ti > 0 && (/^(register|read more|view|more info|details)/i.test(lines[ti]) || HAS_DATE.test(lines[ti]))) ti--;
+    let title = lines[ti] ?? "";
+    if (/^mah\W*jong+g?\W*(class|club)?$/i.test(title) && ti > 0) title = lines[i - 1];
+    title = title.replace(/\s*[–-]\s*(starts?|starting)\b.*$/i, "").trim();
+    const letters = [...title].filter((c) => /[A-Za-z]/.test(c));
+    if (letters.length && letters.filter((c) => c === c.toUpperCase()).length / letters.length > 0.7) title = title.toLowerCase().replace(/(^|[\s(\-–])([a-z])/g, (m, a, b) => a + b.toUpperCase());
+    const tm = lines.slice(i, i + 4).join(" ").match(/(\d{1,2}):(\d{2}) ?([AP]M)/i);
+    if (!tm || !title || title.length > 90) continue;
+    const time = to24(tm[1], tm[2], tm[3]);
+    const days = [...new Set([...lines.slice(i + 1, i + 5).join(" ").matchAll(/\b(Sun|Mon|Tues?|Wed(?:nes)?|Thu(?:rs?)?|Fri|Sat(?:ur)?)(?:day)?s?\b/gi)].map((m) => WEEKDAYS.indexOf(m[1].toLowerCase().slice(0, 3))))];
+    const start = iso(ds[0][1], ds[0][2], ds[0][3]);
+    const end = ds[1] ? iso(ds[1][1], ds[1][2], ds[1][3]) : start;
+    const push = (date) => out.push({ name: title, date, time, venue: "", price: null, url, type: /open play/i.test(title) ? "OPEN_PLAY" : /class|course|lesson/i.test(near) ? "LESSON" : guessType(title) });
+    if (end === start || !days.length) { push(start); continue; }
+    let n = 0;
+    for (let t = Date.parse(start < today ? today : start); t <= Date.parse(end) && n < 40; t += 864e5) {
+      const date = new Date(t).toISOString().slice(0, 10);
+      if (horizon && date > horizon) break;
+      if (days.includes(new Date(t).getUTCDay())) { push(date); n++; }
+    }
+  }
+  return out;
+}
+
+export async function browserEvents(url, horizon) {
+  const { html, lines: text } = await render(url);
+  const ld = jsonLdFromHtml(html, url);
+  return ld.length ? ld : datedTextEvents(text, url, horizon);
+}
