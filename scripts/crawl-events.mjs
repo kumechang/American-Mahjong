@@ -67,8 +67,10 @@ function sourceFor(owner) {
     if (/(^|\.)meetup\.com$/.test(url.host) && url.pathname.split("/").filter(Boolean)[0]) return { kind: "meetup", key: u };
     if (url.host === "calendly.com" && url.pathname.split("/").filter(Boolean).length >= 2) return { kind: "calendly", key: u };
   }
-  if (owner.type === "instructor") return null; // teachers' own sites vary too much to read generically
-  const site = [owner.website, owner.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !/bamgoodtime\.com\/(clubs|mahjong-clubs)/.test(u));
+  // Teachers' own sites are read too, but only through structured data (JSON-LD, calendar feeds) and only when they name mahjong;
+  // pages of directories and social networks are not the teacher's own schedule.
+  const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com|tiktok|youtube|google\./i;
+  const site = [owner.website, owner.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !DIRECTORY.test(u));
   return site ? { kind: "jsonld", key: site } : null;
 }
 
@@ -161,11 +163,11 @@ for (const { owner, src } of work) {
     const status = owner.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
     results.get(city.slug).rows.push({
-      name: e.name, city: city.name, state: city.state, event_date: e.date, start_time: e.time, end_time: "",
+      name: e.name.replace(/^Copy of:\s*/i, ""), city: city.name, state: city.state, event_date: e.date, start_time: e.time, end_time: "",
       venue: e.venue || owner.address || "", club_name: owner.type === "club" ? owner.name : "", instructor_name: owner.type === "instructor" ? owner.name : "",
       event_type: e.type,
       beginner_friendly: e.type === "LESSON" && /101|beginner|intro|learn/i.test(e.name) ? "TRUE" : "FALSE",
-      price: e.price ?? "", registration_url: e.url, source_url: e.url, last_verified_at: today, status,
+      price: e.price != null && e.price > 0 && e.price <= 600 ? e.price : "", registration_url: e.url, source_url: e.url, last_verified_at: today, status,
     });
   }
   // remember what complete listings (not single event pages) showed, to spot events that vanished
