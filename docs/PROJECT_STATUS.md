@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0190 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0191 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -203,6 +203,9 @@ Third pass over the remaining 66 unpublished cities (owner pages read directly, 
 (only a "Charleston Club" membership name); Mid Mo Mahjong's sessions are in Blue Springs (Kansas City area); Bend OR, Cherry Hill NJ, Brenham TX, Havre De Grace MD and Margate FL have American wording but venues that are
 street-address only, "to be announced" or "free (donations welcome)", so fewer than four sessions qualify. Louisville KY, Sarasota FL, Naples FL (4 ACTIVE) and Pittsburgh PA have owners but none states American on its own pages.
 The 40-odd bambuddies.org / orderofthetile.com rows (Pittsburgh, Cincinnati, Milwaukee) have no page of their own to read. Next step for these: contact the owners, or add a browser-based reader for sites that render with JavaScript.
+Street-address-only venues (accepted 2026-10-12 when the address is a business, checked by address search): Island Park NY published (`0191`): MJ Social, 203 Long Beach Road is a commercial building (LoopNet), 41 dated sessions ACTIVE.
+Still held after the address check: Bend OR (698 NW York Dr is a residential lot), Layton UT (Derus Way is a residential street), Friendswood TX (Anna Lane) and Angleton TX (Oak Ridge Dr) look like homes; Merchantville NJ (22 N Centre St
+is a mixed-use building) and Havre De Grace MD (120 S Union Ave) could not be confirmed and each has fewer than four qualifying sessions. Published cities: 88.
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
