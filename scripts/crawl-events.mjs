@@ -40,6 +40,11 @@ const knownUrl = new Set(known.filter((e) => e.sourceUrl).map((e) => `${e.source
 // An event we already have is recognised by owner + date + start time (names differ between
 // our rows and the owner's own wording), or by owner + date + name when a time is missing.
 // names compared loosely: case, "@" vs "at", punctuation
+// Venues that turned out to be private homes (data/venue-denylist.txt, one fragment per line, # comments): never listed
+const denied = existsSync("data/venue-denylist.txt")
+  ? readFileSync("data/venue-denylist.txt", "utf8").split("\n").map((l) => l.trim().toLowerCase()).filter((l) => l && !l.startsWith("#"))
+  : [];
+const deniedVenue = (v) => denied.some((d) => String(v ?? "").toLowerCase().includes(d));
 const norm = (n) => String(n).toLowerCase().replace(/@/g, " at ").replace(/[^a-z0-9]+/g, " ").trim();
 // The importer keys an event on city + name + date, and a second row with the same key overwrites the first.
 const slugify = (t) => String(t).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -147,7 +152,7 @@ for (const { owner, src } of work) {
   const ok = ownerKey(owner);
   for (const e of found) {
     if (e.date < today) continue;
-    if (e.date > horizonDate || NOT_A_SESSION.test(e.name)) continue;
+    if (e.date > horizonDate || NOT_A_SESSION.test(e.name) || deniedVenue(e.venue)) continue;
     if (knownKey.has(`${ok}|${e.date}|${norm(e.name)}`) || (e.time && knownKey.has(`${ok}|${e.date}|t${e.time}`))) continue;
     const dupKey = `${ok}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;
@@ -160,7 +165,9 @@ for (const { owner, src } of work) {
     // Eventbrite and Calendly must name their own venue; the booking adapters may fall back to the club's address.
     const own = ["jsonld", "ebrite", "calendly", "meetup"].includes(src.kind);
     const complete = e.time && (own ? e.venue : e.venue || (/\d/.test(owner.address ?? "") ? owner.address : ""));
-    const status = owner.status === "ACTIVE" && complete ? "ACTIVE" : "NEEDS_REVIEW";
+    // a title that says evening/night but a start time before noon (or the reverse) is a typo at the source: hold for review
+    const clash = e.time && ((/\b(evening|night)\b/i.test(e.name) && e.time < "12:00") || (/\bmorning\b/i.test(e.name) && e.time >= "17:00"));
+    const status = owner.status === "ACTIVE" && complete && !clash ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
     results.get(city.slug).rows.push({
       name: e.name.replace(/^Copy of:\s*/i, ""), city: city.name, state: city.state, event_date: e.date, start_time: e.time, end_time: "",

@@ -1,0 +1,7 @@
+# Addresses the event crawler must never list: private homes found as venues. One fragment per line.
+906 Anna Lane
+698 NW York
+2269 E Derus
+839 Oak Ridge
+25706 S 182nd
+14058 Harrison St
