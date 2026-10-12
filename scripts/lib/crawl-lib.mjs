@@ -395,10 +395,16 @@ export function widgetEvents(t, url) {
     for (let k = j; k < t.length && t[k] !== "View Event →" && desc.length < 60; k++) desc.push(t[k]);
     const m1 = t[i + 1].match(/(\d{1,2}):(\d\d) ([AP]M)/);
     const price = (desc.join(" ").match(/\$(\d+(?:\.\d\d)?)/) ?? [])[1];
-    out.push({ name: t[i - 1], date: `${d[3]}-${pad(MONTHS[d[1].toLowerCase()])}-${pad(d[2])}`, time: to24(m1[1], m1[2], m1[3]), venue: decode(venue), price: price ? Number(price) : null, url, type: /open play|guided play|social|mixer/i.test(t[i - 1]) ? "OPEN_PLAY" : /101|102|103|class|lesson|learn|beginner|intro|strategy/i.test(`${t[i - 1]} ${desc.slice(0, 8).join(" ")}`) ? "LESSON" : guessType(t[i - 1]) });
+    out.push({ name: t[i - 1], desc: desc.join(" ").slice(0, 400), date: `${d[3]}-${pad(MONTHS[d[1].toLowerCase()])}-${pad(d[2])}`, time: to24(m1[1], m1[2], m1[3]), venue: decode(venue), price: price ? Number(price) : null, url, type: /open play|guided play|social|mixer/i.test(t[i - 1]) ? "OPEN_PLAY" : /101|102|103|class|lesson|learn|beginner|intro|strategy/i.test(`${t[i - 1]} ${desc.slice(0, 8).join(" ")}`) ? "LESSON" : guessType(t[i - 1]) });
   }
   return out;
 }
-export async function widgetCalendar(url) {
-  return widgetEvents(lines(await get(url)), url);
+// all=false: the page belongs to an organisation that does more than mahjong, so keep only entries that mention it
+export async function widgetCalendar(url, all = false, include = "") {
+  const inc = include ? new RegExp(include, "i") : null; // an organiser active in several cities: keep only the entries for this one
+  const ev = widgetEvents(lines(await get(url)), url).filter((e) => !inc || inc.test(e.name));
+  // a multi-week league is sold as one ticket: keep its price on the first session only
+  const firstSeen = new Set();
+  for (const e of ev) { if (e.price >= 150) { const k = `${e.name}|${e.price}`; if (firstSeen.has(k)) e.price = null; else firstSeen.add(k); } }
+  return ev.filter((e) => all || (/mah/i.test(`${e.name} ${e.desc}`) && !OTHER_STYLES.test(`${e.name} ${e.desc.slice(0, 200)}`)));
 }
