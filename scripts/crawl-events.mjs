@@ -86,7 +86,7 @@ const browserSources = existsSync("data/browser-sources.json") ? JSON.parse(read
 for (const b of browserSources) {
   const owner = [...clubs, ...teachers].find((o) => o.name.toLowerCase() === b.owner.toLowerCase());
   if (!owner) continue;
-  for (const u of b.urls) work.push({ owner, src: { kind: b.kind === "calendar" ? "calendar" : "browser", key: u } });
+  for (const u of b.urls) work.push({ owner, src: { kind: b.kind === "calendar" ? "calendar" : "browser", key: u, all: Boolean(b.all), include: b.include ?? "" } });
 }
 // Clubs that only link to single Eventbrite event pages: read the latest such page, find its organizer, crawl that.
 const withSource = new Set(work.filter((w) => w.src.kind !== "jsonld").map((w) => ownerKey(w.owner)));
@@ -122,7 +122,7 @@ for (const { owner, src } of work) {
       : src.kind === "linktree" ? await linktree(src.key)
       : src.kind === "meetup" ? await meetup(src.key)
       : src.kind === "browser" ? await browserEvents(src.key, horizonDate)
-      : src.kind === "calendar" ? await widgetCalendar(src.key)
+      : src.kind === "calendar" ? await widgetCalendar(src.key, src.all, src.include)
       : ((await tribe(src.key)) ?? (await jsonLd(src.key)));
     if (found.organizer && !crawledLinks.has(`${ownerKey(owner)}|${found.organizer}`)) {
       crawledLinks.add(`${ownerKey(owner)}|${found.organizer}`);

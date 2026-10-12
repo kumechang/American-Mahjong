@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0193 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0194 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -216,6 +216,11 @@ Calendar-widget reader (2026-10-12, `0193`): several studios' own sites share on
 `widgetCalendar()` reads it with a plain request; owners are listed in `data/browser-sources.json` with `"kind": "calendar"` (The Mahjong Society, The Lucky Sparrow, MahjongRVA). ACTIVE needs a time and either the
 entry's venue or an owner address with a street number (a bare "Richmond, VA" no longer counts). Richmond VA: +3 ACTIVE sessions (Wegmans open play x2, Bar West open play), back above five. Chicago's calendar is now kept
 current by the crawler too. Cities still under five: New Orleans and St. Louis (4 each).
+More calendar-widget owners (2026-10-12, `0194`): a scan of 180 owner sites for the same Squarespace event list found seven more: itsamahjing (Austin), Bay State Bam (Boston), Eastside Jewish Commons (Portland), OK LET'S MAHJONG
+(Oklahoma City), Tucson Chinese Cultural Center, Girls Who Mahjong (Washington DC) and Mahjong Mama DSM (Des Moines). Entries on organisation-wide calendars (EJC, Tucson Chinese Cultural Center) are kept only when they mention
+mahjong; owners listed with `"all": true` are mahjong-only; OK LET'S MAHJONG uses `"include": "^OKC:"` because the same page also lists its Del Mar, CA nights; a price of $150 or more that repeats on a series (the $375 league) is kept on the
+first session only. +45 sessions: 20 ACTIVE (Oklahoma City 9, Washington DC 4, Austin 3, Portland 3, Boston 1) and 25 NEEDS_REVIEW (no venue on the widget, or owner not yet confirmed as American: Tucson Chinese Cultural Center, Des Moines).
+The scan found no widget site for New Orleans or St. Louis, which stay at four.
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own

@@ -10,14 +10,16 @@
     "kind": "calendar",
     "urls": [
       "https://themahjongsociety.com/event-calendar"
-    ]
+    ],
+    "all": true
   },
   {
     "owner": "The Lucky Sparrow / Emily Cox",
     "kind": "calendar",
     "urls": [
       "https://www.theluckysparrow.com/events"
-    ]
+    ],
+    "all": true
   },
   {
     "owner": "MahjongRVA",
@@ -25,5 +27,60 @@
     "urls": [
       "https://www.mahjongrva.com/calendar"
     ]
+  },
+  {
+    "owner": "itsamahjing",
+    "kind": "calendar",
+    "urls": [
+      "https://www.itsamahjing.com/events"
+    ],
+    "all": true
+  },
+  {
+    "owner": "Bay State Bam",
+    "kind": "calendar",
+    "urls": [
+      "https://www.baystatebam.com/upcoming-events"
+    ],
+    "all": true
+  },
+  {
+    "owner": "Eastside Jewish Commons American Mahjong",
+    "kind": "calendar",
+    "urls": [
+      "https://ejcpdx.org/events"
+    ]
+  },
+  {
+    "owner": "OK LET'S MAHJONG",
+    "kind": "calendar",
+    "urls": [
+      "https://www.okletsmahjong.com/events"
+    ],
+    "all": true,
+    "include": "^OKC:"
+  },
+  {
+    "owner": "Tucson Chinese Cultural Center Learn Mahjong",
+    "kind": "calendar",
+    "urls": [
+      "https://www.tucsonchinese.org/events"
+    ]
+  },
+  {
+    "owner": "Girls Who Mahjong",
+    "kind": "calendar",
+    "urls": [
+      "https://www.girlswhomahjong.com/events"
+    ],
+    "all": true
+  },
+  {
+    "owner": "Juliann Cline / Mahjong Mama DSM",
+    "kind": "calendar",
+    "urls": [
+      "https://www.mahjongmamadsm.com/events"
+    ],
+    "all": true
   }
 ]
