@@ -16,14 +16,14 @@
 //   - WordPress sites with The Events Calendar (/wp-json/tribe/events/v1/events), then anything else:
 //     schema.org Event data (JSON-LD) found on the page (clubs only)
 //
-//   node scripts/crawl-events.mjs [--out-dir=data/inbox/crawl-YYYY-MM-DD-HHMM] [--today=YYYY-MM-DD]
+//   node scripts/crawl-events.mjs [--only=browser] [--out-dir=data/inbox/crawl-YYYY-MM-DD-HHMM] [--today=YYYY-MM-DD]
 //
 // Needs the local D1 (`npx wrangler d1 migrations apply DB --local`).
 // Exit code 3 = nothing new. Be polite: one request per host per second,
 // a User-Agent that says who we are, a hard cap on pages per run.
 
-import { mkdirSync, writeFileSync } from "node:fs";
-import { arg, today, UA, q, decode, lines, csvCell, MONTHS, pad, to24, guessType, get, pages, bamGoodTime, bookwhen, calendly, linktree, meetup, tribe, eventbriteOrg, jsonLd, OTHER_STYLES, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
+import { arg, today, UA, q, decode, lines, csvCell, MONTHS, pad, to24, guessType, get, pages, bamGoodTime, bookwhen, calendly, linktree, meetup, tribe, eventbriteOrg, jsonLd, browserEvents, closeBrowser, OTHER_STYLES, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
 
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
 const outDir = arg("out-dir") ?? `data/inbox/crawl-${stamp}`;
@@ -79,8 +79,15 @@ const note = (city, text) => {
   results.get(city.slug).notes.push(text);
 };
 const seenSources = new Set();
-const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, meetup: 2, ebrite: 3, jsonld: 4 };
+const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, meetup: 2, ebrite: 3, jsonld: 4, browser: 5 };
 const work = [...clubs, ...teachers].map((o) => ({ owner: o, src: sourceFor(o) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
+// Sites that only show their schedule after JavaScript runs: read with a headless browser (data/browser-sources.json).
+const browserSources = existsSync("data/browser-sources.json") ? JSON.parse(readFileSync("data/browser-sources.json", "utf8")) : [];
+for (const b of browserSources) {
+  const owner = [...clubs, ...teachers].find((o) => o.name.toLowerCase() === b.owner.toLowerCase());
+  if (!owner) continue;
+  for (const u of b.urls) work.push({ owner, src: { kind: "browser", key: u } });
+}
 // Clubs that only link to single Eventbrite event pages: read the latest such page, find its organizer, crawl that.
 const withSource = new Set(work.filter((w) => w.src.kind !== "jsonld").map((w) => ownerKey(w.owner)));
 const ebEvents = q(`SELECT clubId, registrationUrl, sourceUrl, eventDate FROM Event WHERE clubId IS NOT NULL AND (registrationUrl LIKE '%eventbrite.%/e/%' OR sourceUrl LIKE '%eventbrite.%/e/%') ORDER BY eventDate DESC`);
@@ -94,6 +101,7 @@ for (const [clubId, u] of ebByClub) {
   const c = clubById.get(clubId);
   if (c && !withSource.has(ownerKey(c))) work.push({ owner: c, src: { kind: "jsonld", key: u } });
 }
+if (arg("only")) work.splice(0, work.length, ...work.filter((w) => w.src.kind === arg("only"))); // e.g. --only=browser for a quick test
 const crawledLinks = new Set();
 const listings = new Map();
 const seenEvent = new Set();
@@ -113,6 +121,7 @@ for (const { owner, src } of work) {
       : src.kind === "calendly" ? await calendly(src.key)
       : src.kind === "linktree" ? await linktree(src.key)
       : src.kind === "meetup" ? await meetup(src.key)
+      : src.kind === "browser" ? await browserEvents(src.key, horizonDate)
       : ((await tribe(src.key)) ?? (await jsonLd(src.key)));
     if (found.organizer && !crawledLinks.has(`${ownerKey(owner)}|${found.organizer}`)) {
       crawledLinks.add(`${ownerKey(owner)}|${found.organizer}`);
@@ -207,6 +216,7 @@ for (const { city, rows, notes } of results.values()) {
     `# ${city.name}, ${city.state}: event crawler (${today})\n\n## New events\n${rows.length ? rows.map((r) => `- ${r.event_date} ${r.start_time} ${r.name} (${r.club_name || r.instructor_name}) [${r.status}]`).join("\n") : "- none"}\n\n## Notes\n${notes.length ? notes.map((n) => `- ${n}`).join("\n") : "- none"}\n`,
   );
 }
+await closeBrowser();
 const noteLines = [...results.values()].flatMap((r) => r.notes.map((n) => `  - ${r.city.name}: ${n}`));
 console.log(`# Event crawler ${today}\n\n- Pages fetched: ${pages()}\n- New events: ${total} in ${[...results.values()].filter((r) => r.rows.length).length} cities\n- Notes (${noteLines.length}):\n${noteLines.join("\n") || "  - none"}\n- Output: ${total ? outDir : "(nothing written)"}`);
 // Exit 3 = nothing new to import. Notes alone (a page that returned 0 events, an event that looks gone)
