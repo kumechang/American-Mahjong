@@ -12,7 +12,7 @@ squash-merged to `main` (PR numbers below run through #60).
 - Cities: **69 total, 53 published** (16 unpublished, listed below)
 - ACTIVE rows: 113 clubs, 115 instructors, 213 upcoming events
 - NEEDS_REVIEW rows held back: 33 clubs, 14 instructors, 49 events
-- Migrations: 0000–0194 (`migrations/`, applied automatically at deploy)
+- Migrations: 0000–0195 (`migrations/`, applied automatically at deploy)
 - Publish rule: at least 5 ACTIVE rows (clubs + instructors + upcoming events)
 
 ### Unpublished cities and what each needs
@@ -221,6 +221,11 @@ More calendar-widget owners (2026-10-12, `0194`): a scan of 180 owner sites for 
 mahjong; owners listed with `"all": true` are mahjong-only; OK LET'S MAHJONG uses `"include": "^OKC:"` because the same page also lists its Del Mar, CA nights; a price of $150 or more that repeats on a series (the $375 league) is kept on the
 first session only. +45 sessions: 20 ACTIVE (Oklahoma City 9, Washington DC 4, Austin 3, Portland 3, Boston 1) and 25 NEEDS_REVIEW (no venue on the widget, or owner not yet confirmed as American: Tucson Chinese Cultural Center, Des Moines).
 The scan found no widget site for New Orleans or St. Louis, which stay at four.
+Reader extensions (2026-10-12, `0195`), found by measuring 116 owner sites that had no upcoming sessions (103 of ~134 link only to Instagram, which is not read): (1) the JSON-LD reader follows up to three Events/Classes/Calendar
+links from a home page that has none, and a calendar feed (.ics / webcal:) linked there; (2) a new iCalendar reader (`kind: "ics"` in `data/browser-sources.json`, TZID or X-WR-TIMEZONE local times, weekly RRULE expanded in the
+window, all-day, cancelled and unlabelled-UTC entries skipped); (3) teachers' own sites are now read too (they were skipped entirely), through structured data only and only entries that name mahjong; (4) calendar entries for Mahj with
+Meg; (5) a price outside $1-$600 is dropped (a JSON-LD price of 3690 was almost certainly cents) and a "Copy of:" title prefix is stripped. Result: +71 ACTIVE-or-reviewable sessions (Raleigh +26 from Mahj with McMillan, Las Vegas +34,
+Minneapolis +2, Seattle +2, Durham, Scottsdale, Naples, Miami, Houston). Crawl size is now ~760 pages for the JSON-LD kinds alone; the page cap is 1500.
 Verify-night order (2026-10-11): published cities about to drop under five rows come first (those that can reach five, then most dated sessions waiting), then unpublished cities by the same rule
 (North Easton 32 sessions, Park Ridge 17, Opelika 15, ...). Three cities a night, cities done in the last days go to the back.
 Hourly discovery test (2026-10-10/11, PRs #119-#124, `0182`): runs 2-6 all read the same 50 cities, because `runs_per_day` was not passed (the default is 1). The window is now chosen by the workflow's own
