@@ -82,5 +82,13 @@
       "https://www.mahjongmamadsm.com/events"
     ],
     "all": true
+  },
+  {
+    "owner": "Mahj with Meg",
+    "kind": "calendar",
+    "urls": [
+      "https://www.mahjwithmeg.com/event"
+    ],
+    "all": true
   }
 ]
