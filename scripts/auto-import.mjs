@@ -38,7 +38,7 @@ const skip = (reason, what) => { if (!skipped.has(reason)) skipped.set(reason, [
 
 // ---------- what is on the site ----------
 const cities = q(`SELECT id, name, state, slug, published FROM City`);
-const cityKey = (name, state) => `${norm(name)}|${state}`;
+const cityKey = (name, state) => `${norm(name).replace(/^saint /, "st ")}|${state}`; // "Saint Louis" = "St. Louis"
 const cityByKey = new Map(cities.map((c) => [cityKey(c.name, c.state), c]));
 const cityById = new Map(cities.map((c) => [c.id, c]));
 const owners = new Map(); // "type|cityId|norm(name)" -> status
@@ -142,7 +142,17 @@ for (const g of gone) {
 // ---------- assemble the migration ----------
 const parts = [];
 if (newCities.size) {
-  parts.push(`INSERT OR IGNORE INTO "City" ("id", "name", "state", "slug", "published", "createdAt", "updatedAt") VALUES\n${[...newCities.values()].map((c) => `(${sqlStr(`city_${slugify(c.name)}`)}, ${sqlStr(c.name)}, ${sqlStr(c.state)}, ${sqlStr(slugify(c.name))}, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`).join(",\n")};`);
+  // a city name can repeat across states (Portsmouth NH / VA): the slug (and id) then carries the state
+  const usedSlugs = new Set(cities.map((c) => c.slug));
+  const rowsSql = [];
+  for (const c of newCities.values()) {
+    let slug = slugify(c.name);
+    if (usedSlugs.has(slug)) slug = `${slug}-${c.state.toLowerCase()}`;
+    if (usedSlugs.has(slug)) { console.error(`city slug ${slug} is taken: leaving it to a person`); process.exit(1); }
+    usedSlugs.add(slug);
+    rowsSql.push(`(${sqlStr(`city_${slug}`)}, ${sqlStr(c.name)}, ${sqlStr(c.state)}, ${sqlStr(slug)}, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`);
+  }
+  parts.push(`INSERT OR IGNORE INTO "City" ("id", "name", "state", "slug", "published", "createdAt", "updatedAt") VALUES\n${rowsSql.join(",\n")};`);
 }
 if (importSql) parts.push(importSql.trim());
 if (retire.length) parts.push(`-- Sessions the club's own listing no longer shows\n` + retire.map((g) => `UPDATE "Event" SET "status" = 'INACTIVE', "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(g.slug)} AND "status" = 'ACTIVE'; -- ${g.name.replace(/[\r\n]+/g, " ")}, ${g.date} (${g.owner})`).join("\n"));
