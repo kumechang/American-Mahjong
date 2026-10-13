@@ -44,10 +44,14 @@ jobs:
           id="discover-$(date -u +%Y-%m-%d-%H%M)"
           node scripts/discover-clubs.mjs --batch="${BATCH:-100}" --step="${STEP}" --out-dir="data/inbox/$id" | tee summary.md
           rc=${PIPESTATUS[0]}
+          [ "$rc" -eq 0 ] || [ "$rc" -eq 3 ] || exit "$rc"
+          # 二つ目の情報源: BamBuddies の American 専門ディレクトリ(手がかりだけ。bb-… フォルダに出る)
+          node scripts/discover-bambuddies.mjs --out-dir="data/inbox/$id" | tee -a summary.md
+          rc2=${PIPESTATUS[0]}
+          [ "$rc2" -eq 0 ] || [ "$rc2" -eq 3 ] || exit "$rc2"
           cat summary.md >> "$GITHUB_STEP_SUMMARY"
           echo "id=$id" >> "$GITHUB_OUTPUT"
-          if [ "$rc" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          [ "$rc" -eq 0 ] || exit "$rc"
+          if [ "$rc" -eq 3 ] && [ "$rc2" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           echo "found=true" >> "$GITHUB_OUTPUT"
       - name: 検証して PR を作る
         if: steps.discover.outputs.found == 'true'
@@ -60,11 +64,13 @@ jobs:
           echo "## Club discovery \`$ID\`" > "$report"
           cat summary.md >> "$report"
           for dir in data/inbox/$ID/*/; do
-            [ -f "$dir/clubs.csv" ] || continue
+            [ -f "$dir/clubs.csv" ] || [ -f "$dir/instructors.csv" ] || [ -f "$dir/events.csv" ] || continue
             echo "" >> "$report"
             echo "### \`$dir\`" >> "$report"
             echo '```' >> "$report"
-            args=("--clubs=$dir/clubs.csv")
+            args=()
+            [ -f "$dir/clubs.csv" ] && args+=("--clubs=$dir/clubs.csv")
+            [ -f "$dir/instructors.csv" ] && args+=("--instructors=$dir/instructors.csv")
             [ -f "$dir/events.csv" ] && args+=("--events=$dir/events.csv")
             node scripts/validate-csv.mjs "${args[@]}" >> "$report" 2>&1
             echo '```' >> "$report"

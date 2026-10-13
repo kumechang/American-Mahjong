@@ -146,7 +146,8 @@ if (existsSync("data/inbox")) {
         if (known.has(key.toLowerCase()) || !US_STATES.has(r.state)) continue;
         if (ownedHosts.has(hostOf(r.website))) continue;
         if (!leadPlaces.has(key)) leadPlaces.set(key, []);
-        leadPlaces.get(key).push({ name: r.name, website: r.website, american: /Site says:/.test(r.description) });
+        const directory = /BamBuddies/.test(r.description); // BamBuddies lists American mahjong only, but has no website for the group
+        leadPlaces.get(key).push({ name: r.name, website: r.website, american: /Site says:|BamBuddies/.test(r.description), note: directory ? r.schedule : "" });
       }
     }
   }
@@ -220,7 +221,7 @@ if (mode === "verify") {
   existing = picked
     .map((l) => {
       const leads = leadPlaces.get(l) ?? [];
-      return `### ${l}\nまだサイトに掲載がない新規の都市。既存の行はない。${leads.length ? `\nBam Good Time の団体一覧に載っている団体(手がかり。自分のページで American / NMJL を確認すること):\n${leads.map((x) => `- ${x.name} ${x.website}${x.american ? "(団体自身が American と書いている)" : ""}`).join("\n")}` : ""}\n`;
+      return `### ${l}\nまだサイトに掲載がない新規の都市。既存の行はない。${leads.length ? `\nBam Good Time の団体一覧に載っている団体(手がかり。自分のページで American / NMJL を確認すること):\n${leads.map((x) => `- ${x.name} ${x.website}${x.note ? `(BamBuddies の記載: ${x.note.slice(0, 160)}。自分のサイトを探すこと)` : x.american ? "(団体自身が American と書いている)" : ""}`).join("\n")}` : ""}\n`;
     })
     .join("\n");
   modeText = `## 今夜のモード: 新規都市
