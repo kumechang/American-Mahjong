@@ -15,6 +15,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 concurrency:
   group: discover-clubs
@@ -83,3 +84,9 @@ jobs:
           git commit -m "Club discovery results $ID"
           git push origin "inbox/$ID"
           gh pr create --base main --head "inbox/$ID" --title "Inbox: inbox/$ID (club discovery)" --body-file "$report"
+      # 結果を人が見なくても取り込む(失敗しても上の PR は残る)。詳しくは auto-import.yml
+      - name: 自動取り込みを起こす
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run auto-import.yml || echo "::warning::auto-import を起こせませんでした"
