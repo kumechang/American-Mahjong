@@ -38,14 +38,19 @@ jobs:
         run: npx wrangler d1 migrations apply DB --local
       - name: 未取り込みのクローラー結果を集める
         id: collect
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -e
+          # 人がすでに閉じた PR(重複・やり直し)のブランチは取り込まない: 開いている PR のブランチだけが対象
+          open=$(gh pr list --state open --limit 200 --json headRefName --jq '.[].headRefName')
           git fetch -q origin '+refs/heads/inbox/*:refs/remotes/origin/inbox/*' || true
           ids=""
           for ref in $(git for-each-ref --format='%(refname:short)' 'refs/remotes/origin/inbox/crawl-*' 'refs/remotes/origin/inbox/discover-*'); do
             id="${ref#origin/inbox/}"
             [[ $id =~ ^[0-9A-Za-z._-]+$ ]] || continue
             [ -d "data/inbox/$id" ] && continue
+            echo "$open" | grep -qx "inbox/$id" || continue
             git checkout "$ref" -- "data/inbox/$id"
             ids="${ids:+$ids,}$id"
           done
