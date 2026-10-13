@@ -1,0 +1,137 @@
+# Crawler know-how
+
+What we learned building and running the collection pipeline (October 2026). Read this before changing a
+crawler, adding a source, or debugging a bad import. `docs/PROJECT_STATUS.md` has the current state; this file
+has the reasons behind it.
+
+## 1. The pipeline in one picture
+
+```
+cron-job.org ──workflow_dispatch──▶ crawl-events.yml      ─▶ inbox/crawl-…     (events.csv, gone.json, report.md per city)
+             ──workflow_dispatch──▶ discover-clubs.yml    ─▶ inbox/discover-…   (clubs.csv / instructors.csv / events.csv)
+             ──workflow_dispatch──▶ nightly-research.yml  ─▶ AI server pushes inbox/2026-…  (a person reviews these)
+                                         │
+crawl / discover finish ──────────────▶ auto-import.yml ─▶ migrations/NNNN_auto_<stamp>.sql ─▶ PR ─▶ squash-merge ─▶ deploy
+```
+
+- Nothing the crawlers do touches the database directly. They write CSV, a script turns CSV into a numbered
+  migration, and the migration is applied at deploy (`cf:deploy` runs `wrangler d1 migrations apply DB --remote`).
+- GitHub's own `schedule` is unreliable (late, doubled), so cron-job.org triggers `workflow_dispatch`. It needs a
+  `User-Agent` header, or GitHub answers 403.
+- `scripts/lib/crawl-lib.mjs` holds every reader; `scripts/crawl-events.mjs`, `discover-clubs.mjs`,
+  `discover-bambuddies.mjs`, `discover-eventbrite.mjs` are thin drivers; `scripts/auto-import.mjs` is the importer;
+  `scripts/build-nightly-prompt.mjs` plans the AI's night.
+
+## 2. Politeness and identity (non-negotiable)
+
+- Honest User-Agent: `MahjongMapBot/1.0 (+https://mahjong-map.com/about)`. The headless browser uses the same string
+  without the `Mozilla/5.0 (compatible; …)` prefix, because some firewalls (tucsonjcc.org returned 403) block that prefix
+  outright while accepting the plain bot string.
+- One request per second per host (all `*.bamgoodtime.com` share one queue). A page cap per run (`MAX_PAGES = 1500`).
+- `get()` retries 429/5xx/timeouts twice (2 s, 5 s); 403/404/405 are final.
+- Never disable TLS verification. If a sandbox re-signs TLS, trust that one CA by its key hash (section 9).
+- Teachers' own sites are read only through structured data (JSON-LD, calendar feeds), never scraped as free text.
+
+## 3. Readers (what each source type gives and where it breaks)
+
+| Kind | Source | Notes |
+|---|---|---|
+| `bgt` | Bam Good Time club sites (`<club>.bamgoodtime.com/events`) | Most common. Each event is linked twice on the page: dedupe by event URL. The location is the **last line before the price**; filter bullets, "spots left", "Register Externally". Skip events whose lines say home/residence/private house. Skip cancelled/postponed. A club with no listings is normal ("0 events parsed" in the notes is not a failure). |
+| `bookwhen` | bookwhen.com account pages | Complete listing. |
+| `ebrite` | Eventbrite organiser/collection pages (`__NEXT_DATA__`) | Found via an organiser link in an event page's JSON-LD. |
+| `calendly`, `linktree`, `meetup` | Link-in-bio and group pages | Best effort. |
+| `jsonld` | Any own site, JSON-LD `Event` | Follows up to 3 "events/calendar/schedule/class" sub-pages and a linked `.ics`. Skips UTC (`…Z`) timestamps (local time cannot be recovered). |
+| `browser` | Sites that render their schedule with JavaScript | Headless Chromium via `playwright-core`; reads JSON-LD first, then dated text blocks (`datedTextEvents`: title / date or range / time / weekdays, ranges expanded by weekday). Configured in `data/browser-sources.json`. |
+| `calendar` | Squarespace-style calendar widget | `widgetEvents`: "Oct" "13" title "Tuesday, October 13, 2026" "6:00 PM" venue … "View Event →". `all: true` when the organiser only does mahjong; `include: "^OKC:"` when one organiser covers several cities. |
+| `ics` | iCalendar feeds | TZID / `X-WR-TIMEZONE` become local times; all-day and cancelled entries skipped; weekly RRULE expanded inside the crawl window; any other recurrence is skipped (and the feed is then **not** treated as complete). |
+
+Also: BamBuddies directory pages (`bambuddies.org/mahjong-near-me/<metro>-<st>`) are the only American-only directory
+we found. They give names, area, a schedule sentence and often a street address, but **no website**, so every row is a
+lead (NEEDS_REVIEW, no URL). `orderofthetile.com`, `mahjong4friends.com` and `bambuddies.org`'s home page are games/apps,
+not directories.
+
+### What did not work
+- Reading dated text from the plain HTML of ordinary own sites: almost all junk ("Taco Tuesday", "$40.00 pp/per session"
+  read as a title). Dated-text reading is only safe on pages a person has listed in `browser-sources.json`.
+- Eventbrite search pages with plain HTTP: AWS WAF answers **405** (curl with the same headers passes, Node `fetch` does not;
+  it is a TLS-fingerprint check). A real browser passes. `discover-eventbrite.mjs` falls back to Chromium, but it has only
+  been checked by hand and is not in any workflow.
+- Instagram-only owners (about a hundred) are not machine-readable. They need outreach or a person.
+
+## 4. Quality rules (why rows are ACTIVE or NEEDS_REVIEW)
+
+A row becomes ACTIVE only with all of:
+1. an owner that is already ACTIVE on the site;
+2. a start time and a named business venue (street-address-only venues were accepted by decision, once an address search showed a business);
+3. American/NMJL wording on the owner's page, or an ACTIVE owner whose page already confirmed it;
+4. a price that is numeric and between $1 and $600 (a JSON-LD price of 3690 was cents). Multi-session series carry the price on the first session only;
+5. no private-home signals: "Private Residence", "…'s Home", `home|residence` in the location lines, or an address on `data/venue-denylist.txt`;
+6. no state mismatch between the venue text and the row, and no clash between a title saying "Evening"/"Night" and a start before noon (or "Morning" at 5 pm or later). Real example: Mahj Atelier "Evening Mahj 101" is listed at 6:30 **AM** on its own page.
+
+Other rules learned the hard way:
+- Canada is out of scope (Oceanside BC, Toronto, Summerside PE leads).
+- A city is published only with at least 5 ACTIVE rows (clubs + instructors + upcoming events). Events show only if `eventDate >= today`.
+- The importer's event key is city name + event name + date (slug `city-name-date`). Two sessions with the same name on the same day need distinct names (append the time, then the club, then a number).
+- A club slug includes the city name; renaming a city means deleting the old club/event rows first.
+- `ON CONFLICT(slug) DO UPDATE` in `import-csv.mjs` **overwrites**. Anything automatic must skip rows that already exist (the auto-import does).
+- "Possibly gone" is only meaningful against a **complete** listing, and only for sessions that came from the same host (a manually added Meetup row must not be retired because the club's BGT page does not list it).
+- City names repeat across states (Portsmouth NH/VA): city slugs and ids need the state suffix on collision. "Saint Louis" = "St. Louis".
+- A club filed under a different city name (Cross Roads → Little Elm) is invisible to a name check: compare website hosts as well.
+- Look at the club's own page before trusting a directory: venues such as a "Painted Pagoda" with no search footprint stay NEEDS_REVIEW.
+
+## 5. Discovery
+
+- `discover-clubs.mjs` reads a rotating slice of Bam Good Time's city pages. Lessons: pass `--step=${{ github.run_number }}` (without it every hourly run read the same window); keep the span fixed (`ceil(n/100)*100`) because the directory grows and would shift every slice; skip leads archived by earlier runs; make same-day event names unique.
+- A lead is worth a PR when it is in a city we already cover, or says American/NMJL itself, or has dated sessions. The rest is only named in the summary.
+- `discover-bambuddies.mjs` picks the town from the street address tail, then the area, then the metro, and prefers a town already on the site; "Metro …", "Intown", compass words are not towns. Capped at 80 new leads per run; later runs continue because earlier ones are archived under `data/inbox`.
+- The nightly prompt builder skips leads whose website host is already in the database, and anything outside the 50 states + DC.
+
+## 6. Auto-import (the morning check, automated)
+
+Details in the header of `scripts/auto-import.mjs` and in `docs/PROJECT_STATUS.md`. Design points worth remembering:
+- Eligible inputs are branches `inbox/crawl-*` and `inbox/discover-*` that have an **open** PR and are not yet in `data/inbox/` on main. (Closed PRs are deliberate rejections; the first run picked them up and failed.)
+- Safe failure: the importer validates, the migration is applied to the local DB, then **all** migrations are replayed on an empty DB; any failure leaves the inbox PRs open and exits non-zero.
+- `GITHUB_TOKEN` pushes do not start other workflows (except `workflow_dispatch`): the workflow dispatches `close-imported-inbox.yml` itself after merging.
+- Stage whole directories (`git add -A data migrations`). A pathspec naming a file that does not exist makes the entire `git add` fail, and `|| true` hides it.
+- 5-row rule: a city is watched (`data/auto-below.txt`), unpublished after 3 days in a row, republished at 5 only if the script unpublished it (`data/auto-unpublished.txt`). First-time publishing is always a person.
+- Not automated: AI research PRs, promoting NEEDS_REVIEW → ACTIVE, publishing new cities, outreach.
+
+## 7. Operating it
+
+- Review every few days: merged "Auto-import" PRs (body = digest), then the NEEDS_REVIEW rows and leads they list.
+- Nightly AI plan (`build-nightly-prompt.mjs`): four verify nights, two city nights, one event night per week. The verify queue puts at-risk published cities first, then cities that can reach five, then by dated pending sessions.
+- The AI server is for judgment (is it American, is the venue a business, is the date real). Everything deterministic belongs in a crawler.
+- Frequencies: events and discovery are cheap, run them often; the AI costs tokens, keep it to once a night.
+- Open items: `NEXT_PUBLIC_CONTACT_EMAIL` unset; New Orleans and St. Louis sit at four rows (inquiry drafts in `docs/outreach/`); about 66 unpublished cities wait for American wording or a business venue.
+
+## 8. Adding a source
+
+1. Check the page with `curl -A 'MahjongMapBot/1.0 (+https://mahjong-map.com/about)'`. If the schedule is in the HTML, use `jsonld` or a platform reader; if it needs JavaScript, use `browser`; if it is a calendar widget, `calendar`; if there is an `.ics`, `ics`.
+2. For `browser`/`calendar`/`ics`, add an entry to `data/browser-sources.json` (`owner` = exact club or instructor name in the DB, `urls`, optional `all`, `include`).
+3. Test: `node scripts/crawl-events.mjs --only=calendar --out-dir=<scratch>` (needs the local DB: `npx wrangler d1 migrations apply DB --local`).
+4. Look at the venue, time and price of every row before trusting a new reader. Check that a second run finds nothing new, and that renaming one DB event name produces a "Possibly gone" note.
+
+## 9. Local testing in the sandbox
+
+- Rebuild the local DB after editing any applied migration: `rm -rf .wrangler/state && npx wrangler d1 migrations apply DB --local`.
+- The sandbox's egress proxy re-signs TLS and Chromium does not trust its CA. For local runs only:
+  `CA_SPKI=$(openssl x509 -in /root/.ccr/agent-proxy-ca.crt -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64)`,
+  `PW_CHROMIUM=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`, `PW_PROXY=$HTTPS_PROXY`. Never disable verification in code.
+- Chromium in GitHub Actions: `npx playwright-core install --with-deps chromium` (a workflow step).
+- Query the local DB directly with Python's `sqlite3` on `.wrangler/state/v3/d1/miniflare-D1DatabaseObject/<hash>.sqlite` (the other file there, `metadata.sqlite`, has no tables).
+- Test the auto-import on a copy: move the migration you are reproducing out of `migrations/`, rebuild the DB, run `node scripts/auto-import.mjs --dirs=<ids>`, compare with the hand-made migration, then delete the generated `migrations/*_auto_*.sql`, `data/auto-below.txt`, `data/auto-unpublished.txt`.
+- `pkill` can exit 144 in this shell: run it as its own command.
+
+## 10. Mistakes worth not repeating
+
+| What happened | Fix |
+|---|---|
+| Hourly discovery PRs all read the same window | pass `--step=run_number`; closed the duplicate PRs |
+| Venue "•", the club name, or "Private Residence" as the location | take the last candidate line before the price; home filter |
+| Home addresses published in a listing (Bend, Layton, Friendswood, Angleton, Queen Creek, Truckee) | denylist + name/location filters; leave NEEDS_REVIEW |
+| Country/city mismatches (Oceanside BC, Belmont events filed in Chatham, Mid-Missouri in Blue Springs, Liberty = Kansas City duplicate) | check the owner's own page before importing |
+| Old NEEDS_REVIEW rows blocked renamed events | delete them in the migration before the new import |
+| Editing an applied migration | rebuild the local DB |
+| Auto-import run 1 imported branches whose PRs were closed on purpose | only branches with an open PR |
+| Auto-import run 1 failed: new city slug collided with another state's city | state suffix on collision |
+| Auto-import run 2 failed: `git add` of a missing file | stage directories |
