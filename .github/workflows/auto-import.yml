@@ -81,7 +81,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           branch="auto/import-$(date -u +%Y%m%d-%H%M)"
           git checkout -b "$branch"
-          git add -A data/inbox data/auto-below.txt data/auto-unpublished.txt migrations 2>/dev/null || true
+          git add -A data migrations
           git commit -m "Auto-import $(date -u +%Y-%m-%d)"
           git push origin "$branch"
           pr=$(gh pr create --base main --head "$branch" --title "Auto-import $(date -u +%Y-%m-%d)" --body-file digest.md)
