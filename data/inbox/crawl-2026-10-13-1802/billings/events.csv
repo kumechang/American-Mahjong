@@ -1,0 +1,2 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Saturday Play,Billings,MT,2026-12-12,09:00,,"Montana Mahj Tile House, 22528 Grand Ave",Montana Mahj,,OPEN_PLAY,FALSE,20,https://montana-mahj.bamgoodtime.com/events/f2468b33-b3e5-4fd7-81ce-c8e903cbc8a7,https://montana-mahj.bamgoodtime.com/events/f2468b33-b3e5-4fd7-81ce-c8e903cbc8a7,2026-10-13,NEEDS_REVIEW
