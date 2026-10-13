@@ -188,18 +188,25 @@ for (const { owner, src } of work) {
     listings.set(ok, acc);
   }
 }
+const goneRows = [];
 // Events we have that none of the owner's complete listings shows any more (inside the dates they cover).
 for (const { owner, city, seen, max, hosts, platform } of listings.values()) {
   const col = owner.type === "club" ? "clubId" : "instructorId";
-  const mine = q(`SELECT name, eventDate, startTime, sourceUrl, registrationUrl FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
+  const mine = q(`SELECT slug, name, eventDate, startTime, sourceUrl, registrationUrl FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
   const fromHere = (e) => platform || [e.sourceUrl, e.registrationUrl].some((u) => { try { return hosts.has(new URL(u).host); } catch { return false; } });
   for (const e of mine.filter(fromHere)) {
     const d = e.eventDate.slice(0, 10);
     if (d <= max && !seen.has(`${d}|${norm(e.name)}`) && !(hhmm(e.startTime) && seen.has(`${d}|t${hhmm(e.startTime)}`))) {
       note(city, `Possibly gone: "${e.name}" on ${d} (${owner.name}) is not in ${owner.name}'s current listing`);
+      goneRows.push({ slug: e.slug, name: e.name, date: d, owner: owner.name, city: city.name, sameHost: [e.sourceUrl, e.registrationUrl].some((u) => { try { return hosts.has(new URL(u).host); } catch { return false; } }) });
     }
   }
 }
+// scripts/auto-import.mjs retires these. A listing that suddenly lacks most of an owner's sessions is a broken page, not forty cancellations: leave those to a person.
+const goneByOwner = new Map();
+for (const g of goneRows) goneByOwner.set(g.owner, (goneByOwner.get(g.owner) ?? 0) + 1);
+const gone = goneRows.filter((g) => g.sameHost && g.date > today && goneByOwner.get(g.owner) <= 6).map(({ sameHost, ...g }) => g); // only sessions that came from the very site that no longer lists them
+if (gone.length) { mkdirSync(outDir, { recursive: true }); writeFileSync(`${outDir}/gone.json`, JSON.stringify(gone, null, 1) + "\n"); }
 
 // ---------- make event names unique (city + name + date) ----------
 for (const { city, rows } of results.values()) {
@@ -233,7 +240,7 @@ for (const { city, rows, notes } of results.values()) {
 }
 await closeBrowser();
 const noteLines = [...results.values()].flatMap((r) => r.notes.map((n) => `  - ${r.city.name}: ${n}`));
-console.log(`# Event crawler ${today}\n\n- Pages fetched: ${pages()}\n- New events: ${total} in ${[...results.values()].filter((r) => r.rows.length).length} cities\n- Notes (${noteLines.length}):\n${noteLines.join("\n") || "  - none"}\n- Output: ${total ? outDir : "(nothing written)"}`);
+console.log(`# Event crawler ${today}\n\n- Pages fetched: ${pages()}\n- New events: ${total} in ${[...results.values()].filter((r) => r.rows.length).length} cities\n- Notes (${noteLines.length}):\n${noteLines.join("\n") || "  - none"}\n- Retired by the auto-import: ${gone.length}\n- Output: ${total || gone.length ? outDir : "(nothing written)"}`);
 // Exit 3 = nothing new to import. Notes alone (a page that returned 0 events, an event that looks gone)
 // stay in the job summary; they don't open a PR.
-process.exit(total === 0 ? 3 : 0);
+process.exit(total === 0 && gone.length === 0 ? 3 : 0);

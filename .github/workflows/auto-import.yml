@@ -1,0 +1,94 @@
+# クローラーの結果(inbox/crawl-… と inbox/discover-… のブランチ)を、人が見なくても自動で取り込む。
+# 何をどう取り込むか・何を取り込まないかは scripts/auto-import.mjs の先頭コメントを参照。
+#   - 追加するだけ(既存の行は上書きしない)。クラブ・講師は必ず NEEDS_REVIEW。
+#   - イベントが ACTIVE になるのは、すでに ACTIVE の主催者で、開始時刻・会場がそろっているものだけ。
+#   - 団体自身の一覧から消えたセッションは INACTIVE にする。
+#   - 5 行を 3 日続けて下回った公開都市は非公開に戻し、5 行に戻ったら(この仕組みが非公開にしたものだけ)再公開する。
+# 検証(新しいマイグレーションを空の DB から全部流す)に通ったときだけ、PR を作ってそのままマージする。
+# 通らなかったときは何もせず、inbox の PR を残す(今までどおり人が見る)。
+# 起動: crawl-events と discover-clubs の最後から workflow_dispatch(手動でも可)。
+# AI 調査サーバーの PR(inbox/2026-…)は対象外。人が見る。
+name: auto-import
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: auto-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: ローカル DB を作る
+        run: npx wrangler d1 migrations apply DB --local
+      - name: 未取り込みのクローラー結果を集める
+        id: collect
+        run: |
+          set -e
+          git fetch -q origin '+refs/heads/inbox/*:refs/remotes/origin/inbox/*' || true
+          ids=""
+          for ref in $(git for-each-ref --format='%(refname:short)' 'refs/remotes/origin/inbox/crawl-*' 'refs/remotes/origin/inbox/discover-*'); do
+            id="${ref#origin/inbox/}"
+            [[ $id =~ ^[0-9A-Za-z._-]+$ ]] || continue
+            [ -d "data/inbox/$id" ] && continue
+            git checkout "$ref" -- "data/inbox/$id"
+            ids="${ids:+$ids,}$id"
+          done
+          echo "ids=$ids" >> "$GITHUB_OUTPUT"
+          echo "取り込み対象: ${ids:-なし}"
+      - name: 取り込みマイグレーションを作る
+        id: imp
+        run: |
+          set +e
+          node scripts/auto-import.mjs --dirs="${{ steps.collect.outputs.ids }}" --digest=digest.md | tee summary.md
+          rc=${PIPESTATUS[0]}
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$rc" -eq 3 ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          [ "$rc" -eq 0 ] || { echo "::error::auto-import が人の確認を求めました(終了コード $rc)。inbox の PR をそのまま残します。"; exit "$rc"; }
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: 空の DB から全マイグレーションを流して確かめる
+        if: steps.imp.outputs.changed == 'true'
+        run: |
+          rm -rf .wrangler/state
+          npx wrangler d1 migrations apply DB --local
+      - name: PR を作ってマージする
+        if: steps.imp.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="auto/import-$(date -u +%Y%m%d-%H%M)"
+          git checkout -b "$branch"
+          git add -A data/inbox data/auto-below.txt data/auto-unpublished.txt migrations 2>/dev/null || true
+          git commit -m "Auto-import $(date -u +%Y-%m-%d)"
+          git push origin "$branch"
+          pr=$(gh pr create --base main --head "$branch" --title "Auto-import $(date -u +%Y-%m-%d)" --body-file digest.md)
+          echo "$pr"
+          if gh pr merge "$pr" --squash --delete-branch; then
+            merged=true
+          elif gh pr merge "$pr" --squash --auto --delete-branch; then
+            merged=pending
+          else
+            merged=false
+          fi
+          echo "merged=$merged"
+          if [ "$merged" = "false" ]; then echo "::warning::自動マージできませんでした($pr)。人が確認してください。"; exit 0; fi
+          # GITHUB_TOKEN の push は他のワークフローを起こさないので、取り込み済みの inbox PR の片付けを直接呼ぶ
+          gh workflow run close-imported-inbox.yml || true

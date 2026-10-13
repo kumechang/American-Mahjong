@@ -511,3 +511,19 @@ export function parseIcs(text, url, horizon, all = false) {
 export async function icsEvents(url, horizon, all = false) {
   return parseIcs(await get(url.replace(/^webcal:/i, "https:")), url, horizon, all);
 }
+
+// CSV text -> [{header: value}]; quoted cells, doubled quotes and newlines inside quotes are handled.
+export function parseCsv(text) {
+  const rows = []; let row = [], cell = "", inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQ) { if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; } else if (ch === '"') inQ = false; else cell += ch; }
+    else if (ch === '"') inQ = true;
+    else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
+    else if (ch !== "\r") cell += ch;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  const [head, ...body] = rows;
+  return (head ? body.filter((r) => r.length === head.length) : []).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i]])));
+}

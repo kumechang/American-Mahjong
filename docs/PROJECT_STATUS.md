@@ -257,6 +257,22 @@ Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `
 - New `scripts/discover-eventbrite.mjs`: Eventbrite "mahjong" search per city. Eventbrite's firewall blocks plain HTTP, so it falls back to headless Chromium. Not in any workflow yet: run it once by hand and read the output first.
 - Tried and rejected: reading dated text from plain HTML of owners' own sites (mostly junk).
 
+## Auto-import (since 2026-10-13): the morning check, automated
+`crawl-events` and `discover-clubs` end by starting `auto-import.yml`, which turns every unimported `inbox/crawl-*` / `inbox/discover-*`
+branch into a migration (`migrations/NNNN_auto_<stamp>.sql`) with `scripts/auto-import.mjs`, replays all migrations on an empty database,
+and then opens a PR ("Auto-import YYYY-MM-DD", body = digest) and squash-merges it. Rules (details in the script's header):
+- Insert only; existing rows are never overwritten. Clubs and instructors are always NEEDS_REVIEW (BamBuddies leads only for places already on the site).
+- Events are ACTIVE only for an owner already ACTIVE, with start time, named venue, sane price, no state mismatch, no morning/evening clash;
+  home-looking names/venues and `data/venue-denylist.txt` are dropped.
+- Sessions that the owner's own complete listing no longer shows (`gone.json` from the event crawler, same-site sessions only, at most 6 per owner) become INACTIVE.
+- A published city under five active rows is watched (`data/auto-below.txt`) and unpublished after 3 days in a row; cities unpublished this way
+  (`data/auto-unpublished.txt`) are published again at five. First-time publishing stays a person's decision.
+- Anything unusual (importer error, migration does not apply, more than 12 visibility changes, very large batches) stops the run; the inbox PRs stay open as before.
+- Not automated: AI research PRs (`inbox/2026-…`), promoting NEEDS_REVIEW to ACTIVE, publishing new cities, outreach.
+**Review every few days:** open the merged "Auto-import" PRs (the body lists what went in, what was retired, what was unpublished and what was left out),
+then the NEEDS_REVIEW rows and leads they mention. To undo a bad import, revert that PR (the migration is idempotent only for inserts, so also write a
+fixing migration for retired/unpublished rows).
+
 ## How to resume
 ```bash
 git checkout claude/ecstatic-archimedes-n8cojp && git fetch origin main && git merge origin/main
