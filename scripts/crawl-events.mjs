@@ -179,17 +179,21 @@ for (const { owner, src } of work) {
   }
   // remember what complete listings (not single event pages) showed, to spot events that vanished
   if ((["bgt", "bookwhen", "ebrite"].includes(src.kind) || found.complete) && maxSeen) {
-    const acc = listings.get(ok) ?? { owner, city, seen: new Set(), max: "" };
+    const acc = listings.get(ok) ?? { owner, city, seen: new Set(), max: "", hosts: new Set(), platform: false };
     for (const k of seenNow) acc.seen.add(k);
+    // a calendar widget or feed only speaks for events that came from the same site; the booking platforms for all of the owner's events
+    if (["bgt", "bookwhen", "ebrite"].includes(src.kind)) acc.platform = true;
+    for (const u of [src.key, ...found.map((f) => f.url)]) { try { acc.hosts.add(new URL(u).host); } catch { /* not a URL */ } }
     if (maxSeen > acc.max) acc.max = maxSeen;
     listings.set(ok, acc);
   }
 }
 // Events we have that none of the owner's complete listings shows any more (inside the dates they cover).
-for (const { owner, city, seen, max } of listings.values()) {
+for (const { owner, city, seen, max, hosts, platform } of listings.values()) {
   const col = owner.type === "club" ? "clubId" : "instructorId";
-  const mine = q(`SELECT name, eventDate, startTime FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
-  for (const e of mine) {
+  const mine = q(`SELECT name, eventDate, startTime, sourceUrl, registrationUrl FROM Event WHERE ${col}='${owner.id}' AND status='ACTIVE' AND eventDate >= '${today} 00:00:00'`);
+  const fromHere = (e) => platform || [e.sourceUrl, e.registrationUrl].some((u) => { try { return hosts.has(new URL(u).host); } catch { return false; } });
+  for (const e of mine.filter(fromHere)) {
     const d = e.eventDate.slice(0, 10);
     if (d <= max && !seen.has(`${d}|${norm(e.name)}`) && !(hhmm(e.startTime) && seen.has(`${d}|t${hhmm(e.startTime)}`))) {
       note(city, `Possibly gone: "${e.name}" on ${d} (${owner.name}) is not in ${owner.name}'s current listing`);

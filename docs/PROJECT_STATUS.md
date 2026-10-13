@@ -250,6 +250,13 @@ Housekeeping: `close-imported-inbox` (runs on every push to `main`) closes the `
 - A title that says "evening/night" with a start before noon (or "morning" at 5 pm or later) is kept as NEEDS_REVIEW (source typo, e.g. Mahj Atelier "Evening" lessons listed at 6:30 AM).
 - The nightly prompt builder skips discovery leads whose club website is already in the DB and leads outside the 50 states + DC.
 
+## Crawler upgrades 2026-10-13
+- "Possibly gone" detection now also covers calendar-widget and ICS sources (only events that came from the same site are compared).
+- `get()` retries 429/5xx/timeouts twice; Bam Good Time sessions marked cancelled/postponed are skipped.
+- New `scripts/discover-bambuddies.mjs` (wired into `discover-clubs.yml`): leads from the BamBuddies American-mahjong directory, written to `bb-<city>/` folders (clubs.csv + instructors.csv, NEEDS_REVIEW, no website); the nightly prompt shows their directory text.
+- New `scripts/discover-eventbrite.mjs`: Eventbrite "mahjong" search per city. Eventbrite's firewall blocks plain HTTP, so it falls back to headless Chromium. Not in any workflow yet: run it once by hand and read the output first.
+- Tried and rejected: reading dated text from plain HTML of owners' own sites (mostly junk).
+
 ## How to resume
 ```bash
 git checkout claude/ecstatic-archimedes-n8cojp && git fetch origin main && git merge origin/main

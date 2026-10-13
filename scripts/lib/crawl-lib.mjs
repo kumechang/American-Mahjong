@@ -53,15 +53,25 @@ export async function get(url) {
   if (wait > 0) await new Promise((r) => setTimeout(r, wait));
   lastFetch.set(host, Date.now());
   pagesFetched++;
-  const ctl = new AbortController();
-  const t = setTimeout(() => ctl.abort(), 20000);
-  try {
-    const res = await fetch(url, { headers: { "user-agent": UA, accept: "text/html" }, signal: ctl.signal, redirect: "follow" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.text();
-  } finally {
-    clearTimeout(t);
+  // a busy site answers 429/5xx or stalls now and then: try up to three times (2 s, then 5 s apart) before giving up
+  let lastErr;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, attempt === 1 ? 2000 : 5000));
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 20000);
+    try {
+      const res = await fetch(url, { headers: { "user-agent": UA, accept: "text/html" }, signal: ctl.signal, redirect: "follow" });
+      if (res.ok) return await res.text();
+      lastErr = new Error(`HTTP ${res.status}`);
+      if (res.status !== 429 && res.status < 500) throw lastErr; // 404, 403 and the like will not change
+    } catch (e) {
+      if (e === lastErr) throw e;
+      lastErr = e; // timeout or connection error
+    } finally {
+      clearTimeout(t);
+    }
   }
+  throw lastErr;
 }
 
 // ---------- adapters: return [{name,date,time,venue,price,url,type}] ----------
@@ -87,6 +97,7 @@ export async function bamGoodTime(origin) {
     }
     if (seen.has(m[1])) continue;
     seen.add(m[1]);
+    if (l.some((x) => /^(event )?(cancel+ed|postponed)\b/i.test(x)) || /\b(cancel+ed|postponed)\b/i.test(l[di - 1])) continue; // a cancelled session is not a listing
     // after the time: [•] [host club] location, then the price. The location is the last line before the price.
     let end = j;
     while (end < l.length && !/^\$/.test(l[end]) && !/^(part of:?|series|free)$/i.test(l[end])) end++;
@@ -423,7 +434,9 @@ export async function widgetCalendar(url, all = false, include = "") {
   // a multi-week league is sold as one ticket: keep its price on the first session only
   const firstSeen = new Set();
   for (const e of ev) { if (e.price >= 150) { const k = `${e.name}|${e.price}`; if (firstSeen.has(k)) e.price = null; else firstSeen.add(k); } }
-  return ev.filter((e) => all || (/mah/i.test(`${e.name} ${e.desc}`) && !OTHER_STYLES.test(`${e.name} ${e.desc.slice(0, 200)}`)));
+  const out = ev.filter((e) => all || (/mah/i.test(`${e.name} ${e.desc}`) && !OTHER_STYLES.test(`${e.name} ${e.desc.slice(0, 200)}`)));
+  out.complete = out.length > 0; // the whole calendar was read, so an event of ours missing from it has gone
+  return out;
 }
 
 
@@ -441,6 +454,7 @@ export function parseIcs(text, url, horizon, all = false) {
   const raw = text.replace(/\r\n?/g, "\n").replace(/\n[ \t]/g, "").split("\n");
   const calTz = (raw.find((l) => /^X-WR-TIMEZONE:/i.test(l)) ?? "").split(":")[1]?.trim();
   const out = [];
+  let skipped = 0; // recurrence rules we cannot expand: the feed is then not a complete list
   let ev = null;
   for (const line of raw) {
     if (line === "BEGIN:VEVENT") { ev = { ex: [] }; continue; }
@@ -453,7 +467,7 @@ export function parseIcs(text, url, horizon, all = false) {
       const dates = [];
       if (e.rrule) {
         const r = Object.fromEntries(e.rrule.split(";").map((x) => x.split("=")));
-        if (r.FREQ !== "WEEKLY") { if (!r.FREQ) dates.push(e.start.date); }
+        if (r.FREQ !== "WEEKLY") { if (!r.FREQ) dates.push(e.start.date); else skipped++; }
         else {
           const days = (r.BYDAY ?? "").split(",").filter(Boolean).map((d) => ["SU", "MO", "TU", "WE", "TH", "FR", "SA"].indexOf(d.slice(-2)));
           const startMs = Date.parse(e.start.date), until = r.UNTIL ? Date.parse(`${r.UNTIL.slice(0, 4)}-${r.UNTIL.slice(4, 6)}-${r.UNTIL.slice(6, 8)}`) : Infinity;
@@ -491,6 +505,7 @@ export function parseIcs(text, url, horizon, all = false) {
       } else ev.start = { date: `${d[1]}-${d[2]}-${d[3]}`, time: `${d[4]}:${d[5]}` };
     }
   }
+  out.complete = out.length > 0 && skipped === 0;
   return out;
 }
 export async function icsEvents(url, horizon, all = false) {
