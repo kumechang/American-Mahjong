@@ -273,6 +273,8 @@ and then opens a PR ("Auto-import YYYY-MM-DD", body = digest) and squash-merges 
 then the NEEDS_REVIEW rows and leads they mention. To undo a bad import, revert that PR (the migration is idempotent only for inserts, so also write a
 fixing migration for retired/unpublished rows).
 
+Crawler know-how (sources, rules, pitfalls, testing): `docs/CRAWLER_KNOWHOW.md`.
+
 ## How to resume
 ```bash
 git checkout claude/ecstatic-archimedes-n8cojp && git fetch origin main && git merge origin/main
