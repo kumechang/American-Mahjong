@@ -1,3 +1,7 @@
+birmingham 2026-10-14
 cumming 2026-10-13
+fort-worth 2026-10-14
+georgetown 2026-10-14
 new-orleans 2026-10-13
+round-rock 2026-10-14
 st-louis 2026-10-13
