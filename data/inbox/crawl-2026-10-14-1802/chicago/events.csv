@@ -1,0 +1,3 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahjong 101 at Logan Arts Cafe,Chicago,IL,2026-12-06,14:00,,Logan Arts Center,The Mahjong Society,,LESSON,TRUE,,https://themahjongsociety.com/event-calendar,https://themahjongsociety.com/event-calendar,2026-10-14,ACTIVE
+Open Play at Bungalow by Middle Brow,Chicago,IL,2026-12-10,18:30,,Bungalow by Middle Brow,The Mahjong Society,,OPEN_PLAY,FALSE,,https://themahjongsociety.com/event-calendar,https://themahjongsociety.com/event-calendar,2026-10-14,ACTIVE
