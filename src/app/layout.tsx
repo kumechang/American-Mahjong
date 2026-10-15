@@ -24,6 +24,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // Every page names itself as the canonical URL ("./" resolves against the page's own path with metadataBase), so the
+  // http:// and other variants Google finds are folded into the https page. Pages that set their own `alternates` override this.
+  alternates: { canonical: "./" },
   title: {
     default: "American Mahjong Guide — Learn, Find, Play",
     template: "%s | American Mahjong Guide",
