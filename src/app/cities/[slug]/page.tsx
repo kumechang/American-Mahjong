@@ -168,18 +168,55 @@ function buildBreadcrumbJsonLd(city: City) {
   };
 }
 
+const EVENT_TYPE_PHRASES: Record<string, string> = {
+  OPEN_PLAY: "American mahjong open play",
+  LESSON: "American mahjong lesson",
+  TOURNAMENT: "American mahjong tournament",
+  SOCIAL: "American mahjong social",
+  OTHER: "American mahjong event",
+};
+
+function originOf(url: string | null | undefined) {
+  try {
+    return url ? new URL(url).origin : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function buildEventsJsonLd(city: City) {
   return city.events.map((event) => {
     const club = city.clubs.find((club) => club.id === event.clubId);
+    const teacher = city.instructors.find((i) => i.id === event.instructorId);
     const venueName = event.venue ?? club?.name ?? `${city.name}, ${city.state}`;
+
+    // eventDate is stored as a naive "YYYY-MM-DD HH:MM:SS" string (midnight);
+    // the real start/end live in startTime/endTime (local "HH:MM"). Without a
+    // UTC offset Google reads the time in the venue's own time zone.
+    const day = event.eventDate.slice(0, 10);
+    const clock = (t: string | null) => (t && /^\d{1,2}:\d{2}/.test(t) ? t.slice(0, 5).padStart(5, "0") : null);
+    const start = clock(event.startTime);
+    const end = clock(event.endTime);
+
+    const organizerName = club?.name ?? teacher?.name;
+    const organizerUrl = club?.website ?? teacher?.website ?? originOf(event.registrationUrl) ?? originOf(event.sourceUrl);
+    const phrase = EVENT_TYPE_PHRASES[event.eventType] ?? EVENT_TYPE_PHRASES.OTHER;
+    const description = [
+      `${phrase}${event.beginnerFriendly ? " for beginners" : ""} at ${venueName} in ${city.name}, ${city.state}`,
+      organizerName ? `hosted by ${organizerName}` : null,
+    ]
+      .filter(Boolean)
+      .join(", ")
+      .concat(".");
 
     return {
       "@context": "https://schema.org",
       "@type": "Event",
       name: event.name,
-      // eventDate is stored as a naive "YYYY-MM-DD HH:MM:SS" string (no
-      // timezone), so normalize it to ISO 8601 for schema.org/Google.
-      startDate: new Date(`${event.eventDate.replace(" ", "T")}Z`).toISOString(),
+      description,
+      image: [`${SITE_URL}/og/og-default.jpg`],
+      startDate: start ? `${day}T${start}` : day,
+      ...(start && end && end > start ? { endDate: `${day}T${end}` } : {}),
       eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
       eventStatus: "https://schema.org/EventScheduled",
       location: {
@@ -191,22 +228,29 @@ function buildEventsJsonLd(city: City) {
           addressRegion: city.state,
         },
       },
-      ...(club
+      ...(organizerName
         ? {
             organizer: {
               "@type": "Organization",
-              name: club.name,
-              ...(club.website ? { url: club.website } : {}),
+              name: organizerName,
+              ...(organizerUrl ? { url: organizerUrl } : {}),
             },
           }
         : {}),
-      ...(event.registrationUrl
+      // the teacher when there is one, otherwise the group running it
+      ...(teacher || club
+        ? { performer: teacher ? { "@type": "Person", name: teacher.name } : { "@type": "Organization", name: club!.name } }
+        : {}),
+      // Only a known price is stated: an unknown price must not read as "free".
+      ...(event.registrationUrl && event.price != null
         ? {
             offers: {
               "@type": "Offer",
               url: event.registrationUrl,
-              price: event.price ?? 0,
+              price: event.price,
               priceCurrency: "USD",
+              availability: "https://schema.org/InStock",
+              validFrom: `${event.createdAt.slice(0, 10)}`,
             },
           }
         : {}),
