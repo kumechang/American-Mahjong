@@ -1,0 +1,40 @@
+# Island Park, NY: event crawler (2026-10-16)
+
+## New events
+- 2026-10-23 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-10-24 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-03 13:00 Vote + Play (MJ Social) [ACTIVE]
+- 2026-11-05 13:00 Automatic Table Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-06 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-06 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-11-07 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-11 18:30 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-12 13:00 Automatic Table Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-13 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-13 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-11-14 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-17 13:00 Automatic Table Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-18 18:30 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-19 13:00 Automatic Table Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-20 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-20 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-11-21 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-24 13:00 Automatic Table Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-27 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-27 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-11-28 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-11-30 18:30 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-12-01 13:00 Automatic Table Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-12-02 18:30 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-12-03 11:00 Beginner Guided Play (MJ Social) [ACTIVE]
+- 2026-12-04 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-12-04 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-12-07 18:30 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-12-10 11:00 Beginner Guided Play (MJ Social) [ACTIVE]
+- 2026-12-11 13:00 Mah Jongg Open Play (MJ Social) [ACTIVE]
+- 2026-12-11 14:00 Beginner Mah Jongg Guided Play (MJ Social) [ACTIVE]
+- 2026-12-14 18:30 Mah Jongg Open Play (MJ Social) [ACTIVE]
+
+## Notes
+- Possibly gone: "Beginner Guided Play" on 2026-11-19 (MJ Social) is not in MJ Social's current listing
+- Possibly gone: "Beginner Guided Play" on 2026-11-26 (MJ Social) is not in MJ Social's current listing
