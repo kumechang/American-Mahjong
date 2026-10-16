@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Motor City Mahjong 101 at 5 Star Lanes,Detroit,MI,2026-11-06,18:00,,5 Star Lanes,Motor City Mahjong,,LESSON,TRUE,85,https://motorcitymahjong.bamgoodtime.com,https://motorcitymahjong.bamgoodtime.com,2026-10-17,ACTIVE
+Open Play & Mahj Muddle Kickoff,Detroit,MI,2026-10-19,17:30,,Soul Cafe,Mah Jongg Mommas,,OPEN_PLAY,FALSE,15,https://mah-jongg-mommas.bamgoodtime.com,https://mah-jongg-mommas.bamgoodtime.com,2026-10-17,ACTIVE
+White Lake Morning Learn to Play Series (3 weeks),Detroit,MI,2026-11-02,10:30,,White Lake MI (address given at registration),Mah Jongg Mommas,,LESSON,TRUE,,https://mah-jongg-mommas.bamgoodtime.com,https://mah-jongg-mommas.bamgoodtime.com,2026-10-17,NEEDS_REVIEW
+White Lake Evening Learn to Play Series (3 weeks),Detroit,MI,2026-11-02,17:30,,White Lake MI (address given at registration),Mah Jongg Mommas,,LESSON,TRUE,,https://mah-jongg-mommas.bamgoodtime.com,https://mah-jongg-mommas.bamgoodtime.com,2026-10-17,NEEDS_REVIEW
