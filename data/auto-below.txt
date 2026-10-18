@@ -1,7 +1,6 @@
+detroit 2026-10-18
 indianapolis 2026-10-16
 jacksonville 2026-10-16
-lees-summit 2026-10-15
-little-elm 2026-10-15
-los-angeles 2026-10-15
 new-york 2026-10-16
 orlando 2026-10-16
+washington 2026-10-18
