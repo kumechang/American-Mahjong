@@ -4,7 +4,6 @@ fort-worth
 georgetown
 indianapolis
 jacksonville
-lees-summit
 little-elm
 los-angeles
 new-orleans
