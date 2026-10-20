@@ -1,10 +1,5 @@
-birmingham 2026-10-14
-cumming 2026-10-13
-fort-worth 2026-10-14
-georgetown 2026-10-14
-lees-summit 2026-10-15
-little-elm 2026-10-15
-los-angeles 2026-10-15
-new-orleans 2026-10-13
-round-rock 2026-10-14
-st-louis 2026-10-13
+boise 2026-10-20
+detroit 2026-10-18
+hartford 2026-10-20
+salt-lake-city 2026-10-20
+washington 2026-10-18
