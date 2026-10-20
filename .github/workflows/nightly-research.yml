@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "events か cities(空欄なら自動)"
+        description: "verify か events か cities(空欄なら自動)"
         default: ""
       force:
         description: "(使わない。制限を撤廃したので常に実行する。古い cron-job.org の本文が残っていても失敗しないよう残してある)"
@@ -56,7 +56,7 @@ jobs:
           MODE: ${{ inputs.mode }}
         run: |
           set +e
-          [[ -z "$MODE" || "$MODE" =~ ^(events|cities)$ ]] || { echo "不正な mode: $MODE"; exit 1; }
+          [[ -z "$MODE" || "$MODE" =~ ^(verify|events|cities)$ ]] || { echo "不正な mode: $MODE"; exit 1; }
           args=(--out=prompt.md)
           [ -n "$MODE" ] && args+=("--mode=$MODE")
           node scripts/build-nightly-prompt.mjs "${args[@]}" | tee summary.md
