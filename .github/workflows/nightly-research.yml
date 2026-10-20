@@ -11,7 +11,7 @@ on:
         description: "events か cities(空欄なら自動)"
         default: ""
       force:
-        description: "未処理の inbox PR が溜まっていても実行する(true)"
+        description: "(使わない。制限を撤廃したので常に実行する。古い cron-job.org の本文が残っていても失敗しないよう残してある)"
         default: "false"
 
 permissions:
@@ -32,22 +32,18 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: 未処理の inbox PR を数える
+      # 以前は「未処理の inbox PR が 2 件以上なら依頼しない」という制限があったが、撤廃した(溜まっていても毎晩依頼する)。
+      # 件数は参考のためにログに出すだけ。
+      - name: 未処理の inbox PR を数える(制限なし・表示のみ)
         id: backlog
         env:
           GH_TOKEN: ${{ github.token }}
-          FORCE: ${{ inputs.force }}
         run: |
           set -euo pipefail
           open=$(gh pr list --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("inbox/"))] | length')
           echo "未処理の inbox PR: $open"
-          if [ "$open" -ge 2 ] && [ "${FORCE:-false}" != "true" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "## Skipped" >> "$GITHUB_STEP_SUMMARY"
-            echo "未処理の inbox PR が ${open} 件あるため、今夜は依頼しません。先に取り込んでください。" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
+          echo "未処理の inbox PR: ${open} 件(制限なし。今夜も依頼します)" >> "$GITHUB_STEP_SUMMARY"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
       - run: npm ci
         if: steps.backlog.outputs.skip == 'false'
       - name: ローカル DB を作る
