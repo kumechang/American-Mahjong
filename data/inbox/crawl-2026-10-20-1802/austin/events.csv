@@ -1,0 +1,6 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahj 101 - Sunday Beginner Lessons at Mattina,Austin,TX,2026-11-01,15:00,,,itsamahjing,,LESSON,TRUE,75,https://www.itsamahjing.com/events,https://www.itsamahjing.com/events,2026-10-20,NEEDS_REVIEW
+Mahj 102 - Sunday Mahjong Skills at Mattina,Austin,TX,2026-11-08,15:00,,,itsamahjing,,LESSON,FALSE,75,https://www.itsamahjing.com/events,https://www.itsamahjing.com/events,2026-10-20,NEEDS_REVIEW
+Guided Play - Sunday Mahjong at Mattina,Austin,TX,2026-11-15,15:00,,,itsamahjing,,OPEN_PLAY,FALSE,55,https://www.itsamahjing.com/events,https://www.itsamahjing.com/events,2026-10-20,NEEDS_REVIEW
+Mahj 101 - Beginner Lesson at Mattina - November 22,Austin,TX,2026-11-22,15:00,,,itsamahjing,,LESSON,TRUE,75,https://www.itsamahjing.com/events,https://www.itsamahjing.com/events,2026-10-20,NEEDS_REVIEW
+Open Play - Sunday Mahjong at Mattina,Austin,TX,2026-11-29,15:00,,,itsamahjing,,OPEN_PLAY,FALSE,40,https://www.itsamahjing.com/events,https://www.itsamahjing.com/events,2026-10-20,NEEDS_REVIEW

@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Beginner American Mahjong Class (Mahj 101) at The O.G. Coffee & Wine Bar — Afternoon,Minneapolis,MN,2026-11-10,14:00,,The O.G. Coffee & Wine Bar,,Jennifer / Mahj Nest,LESSON,TRUE,,https://mahjnest.com/,https://mahjnest.com/,2026-10-20,ACTIVE
+Beginner American Mahjong Class (Mahj 101) at The O.G. Coffee & Wine Bar — Evening,Minneapolis,MN,2026-11-18,18:00,,The O.G. Coffee & Wine Bar,,Jennifer / Mahj Nest,LESSON,TRUE,,https://mahjnest.com/,https://mahjnest.com/,2026-10-20,ACTIVE
+Beginner American Mahjong Class (Mahj 101) at The O.G. Coffee & Wine Bar — Evening,Minneapolis,MN,2026-12-09,18:00,,The O.G. Coffee & Wine Bar,,Jennifer / Mahj Nest,LESSON,TRUE,,https://mahjnest.com/,https://mahjnest.com/,2026-10-20,ACTIVE
+Mahjoween — American Mahjong Open Play,Minneapolis,MN,2026-10-31,09:00,,,,Jennifer / Mahj Nest,OPEN_PLAY,FALSE,,https://mahjnest.com/,https://mahjnest.com/,2026-10-20,NEEDS_REVIEW
