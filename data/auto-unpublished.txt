@@ -5,8 +5,8 @@ georgetown
 indianapolis
 jacksonville
 little-elm
-los-angeles
 new-orleans
 new-york
 orlando
 st-louis
+washington
