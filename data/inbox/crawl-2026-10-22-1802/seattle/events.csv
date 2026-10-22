@@ -1,0 +1,3 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Daytime American Mahjong Free Play,Seattle,WA,2026-12-21,13:00,,"SJCC Makom, WA",American Mahjong at the J,,OPEN_PLAY,FALSE,,https://sjcc.org/event/daytime-drop-in-mahjong/2026-12-21/,https://sjcc.org/event/daytime-drop-in-mahjong/2026-12-21/,2026-10-22,ACTIVE
+Evening Mahjong Free Play,Seattle,WA,2026-12-21,18:00,,"SJCC Makom, WA",American Mahjong at the J,,OPEN_PLAY,FALSE,,https://sjcc.org/event/evening-mahjong-free-play/2026-12-21/,https://sjcc.org/event/evening-mahjong-free-play/2026-12-21/,2026-10-22,ACTIVE
