@@ -1,0 +1,44 @@
+[
+ {
+  "slug": "aurora-friday-open-play-20261120",
+  "name": "Friday Open Play",
+  "date": "2026-11-20",
+  "owner": "Mingle Mahjong Club",
+  "city": "Aurora"
+ },
+ {
+  "slug": "grafton-sunday-morning-coffee-mahjong-20261206",
+  "name": "Sunday Morning Coffee & Mahjong ☕🀄",
+  "date": "2026-12-06",
+  "owner": "Central MA Mahjong",
+  "city": "Grafton"
+ },
+ {
+  "slug": "grafton-sunday-morning-coffee-mahjong-20261220",
+  "name": "Sunday Morning Coffee & Mahjong ☕🀄",
+  "date": "2026-12-20",
+  "owner": "Central MA Mahjong",
+  "city": "Grafton"
+ },
+ {
+  "slug": "richmond-community-open-play-20261027",
+  "name": "Community Open Play",
+  "date": "2026-10-27",
+  "owner": "MahjongRVA",
+  "city": "Richmond"
+ },
+ {
+  "slug": "richmond-community-open-play-20261119",
+  "name": "Community Open Play",
+  "date": "2026-11-19",
+  "owner": "MahjongRVA",
+  "city": "Richmond"
+ },
+ {
+  "slug": "richmond-community-open-play-20261217",
+  "name": "Community Open Play",
+  "date": "2026-12-17",
+  "owner": "MahjongRVA",
+  "city": "Richmond"
+ }
+]
