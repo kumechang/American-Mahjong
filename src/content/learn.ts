@@ -1,4 +1,7 @@
+import type { DiagramId } from "@/components/diagrams";
+
 export type LearnSection =
+  | { type: "diagram"; id: DiagramId }
   | { type: "paragraphs"; heading?: string; paragraphs: string[] }
   | { type: "list"; heading?: string; items: string[]; ordered?: boolean }
   | { type: "glossary"; heading?: string; terms: { term: string; definition: string }[] };
@@ -82,6 +85,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           "You'll start with 13 tiles on your rack (the dealer starts with 14). As the game goes on, you draw and discard tiles until your hand matches one of the official hands for the year. (At the very start, you'll also trade some tiles in a phase called the Charleston.) Match one, and you call \"Mahjong\" to win.",
         ],
       },
+      { type: "diagram", id: "tileset" },
       {
         type: "paragraphs",
         heading: "The card",
@@ -114,6 +118,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
     intro:
       "You'll hear a lot of new vocabulary at your first American Mahjong table. Here's what the most common terms actually mean — bookmark this page and check back whenever something in another guide isn't clear.",
     sections: [
+      { type: "diagram", id: "groups" },
       {
         type: "glossary",
         terms: [
@@ -267,6 +272,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           "Once the Charleston is done, play begins: the dealer discards first, then players take turns drawing a tile and discarding one, working toward a hand on the card.",
         ],
       },
+      { type: "diagram", id: "round" },
       {
         type: "paragraphs",
         heading: "During play",
@@ -310,6 +316,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           "All four players build the wall together: everyone builds a wall two tiles high and 19 tiles long in front of them, and together you push the four walls into a square in the middle of the table.",
         ],
       },
+      { type: "diagram", id: "table" },
       {
         type: "paragraphs",
         heading: "Dealing",
@@ -384,6 +391,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           "The idea is to let go of tiles you don't need and hope for something more useful in return. You won't always love what you receive, and that's normal.",
         ],
       },
+      { type: "diagram", id: "charleston" },
       {
         type: "paragraphs",
         heading: "What to pass",
@@ -438,6 +446,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           "There's no bonus for being the dealer under the standard rules.",
         ],
       },
+      { type: "diagram", id: "payments" },
       {
         type: "paragraphs",
         paragraphs: [
@@ -475,6 +484,7 @@ export const LEARN_TOPICS: Record<string, LearnTopic> = {
           "Jokers can never be used for a single tile or as part of a pair — that's true on every hand on the card. Some hands, like the ones in the Singles and Pairs section, are made only of singles and pairs, so jokers can't be used anywhere in them. Check your card before you build around a joker.",
         ],
       },
+      { type: "diagram", id: "jokers" },
       {
         type: "paragraphs",
         heading: "Trading for a joker",

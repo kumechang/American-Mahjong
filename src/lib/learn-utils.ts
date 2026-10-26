@@ -8,6 +8,7 @@ export function headingId(heading: string): string {
 }
 
 function sectionText(section: LearnSection): string {
+  if (section.type === "diagram") return "";
   if (section.type === "paragraphs") return section.paragraphs.join(" ");
   if (section.type === "list") return section.items.join(" ");
   return section.terms.map((t) => `${t.term} ${t.definition}`).join(" ");
