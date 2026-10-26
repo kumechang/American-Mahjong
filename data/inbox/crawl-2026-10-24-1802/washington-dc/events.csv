@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahjong 101 @ Relume,Washington,DC,2026-11-20,18:00,,Relume,,Girls Who Mahjong,LESSON,TRUE,,https://www.girlswhomahjong.com/events,https://www.girlswhomahjong.com/events,2026-10-24,ACTIVE
+Mahjong 101 @ Shop Made in DC Georgetown,Washington,DC,2026-12-06,15:00,,Shop Made In DC,,Girls Who Mahjong,LESSON,TRUE,,https://www.girlswhomahjong.com/events,https://www.girlswhomahjong.com/events,2026-10-24,ACTIVE
+Mahjong Open Play @ Shop Made in DC Dupont,Washington,DC,2026-12-12,15:00,,Shop Made In DC/WE MAKE DC,,Girls Who Mahjong,OPEN_PLAY,FALSE,,https://www.girlswhomahjong.com/events,https://www.girlswhomahjong.com/events,2026-10-24,ACTIVE
+Mahjong 101 @ Relume,Washington,DC,2026-12-13,14:00,,Relume,,Girls Who Mahjong,LESSON,TRUE,,https://www.girlswhomahjong.com/events,https://www.girlswhomahjong.com/events,2026-10-24,ACTIVE

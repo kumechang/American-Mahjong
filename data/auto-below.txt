@@ -1,5 +1,2 @@
-boise 2026-10-20
-detroit 2026-10-18
-hartford 2026-10-20
-salt-lake-city 2026-10-20
-washington 2026-10-18
+aurora 2026-10-23
+memphis 2026-10-24

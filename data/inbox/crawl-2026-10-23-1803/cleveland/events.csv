@@ -1,0 +1,2 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahjong Open Play,Cleveland,OH,2026-10-28,17:00,,"Kelly's Cafe, 1661 Pearl Road, Brunswick, OH 44212",Southwest Cleveland Mahjong,,OPEN_PLAY,FALSE,7.18,https://www.eventbrite.com/e/mahjong-open-play-tickets-2003785681915,https://www.eventbrite.com/e/mahjong-open-play-tickets-2003785681915,2026-10-23,ACTIVE

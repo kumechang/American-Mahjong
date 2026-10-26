@@ -1,12 +1,15 @@
 birmingham
 cumming
 fort-worth
+fresno
 georgetown
+hartford
 indianapolis
 jacksonville
 little-elm
-los-angeles
 new-orleans
 new-york
 orlando
+salt-lake-city
 st-louis
+washington
