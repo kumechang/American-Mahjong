@@ -5,24 +5,28 @@ import { cities } from "@/db/schema";
 import { CitySearch } from "@/components/CitySearch";
 import { getUpcomingHighlights } from "@/lib/upcoming";
 import { eventDateParts, formatClockTime } from "@/lib/format";
+import { LearnIcon, FindIcon, PlayIcon } from "@/components/StepIcons";
 
 // City list and events come from D1, which only exists at request time.
 export const dynamic = "force-dynamic";
 
 const JOURNEY_STEPS = [
   {
+    icon: LearnIcon,
     href: "/learn",
     title: "Learn how to play",
     description:
       "What American Mahjong is, the Charleston, scoring, jokers and etiquette, explained for total beginners.",
   },
   {
+    icon: FindIcon,
     href: "/find",
     title: "Find a place to play",
     description:
       "Beginner-friendly clubs, lessons, teachers, open play and events, searchable by city.",
   },
   {
+    icon: PlayIcon,
     href: "/community",
     title: "Start playing",
     description:
@@ -159,11 +163,11 @@ export default async function Home() {
         <ol className="mt-6 grid gap-8 sm:grid-cols-3">
           {JOURNEY_STEPS.map((item, index) => (
             <li key={item.href} className="flex gap-4">
-              <span
-                className="font-[family-name:var(--font-display)] text-4xl font-bold leading-none text-jade"
-                aria-hidden="true"
-              >
-                {index + 1}
+              <span className="relative mt-0.5 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-jade/10" aria-hidden="true">
+                <item.icon />
+                <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-jade text-xs font-bold text-background">
+                  {index + 1}
+                </span>
               </span>
               <div>
                 <h3 className="text-lg font-semibold">
