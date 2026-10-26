@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LEARN_TOPIC_META, LEARN_TOPICS, type LearnSection } from "@/content/learn";
 import { headingId, readingMinutes } from "@/lib/learn-utils";
+import { Diagram } from "@/components/diagrams";
 
 export function generateStaticParams() {
   return LEARN_TOPIC_META.map(({ slug }) => ({ slug }));
@@ -25,6 +26,14 @@ export async function generateMetadata({
 }
 
 function LearnSectionBlock({ section }: { section: LearnSection }) {
+  if (section.type === "diagram") {
+    return (
+      <section className="mt-8">
+        <Diagram id={section.id} />
+      </section>
+    );
+  }
+
   if (section.type === "paragraphs") {
     return (
       <section className="mt-10">
@@ -114,7 +123,7 @@ export default async function LearnTopicPage({
   const next =
     index < LEARN_TOPIC_META.length - 1 ? LEARN_TOPIC_META[index + 1] : null;
   const headings = topic.sections
-    .map((section) => section.heading)
+    .map((section) => (section.type === "diagram" ? undefined : section.heading))
     .filter((h): h is string => Boolean(h));
 
   return (
