@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { eq } from "drizzle-orm";
+import { eq, max } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { cities } from "@/db/schema";
+import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
 import { LEARN_TOPIC_META } from "@/content/learn";
 
@@ -25,9 +25,20 @@ const STATIC_ROUTES = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const db = await getDb();
   const publishedCities = await db
-    .select({ slug: cities.slug, updatedAt: cities.updatedAt })
+    .select({ id: cities.id, slug: cities.slug, updatedAt: cities.updatedAt })
     .from(cities)
     .where(eq(cities.published, true));
+
+  // A city page changes when its rows change, not only when the City row does: use the newest update among its visible rows.
+  const [clubStamps, instructorStamps, eventStamps] = await Promise.all(
+    [clubs, instructors, events].map((t) =>
+      db.select({ cityId: t.cityId, at: max(t.updatedAt) }).from(t).where(eq(t.status, "ACTIVE")).groupBy(t.cityId),
+    ),
+  );
+  const newest = new Map<string, string>();
+  for (const { cityId, at } of [...clubStamps, ...instructorStamps, ...eventStamps]) {
+    if (at && at > (newest.get(cityId) ?? "")) newest.set(cityId, at);
+  }
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({
     url: `${SITE_URL}${path}`,
@@ -45,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const cityEntries: MetadataRoute.Sitemap = publishedCities.map((city) => ({
     url: `${SITE_URL}/cities/${city.slug}`,
-    lastModified: new Date(city.updatedAt),
+    lastModified: new Date(`${[city.updatedAt, newest.get(city.id) ?? ""].sort().at(-1)!.replace(" ", "T")}Z`),
     changeFrequency: "daily",
     priority: 0.8,
   }));

@@ -3,6 +3,8 @@
   "name": "american-mahjong",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Pages make several D1 round trips per request: run the Worker near the database (Search Console crawl stats showed 150-970 ms responses)
+  "placement": { "mode": "smart" },
   "main": ".open-next/worker.js",
   "assets": {
     "directory": ".open-next/assets",
