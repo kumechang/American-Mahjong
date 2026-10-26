@@ -4,6 +4,7 @@ import { eq, asc } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities } from "@/db/schema";
 import { CitySearch } from "@/components/CitySearch";
+import { StateTileMap, cityCountsByState } from "@/components/StateTileMap";
 import { getCategoryCities, type CategoryKey } from "@/lib/find-categories";
 import { pluralize } from "@/lib/format";
 
@@ -80,6 +81,11 @@ export default async function FindPage() {
 
       <div className="mt-8">
         <CitySearch cities={cityRows} />
+      </div>
+
+      <h2 className="mt-14 text-xl font-semibold">Browse by state</h2>
+      <div className="mt-4">
+        <StateTileMap counts={cityCountsByState(cityRows)} hrefBase="/cities" />
       </div>
 
       <h2 className="mt-14 text-xl font-semibold">What are you looking for?</h2>

@@ -4,6 +4,7 @@ import { getDb } from "@/lib/db";
 import { cities } from "@/db/schema";
 import { getCityCounts } from "@/lib/city-counts";
 import { CityDirectory } from "@/components/CityDirectory";
+import { StateTileMap, cityCountsByState } from "@/components/StateTileMap";
 
 export const metadata: Metadata = {
   title: "American Mahjong by City",
@@ -48,9 +49,14 @@ export default async function CitiesPage() {
           No city pages are published yet. Check back soon.
         </p>
       ) : (
-        <div className="mt-8">
-          <CityDirectory cities={citiesWithCounts} />
-        </div>
+        <>
+          <div className="mt-8">
+            <StateTileMap counts={cityCountsByState(cityRows)} />
+          </div>
+          <div className="mt-10">
+            <CityDirectory cities={citiesWithCounts} />
+          </div>
+        </>
       )}
     </div>
   );
