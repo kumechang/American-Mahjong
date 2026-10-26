@@ -1,3 +1,4 @@
+aurora
 birmingham
 cumming
 fort-worth
@@ -10,6 +11,5 @@ little-elm
 new-orleans
 new-york
 orlando
-salt-lake-city
 st-louis
 washington
