@@ -100,6 +100,7 @@ Details in the header of `scripts/auto-import.mjs` and in `docs/PROJECT_STATUS.m
 
 - Review every few days: merged "Auto-import" PRs (body = digest), then the NEEDS_REVIEW rows and leads they list.
 - Nightly AI plan (`build-nightly-prompt.mjs`): four verify nights, two city nights, one event night per week. The verify queue puts at-risk published cities first, then cities that can reach five, then by dated pending sessions.
+- Repeats are prevented in three ways (`build-nightly-prompt.mjs`): (1) cities in `data/inbox/<date-time>/` of the last 3 days go to the back of the line, and the nightly workflow also loads the folders of AI PRs that are still open (before this, nothing counted until the PR was merged, so the same cities came back every night); (2) a city whose run left only a report and no CSV rests for 14 days (`cooldown`), and a later CSV ends the rest; (3) a NEEDS_REVIEW owner whose only page is a Bam Good Time site with no dated sessions and no American wording is not sent to the AI at all: it is printed as an "outreach candidate" in the run summary.
 - The AI server is for judgment (is it American, is the venue a business, is the date real). Everything deterministic belongs in a crawler.
 - Frequencies: events and discovery are cheap, run them often; the AI costs tokens, keep it to once a night.
 - Open items: `NEXT_PUBLIC_CONTACT_EMAIL` unset; New Orleans and St. Louis sit at four rows (inquiry drafts in `docs/outreach/`); about 66 unpublished cities wait for American wording or a business venue.

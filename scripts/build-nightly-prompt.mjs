@@ -64,6 +64,20 @@ if (existsSync("data/inbox")) {
     for (const slug of readdirSync(`data/inbox/${run}`)) recent.add(slug);
   }
 }
+// A city the server looked at and could confirm nothing in (its folder has a report but no CSV) rests for COOLDOWN_DAYS: asking again
+// tomorrow about the same Bam Good Time page with no events and no American wording only burns tokens. A later run that does produce a
+// CSV for the city ends the rest. The folders come from main plus, in the nightly workflow, from the branches of PRs still open.
+const COOLDOWN_DAYS = 14;
+const cooldown = new Set();
+if (existsSync("data/inbox")) {
+  for (const run of readdirSync("data/inbox").filter((d) => /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d)).sort()) {
+    if ((Date.parse(today) - Date.parse(run.slice(0, 10))) / 864e5 >= COOLDOWN_DAYS) continue;
+    for (const slug of readdirSync(`data/inbox/${run}`, { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name)) {
+      const files = readdirSync(`data/inbox/${run}/${slug}`);
+      if (files.some((f) => /^(clubs|instructors|events)\.csv$/.test(f))) cooldown.delete(slug); else cooldown.add(slug);
+    }
+  }
+}
 const slugOf = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const atRiskAll = cities
@@ -77,13 +91,13 @@ const known = new Set(cities.map((c) => `${c.name}, ${c.state}`.toLowerCase()));
 const queue = readFileSync("data/city-queue.txt", "utf8")
   .split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#"))
   .filter((l) => !known.has(l.toLowerCase()));
-const queueFresh = queue.filter((l) => !recent.has(slugOf(l.split(",")[0])));
-const queueOrdered = [...queueFresh, ...queue.filter((l) => !queueFresh.includes(l))];
+const queueFresh = queue.filter((l) => !recent.has(slugOf(l.split(",")[0])) && !cooldown.has(slugOf(l.split(",")[0])));
+const queueOrdered = [...queueFresh, ...queue.filter((l) => !queueFresh.includes(l) && !cooldown.has(slugOf(l.split(",")[0])))];
 
 // ---------- owners with their links (for verification and for "which ones does the crawler already read") ----------
 const owners = [
-  ...q(`SELECT id, cityId, name, website, sourceUrl, status FROM Club`).map((o) => ({ ...o, type: "club" })),
-  ...q(`SELECT id, cityId, name, website, sourceUrl, status FROM Instructor`).map((o) => ({ ...o, type: "instructor" })),
+  ...q(`SELECT id, cityId, name, website, sourceUrl, status, description FROM Club`).map((o) => ({ ...o, type: "club" })),
+  ...q(`SELECT id, cityId, name, website, sourceUrl, status, notes AS description FROM Instructor`).map((o) => ({ ...o, type: "instructor" })),
 ];
 const pendingEvents = new Map(); // owner key -> NEEDS_REVIEW upcoming events
 for (const e of q(`SELECT clubId, instructorId FROM Event WHERE status='NEEDS_REVIEW' AND eventDate >= '${today} 00:00:00'`)) {
@@ -92,6 +106,10 @@ for (const e of q(`SELECT clubId, instructorId FROM Event WHERE status='NEEDS_RE
 }
 const DIRECTORY_ONLY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies\.org|mahjonggmaven\.com|mahjong4friends\.com|americanmahjonggassociation\.com|orderofthetile|facebook\.com|instagram\.com/i;
 const ownUrl = (o) => [o.website, o.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !DIRECTORY_ONLY.test(u)) ?? null;
+// Something the server can actually work with: the owner's own site, or a Bam Good Time page that shows dated sessions or American wording.
+// A Bam Good Time page with no sessions and no wording has nothing to read; it goes to the outreach list instead.
+const hasOwnSite = (o) => [o.website, o.sourceUrl].some((u) => u && /^https?:\/\//.test(u) && !DIRECTORY_ONLY.test(u) && !/\.bamgoodtime\.com/.test(u));
+const workable = (o) => Boolean(ownUrl(o)) && (hasOwnSite(o) || (pendingEvents.get(`${o.type}:${o.id}`) ?? 0) > 0 || /american|nmjl|national mah/i.test((o.description ?? "").replace(/American\/NMJL not stated[^.]*\./gi, "")));
 // the daily crawler already reads these (see scripts/crawl-events.mjs)
 const crawlerPlatform = (o) => {
   const u = [o.website, o.sourceUrl].filter(Boolean).join(" ");
@@ -102,10 +120,12 @@ const crawlerPlatform = (o) => {
 const verifyAll = cities
   .map((c) => {
     const act = stats(c).n;
-    const review = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && ownUrl(o));
-    return { c, act, review };
+    const review = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && workable(o));
+    const unreadable = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && ownUrl(o) && !workable(o));
+    return { c, act, review, unreadable };
   })
-  .filter((x) => x.review.length > 0 && (x.act < MIN_ROWS || atRiskAll.some((r) => r.c.id === x.c.id)))
+  .filter((x) => x.act < MIN_ROWS || atRiskAll.some((r) => r.c.id === x.c.id))
+  .filter((x) => x.review.length > 0 || x.unreadable.length > 0)
   .map((x) => {
     // confirming a group also lets its dated sessions go ACTIVE, so they count towards the five rows
     const dated = x.review.reduce((n, o) => n + (pendingEvents.get(`${o.type}:${o.id}`) ?? 0), 0);
@@ -114,7 +134,10 @@ const verifyAll = cities
   // 1) published cities about to fall under five rows, 2) the rest; inside each: ones that can reach five, then most dated sessions waiting
   .map((x) => ({ ...x, atRisk: Boolean(x.c.published) && atRiskAll.some((r) => r.c.id === x.c.id) }))
   .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(b.reachable) - Number(a.reachable) || b.dated - a.dated || b.act - a.act || b.review.length - a.review.length);
-const verifyQueue = [...verifyAll.filter((x) => !recent.has(x.c.slug)), ...verifyAll.filter((x) => recent.has(x.c.slug))];
+const verifiable = verifyAll.filter((x) => x.review.length > 0 && !cooldown.has(x.c.slug));
+const verifyQueue = [...verifiable.filter((x) => !recent.has(x.c.slug)), ...verifiable.filter((x) => recent.has(x.c.slug))];
+// Owners the server cannot learn anything from (a Bam Good Time page with no sessions and no American wording): ask the owner instead.
+const outreach = verifyAll.flatMap((x) => x.unreadable.map((o) => `${x.c.name}, ${x.c.state}: ${o.name} ${ownUrl(o)}`));
 
 // ---------- discovery leads: places the directory crawler found whose club says it plays American mahjong ----------
 function parseCsv(text) {
@@ -152,7 +175,7 @@ if (existsSync("data/inbox")) {
     }
   }
 }
-const leadQueue = [...leadPlaces.entries()].filter(([, l]) => l.some((x) => x.american)).map(([k]) => k);
+const leadQueue = [...leadPlaces.entries()].filter(([k, l]) => l.some((x) => x.american) && !cooldown.has(slugOf(k.split(",")[0]))).map(([k]) => k);
 const explore = [...leadQueue, ...queueOrdered].filter((k, i, all) => all.indexOf(k) === i);
 
 // ---------- today's mode ----------
@@ -246,4 +269,4 @@ swap("EXISTING", existing);
 swap("FOCUS", `### 今夜の重点\n\n${focus}`);
 writeFileSync(out, s);
 
-console.log(`# Nightly research ${today}\n\n- Mode: **${mode}**\n- Cities: ${targets.replace(/^- /gm, "").split("\n").join("; ")}\n- Verify queue: ${verifyQueue.length} cities; lead places: ${leadQueue.length}\n- At-risk published cities: ${atRisk.length} (${atRisk.slice(0, 6).map((x) => `${x.c.name} ${x.n}→${x.after}`).join(", ")})\n- City queue left: ${queue.length}\n- Prompt: ${s.length} characters`);
+console.log(`# Nightly research ${today}\n\n- Mode: **${mode}**\n- Cities: ${targets.replace(/^- /gm, "").split("\n").join("; ")}\n- Verify queue: ${verifyQueue.length} cities; lead places: ${leadQueue.length}\n- At-risk published cities: ${atRisk.length} (${atRisk.slice(0, 6).map((x) => `${x.c.name} ${x.n}→${x.after}`).join(", ")})\n- City queue left: ${queue.length}\n- Resting after an unconfirmed night (${COOLDOWN_DAYS} days): ${[...cooldown].join(", ") || "none"}\n- Outreach candidates (nothing for the server to read; ${outreach.length}): ${outreach.slice(0, 12).join("; ") || "none"}\n- Prompt: ${s.length} characters`);

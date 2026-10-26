@@ -49,6 +49,19 @@ jobs:
       - name: ローカル DB を作る
         if: steps.backlog.outputs.skip == 'false'
         run: npx wrangler d1 migrations apply DB --local
+      # まだ取り込んでいない AI の結果(開いている inbox/<日付> の PR)も「最近調べた」に数えるため、そのフォルダを作業ツリーに置く。
+      # (main に入るまで記録が付かず、同じ都市を毎晩調べていた。scripts/build-nightly-prompt.mjs の cooldown / recent)
+      - name: 取り込み前の AI の結果を読み込む
+        if: steps.backlog.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          for branch in $(gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName | select(test("^inbox/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{4}$"))'); do
+            id="${branch#inbox/}"
+            git fetch -q --depth=1 origin "refs/heads/$branch" && git checkout FETCH_HEAD -- "data/inbox/$id" && echo "読み込み: $id"
+          done
+          exit 0
       - name: 今夜のプロンプトを作る
         id: build
         if: steps.backlog.outputs.skip == 'false'
