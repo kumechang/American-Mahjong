@@ -26,7 +26,8 @@ actually has — never claim a category with zero ACTIVE rows:
 - Has instructors only: `American Mahjong Lessons in {City}, {State}`
 
 Meta description follows the same rule — describe only what's ACTIVE:
-`{N} beginner-friendly American Mahjong club{s} in {City}, {State}{, plus {M} upcoming events if any}.`
+`{N} beginner-friendly American Mahjong club{s} in {City}, {State}{, plus {M} upcoming events if any}. See venues, times and how to join.`
+(The last sentence names no data type, so it is always true; it keeps the description above the length Bing flags as too short.)
 Never say "clubs, lessons, and events" if one of those is empty.
 
 ## 2. Every city page needs real, unique content — not just a data list

@@ -19,9 +19,11 @@ export async function generateMetadata({
     return {};
   }
 
+  // The topic's own description is longer and more specific than the short card text; use it when it fits a search snippet (≤160).
+  const full = LEARN_TOPICS[slug]?.description;
   return {
     title: meta.title,
-    description: meta.description,
+    description: full && full.length <= 160 ? full : meta.description,
   };
 }
 
