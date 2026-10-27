@@ -54,8 +54,7 @@ not directories.
 - Reading dated text from the plain HTML of ordinary own sites: almost all junk ("Taco Tuesday", "$40.00 pp/per session"
   read as a title). Dated-text reading is only safe on pages a person has listed in `browser-sources.json`.
 - Eventbrite search pages with plain HTTP: AWS WAF answers **405** (curl with the same headers passes, Node `fetch` does not;
-  it is a TLS-fingerprint check). A real browser passes. `discover-eventbrite.mjs` falls back to Chromium, but it has only
-  been checked by hand and is not in any workflow.
+  it is a TLS-fingerprint check). A real browser passes. `discover-eventbrite.mjs` falls back to Chromium (see §12).
 - Instagram-only owners (about a hundred) are not machine-readable. They need outreach or a person.
 
 ## 4. Quality rules (why rows are ACTIVE or NEEDS_REVIEW)
@@ -146,3 +145,12 @@ Goal: every place that has American mahjong. The levers, in order of cost:
 4. **AI nights**: 3 verify, 3 "new places" (3 places each), 1 events per week. This is the token cost lever.
 First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (Belmont's club was dropped: its sessions are held in Chatham), eight cities became publishable.
 `venueOk` also protects the event crawler: an ACTIVE owner's session only goes ACTIVE with a venue that passes it.
+
+## 12. Eventbrite discovery (checked 2026-10-27)
+
+`discover-eventbrite.mjs` is the fourth step of `discover-clubs.yml` (Chromium is installed there; `--batch=40 --max=40`, a failure there is only a warning).
+- Flow: Chromium opens the Eventbrite search page for a city → JSON-LD `ItemList` gives event URLs → each event page's JSON-LD gives start time, price, venue and organiser (name + organiser URL). Events without a start time are dropped; times were checked by hand against the pages.
+- The city is the **event's own town** (an Oakland event is not filed under the searched suburb). Output: `eb-<city>-<st>/events.csv` (NEEDS_REVIEW, `club_name` = organiser) and `clubs.csv` (the organiser as a NEEDS_REVIEW lead, website = its Eventbrite page, description says whether the event text mentions American / NMJL).
+- `auto-import.mjs`: `eb-` leads attach to cities on the site; for a town not on the site they create a (unpublished) city only when the event text mentions American / NMJL. Events never go ACTIVE by themselves (the organiser is NEEDS_REVIEW).
+- Eventbrite hosts are in `verify-owners.mjs`'s DIRECTORY list, so organisers are not promoted from their Eventbrite page. They need their own site (nightly research / outreach).
+- Yield is small (first check: 8 events in 3 Bay Area towns from 6 searches); most hits are social nights that are not clearly American.

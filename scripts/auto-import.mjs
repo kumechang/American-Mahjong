@@ -67,6 +67,7 @@ for (const id of dirs) {
   if (existsSync(`${base}/promote.json`)) promote.push(...JSON.parse(readFileSync(`${base}/promote.json`, "utf8")));
   for (const d of readdirSync(base, { withFileTypes: true }).filter((x) => x.isDirectory())) {
     const isLead = /^(bb|m4f)-/.test(d.name); // BamBuddies and Mahjong 4 Friends leads: only for places already on the site
+    const isEventbrite = /^eb-/.test(d.name); // Eventbrite organisers: same, unless the event text itself says American / NMJL
     for (const kind of ["clubs", "instructors", "events"]) {
       const f = `${base}/${d.name}/${kind}.csv`;
       if (!existsSync(f)) continue;
@@ -79,7 +80,7 @@ for (const id of dirs) {
         if (city) r.city = city.name; // "St Louis" -> "St. Louis"
         if (kind !== "events") {
           r.status = "NEEDS_REVIEW";
-          if (!city && isLead) { skip("lead for a place not on the site", ctx); continue; }
+          if (!city && (isLead || (isEventbrite && !/mentions American/.test(r.description ?? "")))) { skip("lead for a place not on the site", ctx); continue; }
           if (owners.has(`${kind === "clubs" ? "club" : "instructor"}|${city?.id}|${norm(r.name)}`)) { skip("already on the site", ctx); continue; }
           if (HOME.test(r.name)) { skip("looks like a private home", ctx); continue; }
           if (!city) { newCities.set(cityKey(r.city, r.state), { name: r.city, state: r.state }); }
