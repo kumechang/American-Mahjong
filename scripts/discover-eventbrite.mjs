@@ -104,7 +104,10 @@ for (let page = 1; page <= 50; page++) {
   if (page === 1) firstLen = html.length;
   if (collect(html, "national").listed === 0) break;
 }
-for (const c of todays) {
+// Eventbrite answers datacenter IPs (GitHub runners) with a challenge page of about 10 KB and no listing: checked 2026-10-27, it works from other networks.
+// Do not burn the whole batch on it.
+const blocked = listedPages === 0;
+for (const c of blocked ? [] : todays) {
   for (let page = 1; page <= 2; page++) {
     let html;
     try { html = await fetchPage(`https://www.eventbrite.com/d/${c.state.toLowerCase()}--${slugify(c.name)}/mahjong/${page > 1 ? `?page=${page}` : ""}`); } catch (e) { if (process.env.DEBUG) console.error(c.name, e.message); break; }
@@ -133,7 +136,7 @@ for (const e of [...found.values()].sort((a, b) => rank(a) - rank(b)).slice(0, M
 
 await closeBrowser();
 if (rows.length === 0) {
-  console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- New events: 0`);
+  console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- New events: 0${blocked ? "\n- Eventbrite showed no listing at all from this network (challenge page): not searched further" : ""}`);
   process.exit(3);
 }
 
