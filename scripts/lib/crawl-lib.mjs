@@ -533,7 +533,8 @@ export function parseCsv(text) {
 export function venueOk(venue, cityName = "") {
   const v = String(venue ?? "").replace(/\s+/g, " ").trim();
   if (v.length < 4 || !/[A-Za-z]{3}/.test(v)) return false;
-  if (/^(free|tbd|tba|online|virtual|zoom|to be announced|location)\b|donation|surrounding area|registration|will be (shared|sent|provided)|address (given|provided|sent)|private|cruise|\bship\b|icon of the sea|\b(home|residence|house)\b|apartment|\bapt\b|airbnb/i.test(v)) return false;
+  const homeTest = v.replace(/\b(coffee|tea|opera|ale|brew|steak|play|pancake|public|beer|bake|pie|waffle|burger|pizza|wine) ?houses?\b/gi, "$1"); // a "Coffee House" is a business, not someone's house
+  if (/^(free|tbd|tba|online|virtual|zoom|to be announced|location)\b|donation|surrounding area|registration|will be (shared|sent|provided)|address (given|provided|sent)|private|cruise|\bship\b|icon of the sea|\b(home|residence|house)\b|apartment|\bapt\b|airbnb/i.test(homeTest)) return false;
   const hasNumber = /\d/.test(v);
   // only a town (and maybe a state): "Carlisle PA", "Shippensburg", "Mechanicsburg, PA"
   const bare = v.replace(/,?\s*\b[A-Z]{2}\b$/, "").replace(/,\s*United States$/i, "").trim();
