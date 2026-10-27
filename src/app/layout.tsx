@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   // Every page names itself as the canonical URL ("./" resolves against the page's own path with metadataBase), so the
   // http:// and other variants Google finds are folded into the https page. Pages that set their own `alternates` override this.
   alternates: { canonical: "./" },
+  // Site ownership for Yandex Webmaster (rendered as <meta name="yandex-verification" content="...">)
+  verification: { yandex: "3117921245ee13f8" },
   title: {
     default: "American Mahjong Guide — Learn, Find, Play",
     template: "%s | American Mahjong Guide",
