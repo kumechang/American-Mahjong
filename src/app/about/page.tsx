@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ContactLink } from "@/components/ContactLink";
 
 export const metadata: Metadata = {
-  title: "About American Mahjong Guide",
+  title: "About",
   description:
     "How American Mahjong Guide researches and verifies the clubs, lessons, and events it lists.",
 };

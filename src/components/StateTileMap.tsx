@@ -47,7 +47,6 @@ export function StateTileMap({ counts, hrefBase = "" }: { counts: Record<string,
           const label = `${stateName(code)}: ${n === 0 ? "no cities yet" : `${n} ${n === 1 ? "city" : "cities"}`}`;
           const tile = (
             <>
-              <title>{label}</title>
               <rect x={x} y={y} width={SIZE} height={SIZE} rx="7" className={`${c.rect} group-hover:stroke-foreground group-focus-visible:stroke-foreground`} strokeWidth="1.5" />
               <text x={x + SIZE / 2} y={y + SIZE / 2 + 6} textAnchor="middle" fontSize="17" fontWeight="600" className={c.text}>
                 {code}

@@ -25,6 +25,8 @@ actually has — never claim a category with zero ACTIVE rows:
 - Has clubs only: `American Mahjong in {City}, {State} — {N} Beginner-Friendly Clubs`
 - Has instructors only: `American Mahjong Lessons in {City}, {State}`
 
+City titles are set without the site-wide " | American Mahjong Guide" suffix and kept to 60 characters (Bing's site scan flags titles over about 65; the suffix alone is 25). When the full form is longer, it falls back to `American Mahjong in {City}, {State}`, then `Mahjong in {City}, {State}`.
+
 Meta description follows the same rule — describe only what's ACTIVE:
 `{N} beginner-friendly American Mahjong club{s} in {City}, {State}{, plus {M} upcoming events if any}. See venues, times and how to join.`
 (The last sentence names no data type, so it is always true; it keeps the description above the length Bing flags as too short.)

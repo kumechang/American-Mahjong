@@ -31,3 +31,12 @@ Links from other sites can't be added in code. Natural ways to earn them: ask cl
 1. Check `https://mahjong-map.com/59d42f4bd90bc2d0734077307777ba67.txt`.
 2. Run the `indexnow` workflow with `all=true`.
 3. In Bing Webmaster Tools, check the IndexNow page for received submissions, and look at SEO Recommendations again after 1–2 weeks.
+
+## Site scan: "title too long" (2026-10-27)
+
+`PagesByIssueCategory` listed 66 city pages with titles that were too long (all `/cities/<slug>`). Cause: the page title plus the
+site-wide suffix " | American Mahjong Guide" (25 characters) came to 65–75. Fix: city titles are now absolute (no suffix) and at most
+60 characters, with shorter fallbacks for long city names (checked on all 74 local city pages: longest 60, no duplicates).
+The `/about` title no longer repeats the site name, and inline SVGs no longer contain `<title>` elements (they use `aria-label`
+and `<desc>`), so scanners can't count them as extra page titles. Re-scan in Bing after the next deploy and run the `indexnow`
+workflow with `all=true`: the sitemap `lastmod` does not change for a title-only edit.

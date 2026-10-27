@@ -22,8 +22,8 @@ function Svg({
 }) {
   const uid = useId().replace(/:/g, "");
   return (
-    <svg viewBox={viewBox} role="img" aria-labelledby={`${uid}t ${uid}d`} className={`h-auto w-full ${className}`} focusable="false">
-      <title id={`${uid}t`}>{title}</title>
+    // No <title> element inside the SVG: some SEO scanners count it as a second page title. aria-label + <desc> serve screen readers.
+    <svg viewBox={viewBox} role="img" aria-label={title} aria-describedby={`${uid}d`} className={`h-auto w-full ${className}`} focusable="false">
       <desc id={`${uid}d`}>{desc}</desc>
       <defs>
         <marker id={`${uid}a`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
