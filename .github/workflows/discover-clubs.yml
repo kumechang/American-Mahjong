@@ -50,9 +50,13 @@ jobs:
           node scripts/discover-bambuddies.mjs --out-dir="data/inbox/$id" | tee -a summary.md
           rc2=${PIPESTATUS[0]}
           [ "$rc2" -eq 0 ] || [ "$rc2" -eq 3 ] || exit "$rc2"
+          # 三つ目の情報源: Mahjong 4 Friends の講師ディレクトリ(手がかりだけ。m4f-… フォルダに出る。電話・メールは読まない)
+          node scripts/discover-mahjong4friends.mjs --out-dir="data/inbox/$id" | tee -a summary.md
+          rc3=${PIPESTATUS[0]}
+          [ "$rc3" -eq 0 ] || [ "$rc3" -eq 3 ] || exit "$rc3"
           cat summary.md >> "$GITHUB_STEP_SUMMARY"
           echo "id=$id" >> "$GITHUB_OUTPUT"
-          if [ "$rc" -eq 3 ] && [ "$rc2" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$rc" -eq 3 ] && [ "$rc2" -eq 3 ] && [ "$rc3" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           echo "found=true" >> "$GITHUB_OUTPUT"
       - name: 検証して PR を作る
         if: steps.discover.outputs.found == 'true'

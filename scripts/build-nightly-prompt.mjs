@@ -162,15 +162,24 @@ const leadPlaces = new Map(); // "City, ST" -> leads
 if (existsSync("data/inbox")) {
   for (const run of readdirSync("data/inbox").filter((d) => d.startsWith("discover-"))) {
     for (const dir of readdirSync(`data/inbox/${run}`)) {
-      const f = `data/inbox/${run}/${dir}/clubs.csv`;
-      if (!existsSync(f)) continue;
-      for (const r of parseCsv(readFileSync(f, "utf8"))) {
-        const key = `${r.city}, ${r.state}`;
-        if (known.has(key.toLowerCase()) || !US_STATES.has(r.state)) continue;
-        if (ownedHosts.has(hostOf(r.website))) continue;
-        if (!leadPlaces.has(key)) leadPlaces.set(key, []);
-        const directory = /BamBuddies/.test(r.description); // BamBuddies lists American mahjong only, but has no website for the group
-        leadPlaces.get(key).push({ name: r.name, website: r.website, american: /Site says:|BamBuddies/.test(r.description), note: directory ? r.schedule : "" });
+      for (const file of ["clubs.csv", "instructors.csv"]) {
+        const f = `data/inbox/${run}/${dir}/${file}`;
+        if (!existsSync(f)) continue;
+        for (const r of parseCsv(readFileSync(f, "utf8"))) {
+          const key = `${r.city}, ${r.state}`;
+          if (known.has(key.toLowerCase()) || !US_STATES.has(r.state)) continue;
+          if (r.website && ownedHosts.has(hostOf(r.website))) continue;
+          if (!leadPlaces.has(key)) leadPlaces.set(key, []);
+          // directory leads: BamBuddies lists American mahjong only (no website for the group); a Mahjong 4 Friends note may mention NMJL
+          const text = `${r.description ?? ""} ${r.notes ?? ""}`;
+          const directory = /BamBuddies|Mahjong 4 Friends/.test(text);
+          leadPlaces.get(key).push({
+            name: r.name,
+            website: r.website,
+            american: /Site says:|BamBuddies|Directory note:/.test(text),
+            note: directory ? (r.schedule || (text.match(/Directory note: "([^"]*)/) ?? [])[1] || "") : "",
+          });
+        }
       }
     }
   }
@@ -179,9 +188,9 @@ const leadQueue = [...leadPlaces.entries()].filter(([k, l]) => l.some((x) => x.a
 const explore = [...leadQueue, ...queueOrdered].filter((k, i, all) => all.indexOf(k) === i);
 
 // ---------- today's mode ----------
-// A week: four nights of verification (turn the crawlers' NEEDS_REVIEW rows into confirmed ones),
-// two nights exploring new cities, one night for events the crawlers cannot read.
-const week = ["verify", "verify", "verify", "verify", "cities", "cities", "events"];
+// A week: three nights of verification (turn the crawlers' NEEDS_REVIEW rows into confirmed ones; the owner's own page is also
+// checked by scripts/verify-owners.mjs), three nights exploring places not on the site yet, one night for events the crawlers cannot read.
+const week = ["verify", "verify", "verify", "cities", "cities", "cities", "events"]; // 3 nights verifying, 3 nights on places not on the site yet, 1 on events
 const has = { verify: verifyQueue.length > 0, cities: explore.length > 0, events: atRisk.length > 0 };
 let mode = forced;
 if (!mode) {
@@ -239,7 +248,7 @@ if (mode === "verify") {
 - 日付つきのイベントが見つからない都市は、CSV を作らず report.md にだけ書く。`;
   focus = picked.map((x) => `- ${x.c.name}: ACTIVE ${x.n} 行のうち ${x.soon} 件が14日以内に終わる。巡回のない団体を優先する。`).join("\n");
 } else {
-  const picked = explore.slice(0, 2);
+  const picked = explore.slice(0, 3);
   targets = picked.map((l) => `- ${l}`).join("\n");
   existing = picked
     .map((l) => {

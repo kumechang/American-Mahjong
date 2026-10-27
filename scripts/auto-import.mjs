@@ -22,12 +22,12 @@ import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync, mkdtem
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { arg, today, q, parseCsv, csvCell, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
+import { arg, today, q, parseCsv, csvCell, NOT_A_SESSION, venueOk } from "./lib/crawl-lib.mjs";
 
 const dirs = (arg("dirs") ?? "").split(",").map((d) => d.trim()).filter(Boolean);
 const digestPath = arg("digest");
 const MIN_ROWS = 5;
-const MAX_ROWS = { clubs: 400, instructors: 100, events: 500, flips: 12 };
+const MAX_ROWS = { clubs: 400, instructors: 250, events: 500, flips: 12 };
 const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
 const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const slugify = (t) => String(t).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -59,12 +59,14 @@ const ROWS = { clubs: [], instructors: [], events: [] };
 const HEAD = {};
 const newCities = new Map();
 const gone = [];
+const promote = [];
 for (const id of dirs) {
   const base = `data/inbox/${id}`;
   if (!existsSync(base)) { console.error(`missing ${base}`); process.exit(1); }
   if (existsSync(`${base}/gone.json`)) gone.push(...JSON.parse(readFileSync(`${base}/gone.json`, "utf8")));
+  if (existsSync(`${base}/promote.json`)) promote.push(...JSON.parse(readFileSync(`${base}/promote.json`, "utf8")));
   for (const d of readdirSync(base, { withFileTypes: true }).filter((x) => x.isDirectory())) {
-    const isLead = d.name.startsWith("bb-"); // BamBuddies leads: only for places already on the site
+    const isLead = /^(bb|m4f)-/.test(d.name); // BamBuddies and Mahjong 4 Friends leads: only for places already on the site
     for (const kind of ["clubs", "instructors", "events"]) {
       const f = `${base}/${d.name}/${kind}.csv`;
       if (!existsSync(f)) continue;
@@ -95,7 +97,7 @@ for (const id of dirs) {
             const price = r.price === "" ? null : Number(r.price);
             const why = !owner || owners.get(owner) !== "ACTIVE" ? "owner is not ACTIVE"
               : !/^\d{2}:\d{2}$/.test(r.start_time) ? "no start time"
-              : !/[A-Za-z]{3}/.test(r.venue) ? "no venue"
+              : !venueOk(r.venue, r.city) ? "no venue a visitor can go to"
               : price != null && !(price >= 0 && price <= 600) ? "price outside $0-$600"
               : stateIn(r.venue).some((s) => s !== r.state) ? "venue is in another state"
               : (/\b(evening|night)\b/i.test(r.name) && r.start_time < "12:00") || (/\bmorning\b/i.test(r.name) && r.start_time >= "17:00") ? "title and start time disagree"
@@ -139,6 +141,32 @@ for (const g of gone) {
   else skip("gone: not an upcoming ACTIVE session any more", `${g.name} ${g.date}`);
 }
 
+// ---------- promotions proposed by scripts/verify-owners.mjs (the owner's own page says American / NMJL) ----------
+const MAX_PROMOTIONS = 40;
+const promoted = [];
+const promoteSql = [];
+for (const p of promote.slice(0, MAX_PROMOTIONS)) {
+  const table = p.type === "club" ? "Club" : "Instructor";
+  const col = p.type === "club" ? "clubId" : "instructorId";
+  const row = q(`SELECT x.id, x.slug, x.status, c.name AS cityName FROM ${table} x JOIN City c ON c.id = x.cityId WHERE x.slug = ${sqlStr(p.slug)}`)[0];
+  if (!row || row.status !== "NEEDS_REVIEW") { skip("promotion: not a NEEDS_REVIEW row any more", p.name); continue; }
+  const quote = String(p.evidence).replace(/[\r\n]+/g, " ").slice(0, 200);
+  promoteSql.push(`UPDATE "${table}" SET "status" = 'ACTIVE', "lastVerifiedAt" = '${today}', "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(p.slug)} AND "status" = 'NEEDS_REVIEW'; -- ${p.name} (${p.city}, ${p.state}): "${quote}" ${p.url}`);
+  // its upcoming sessions that already have a start time and a named venue become visible too (same rule as the event crawler)
+  let n = 0;
+  for (const e of q(`SELECT slug, name, startTime, venue FROM Event WHERE ${col} = ${sqlStr(row.id)} AND status = 'NEEDS_REVIEW' AND eventDate >= '${today} 00:00:00'`)) {
+    const t = String(e.startTime ?? "").slice(0, 5);
+    const bad = !/^\d{2}:\d{2}$/.test(t) || !venueOk(e.venue, row.cityName)
+      || deniedVenue(e.venue) || HOME.test(e.venue ?? "") || HOME.test(e.name) || NOT_A_SESSION.test(e.name)
+      || (/\b(evening|night)\b/i.test(e.name) && t < "12:00") || (/\bmorning\b/i.test(e.name) && t >= "17:00");
+    if (bad) continue;
+    promoteSql.push(`UPDATE "Event" SET "status" = 'ACTIVE', "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(e.slug)} AND "status" = 'NEEDS_REVIEW';`);
+    n++;
+  }
+  promoted.push({ ...p, sessions: n });
+}
+if (promote.length > MAX_PROMOTIONS) skip("promotion: over the per-run limit (the rest wait for the next run)", `${promote.length - MAX_PROMOTIONS} owners`);
+
 // ---------- assemble the migration ----------
 const parts = [];
 if (newCities.size) {
@@ -155,6 +183,7 @@ if (newCities.size) {
   parts.push(`INSERT OR IGNORE INTO "City" ("id", "name", "state", "slug", "published", "createdAt", "updatedAt") VALUES\n${rowsSql.join(",\n")};`);
 }
 if (importSql) parts.push(importSql.trim());
+if (promoteSql.length) parts.push(`-- Owners whose own page says American / NMJL (scripts/verify-owners.mjs), with their ready sessions\n` + promoteSql.join("\n"));
 if (retire.length) parts.push(`-- Sessions the club's own listing no longer shows\n` + retire.map((g) => `UPDATE "Event" SET "status" = 'INACTIVE', "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(g.slug)} AND "status" = 'ACTIVE'; -- ${g.name.replace(/[\r\n]+/g, " ")}, ${g.date} (${g.owner})`).join("\n"));
 
 const stamp = new Date().toISOString().slice(0, 16).replace(/[-T:]/g, "");
@@ -219,6 +248,8 @@ const lines = [
   `- Clubs: ${ROWS.clubs.length} (NEEDS_REVIEW), instructors: ${ROWS.instructors.length} (NEEDS_REVIEW), events: ${ROWS.events.length} (${evStatus})`,
   `- New cities (unpublished): ${[...newCities.values()].map((c) => `${c.name}, ${c.state}`).join("; ") || "none"}`,
   `- Retired sessions: ${retire.length}${retire.length ? " — " + retire.map((g) => `${g.name} ${g.date} (${g.owner})`).join("; ") : ""}`,
+  `- Promoted to ACTIVE (own page says American / NMJL): ${promoted.length}${promoted.length ? " — " + promoted.map((p) => `${p.name} (${p.city}, ${p.state}${p.sessions ? `, +${p.sessions} sessions` : ""})`).join("; ") : ""}`,
+  `- Ready to publish (unpublished, ${MIN_ROWS}+ active rows; a person writes the intro and publishes): ${counts.filter((c) => !c.published && c.n >= MIN_ROWS && !autoList.has(c.slug)).map((c) => `${c.name}, ${c.state} (${c.n})`).join("; ") || "none"}`,
   `- Unpublished (under ${MIN_ROWS} active rows): ${flips.off.map((c) => `${c.name}, ${c.state} (${c.n})`).join("; ") || "none"}`,
   `- Watching (under ${MIN_ROWS} rows, unpublished after ${GRACE_DAYS} days): ${watching.join("; ") || "none"}`,
   `- Published again: ${flips.on.map((c) => `${c.name}, ${c.state} (${c.n})`).join("; ") || "none"}`,

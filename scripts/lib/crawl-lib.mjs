@@ -527,3 +527,16 @@ export function parseCsv(text) {
   const [head, ...body] = rows;
   return (head ? body.filter((r) => r.length === head.length) : []).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i]])));
 }
+
+// A place a visitor can actually go to: a named business or a street address. Not a town ("Carlisle PA or surrounding area"),
+// a price note ("Free (donations welcome)"), a registration placeholder, or a house. Used before an event may go ACTIVE.
+export function venueOk(venue, cityName = "") {
+  const v = String(venue ?? "").replace(/\s+/g, " ").trim();
+  if (v.length < 4 || !/[A-Za-z]{3}/.test(v)) return false;
+  if (/^(free|tbd|tba|online|virtual|zoom|to be announced|location)\b|donation|surrounding area|registration|will be (shared|sent|provided)|address (given|provided|sent)|private|cruise|\bship\b|icon of the sea|\b(home|residence|house)\b|apartment|\bapt\b|airbnb/i.test(v)) return false;
+  const hasNumber = /\d/.test(v);
+  // only a town (and maybe a state): "Carlisle PA", "Shippensburg", "Mechanicsburg, PA"
+  const bare = v.replace(/,?\s*\b[A-Z]{2}\b$/, "").replace(/,\s*United States$/i, "").trim();
+  if (!hasNumber && (bare.split(" ").length <= 2 && bare === cityName || /^[A-Z][a-z]+(?: [A-Z][a-z]+)?$/.test(bare) && v !== bare && !/\b(library|cafe|club|bar|brewing|brewery|hall|center|centre|studio|park|church|temple|synagogue|hotel|inn|lodge|resort|restaurant|kitchen|pub|tavern|market|school|museum|garden)\b/i.test(v))) return false;
+  return true;
+}

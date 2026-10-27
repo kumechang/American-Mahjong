@@ -23,7 +23,7 @@
 // a User-Agent that says who we are, a hard cap on pages per run.
 
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
-import { arg, today, UA, q, decode, lines, csvCell, MONTHS, pad, to24, guessType, get, pages, bamGoodTime, bookwhen, calendly, linktree, meetup, tribe, eventbriteOrg, jsonLd, browserEvents, widgetCalendar, icsEvents, closeBrowser, OTHER_STYLES, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
+import { arg, today, UA, q, decode, lines, csvCell, MONTHS, pad, to24, guessType, get, pages, bamGoodTime, bookwhen, calendly, linktree, meetup, tribe, eventbriteOrg, jsonLd, browserEvents, widgetCalendar, icsEvents, closeBrowser, OTHER_STYLES, NOT_A_SESSION, venueOk } from "./lib/crawl-lib.mjs";
 
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
 const outDir = arg("out-dir") ?? `data/inbox/crawl-${stamp}`;
@@ -167,7 +167,7 @@ for (const { owner, src } of work) {
     const complete = e.time && (own ? e.venue : e.venue || (/\d/.test(owner.address ?? "") ? owner.address : ""));
     // a title that says evening/night but a start time before noon (or the reverse) is a typo at the source: hold for review
     const clash = e.time && ((/\b(evening|night)\b/i.test(e.name) && e.time < "12:00") || (/\bmorning\b/i.test(e.name) && e.time >= "17:00"));
-    const status = owner.status === "ACTIVE" && complete && !clash ? "ACTIVE" : "NEEDS_REVIEW";
+    const status = owner.status === "ACTIVE" && complete && !clash && venueOk(e.venue || owner.address, city.name) ? "ACTIVE" : "NEEDS_REVIEW";
     if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
     results.get(city.slug).rows.push({
       name: e.name.replace(/^Copy of:\s*/i, ""), city: city.name, state: city.state, event_date: e.date, start_time: e.time, end_time: "",
