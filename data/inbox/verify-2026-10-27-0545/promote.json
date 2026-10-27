@@ -1,0 +1,38 @@
+[
+ {
+  "type": "club",
+  "slug": "slidell-crescent-tile-mahjong-co",
+  "name": "Crescent & Tile Mahjong Co",
+  "city": "Slidell",
+  "state": "LA",
+  "evidence": "Join us for American Mahjong with a different theme every Wednesday! Come solo or bring a friend—we’ll help you find a table.",
+  "url": "https://crescent-tile.bamgoodtime.com"
+ },
+ {
+  "type": "club",
+  "slug": "tyrone-tile-table-tyrone",
+  "name": "Tile & Table Tyrone",
+  "city": "Tyrone",
+  "state": "GA",
+  "evidence": "Come learn the basics of American Style Mahjong. Lesson is for 2.5 hours.",
+  "url": "https://tileandtabletyrone.bamgoodtime.com/events/74839c49-b8b3-4832-8bba-43ecf5baf99b"
+ },
+ {
+  "type": "club",
+  "slug": "wayzata-the-club-room",
+  "name": "The Club Room",
+  "city": "Wayzata",
+  "state": "MN",
+  "evidence": "Please bring your NMJL card to each lesson. It will be provided during your 101 lesson.",
+  "url": "https://theclubroom.bamgoodtime.com"
+ },
+ {
+  "type": "club",
+  "slug": "wyckoff-bams-dots-and-craks-oh-mahj",
+  "name": "Bams, Dots and Craks, Oh Mahj!",
+  "city": "Wyckoff",
+  "state": "NJ",
+  "evidence": "A fun and engaging 2 hour introduction to the game. You’ll learn the tiles, how to read the 2026 National Mah Jongg League card, and the basic rules to get you started.",
+  "url": "https://bams-dots-and-craks-oh-mahj.bamgoodtime.com/events/8833e7c2-7801-4371-9064-0bb1ae8c43bc"
+ }
+]
