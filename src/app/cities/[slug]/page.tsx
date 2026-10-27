@@ -101,9 +101,12 @@ function buildMetadataCopy(city: {
   }
   if (!hasClubs && hasInstructors) titleParts.push("Lessons");
 
-  const title = titleParts.length
-    ? `American Mahjong in ${city.name}, ${city.state} — ${titleParts.join(" & ")}`
-    : `American Mahjong in ${city.name}, ${city.state}`;
+  // Bing flags titles over about 65 characters, and the site-wide " | American Mahjong Guide" suffix alone is 25: city titles
+  // are set as-is (no suffix) and kept to 60 characters, falling back to shorter forms for long city names.
+  const MAX_TITLE = 60;
+  const place = `${city.name}, ${city.state}`;
+  const full = titleParts.length ? `American Mahjong in ${place} — ${titleParts.join(" & ")}` : `American Mahjong in ${place}`;
+  const title = [full, `American Mahjong in ${place}`, `Mahjong in ${place}`].find((t) => t.length <= MAX_TITLE) ?? place;
 
   const descParts: string[] = [];
   if (hasClubs) {
@@ -123,7 +126,7 @@ function buildMetadataCopy(city: {
 
   // The closing sentence names no data type, so it stays true for every city; it also keeps the description from being
   // flagged as too short (Bing Webmaster Tools, SEO Recommendations).
-  return { title, description: `${descParts.join(", ")}. See venues, times and how to join.` };
+  return { title: { absolute: title }, description: `${descParts.join(", ")}. See venues, times and how to join.` };
 }
 
 export async function generateMetadata({
