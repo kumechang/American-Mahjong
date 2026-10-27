@@ -1,0 +1,29 @@
+[
+ {
+  "type": "instructor",
+  "slug": "dallas-crak-queen-mahjong",
+  "name": "Crak Queen Mahjong",
+  "city": "Dallas",
+  "state": "TX",
+  "evidence": "Already been playing and want to feed your addiction? Bring a friend or come make new ones and enjoy sipping and socializing. Tiles are provided, just bring your 2026 NMJL card.",
+  "url": "https://www.crakqueenmahjong.com/"
+ },
+ {
+  "type": "instructor",
+  "slug": "dallas-craks-bams-and-friends",
+  "name": "Craks, Bams, and Friends",
+  "city": "Dallas",
+  "state": "TX",
+  "evidence": "Order 2027 NMJL Card",
+  "url": "https://www.craksbamsandfriends.net/"
+ },
+ {
+  "type": "instructor",
+  "slug": "dallas-dot-crak-bam-boom",
+  "name": "Dot Crak Bam Boom",
+  "city": "Dallas",
+  "state": "TX",
+  "evidence": "2026 NMJL Card Finisher Pin",
+  "url": "http://www.dotcrakbamboom.com"
+ }
+]
