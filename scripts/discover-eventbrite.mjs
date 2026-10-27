@@ -18,6 +18,7 @@
 // Output: <out-dir>/eb-<city>-<st>/events.csv + report.md. Exit code 3 = nothing new.
 
 import { mkdirSync, writeFileSync, readdirSync, readFileSync, existsSync } from "node:fs";
+import { neighborTowns } from "./lib/neighbors.mjs";
 import { arg, today, q, get, render, closeBrowser, decode, csvCell, pages, jsonLdFromHtml, guessType, OTHER_STYLES, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
 
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
@@ -66,7 +67,15 @@ const clock12 = (t) => { const [h, m] = t.split(":").map(Number); return `${h % 
 const span = Math.max(batch, Math.ceil(cities.length / batch) * batch);
 const step = arg("step") != null ? Number(arg("step")) : Math.floor(Date.parse(today) / 864e5);
 const start = (step * batch) % span;
-const todays = cities.slice(start, start + batch);
+// --neighbors=N: instead of the nationwide pass and the cities on the site, search N towns around our densest cities (scripts/lib/neighbors.mjs)
+const neighborsPerRun = Number(arg("neighbors") ?? 0);
+let todays = cities.slice(start, start + batch), neighborInfo = "";
+if (neighborsPerRun > 0) {
+  const all = neighborTowns(q, { radius: Number(arg("radius") ?? 25), minRows: Number(arg("min-rows") ?? 6) });
+  const from = (step * neighborsPerRun) % Math.max(all.length, neighborsPerRun);
+  todays = all.slice(from, from + neighborsPerRun).map((t) => ({ name: t.name, state: t.state, near: t.near, miles: t.miles }));
+  neighborInfo = `${todays.length} towns around dense cities (${from}–${from + todays.length} of ${all.length}; e.g. ${todays.slice(0, 4).map((t) => `${t.name} ${t.state} ${t.miles} mi from ${t.near}`).join("; ")})`;
+}
 
 const found = new Map(); // event id -> candidate
 let searched = 0, nationalPages = 0, listedPages = 0, firstLen = 0;
@@ -90,14 +99,14 @@ function collect(html, search) {
     if (a.addressCountry && a.addressCountry !== "US") continue;
     if (!a.addressLocality || !a.addressRegion || !it.location?.name) continue; // online or no place named
     const american = /american|nmjl|national mah/i.test(text);
-    if (search === "national" && !american && !ourCities.has(`${norm(decode(a.addressLocality))}|${a.addressRegion}`)) continue; // a new town needs the event to say so itself
+    if ((search === "national" || neighborsPerRun > 0) && !american && !ourCities.has(`${norm(decode(a.addressLocality))}|${a.addressRegion}`)) continue; // a new town needs the event to say so itself
     found.set(id, { id, url: String(it.url).split("?")[0], name: decode(String(it.name)), date: String(it.startDate).slice(0, 10), place: decode(String(it.location.name)), street: a.streetAddress ?? "", city: decode(a.addressLocality), state: a.addressRegion, search, american });
   }
   if (list.length) listedPages++;
   return { listed: list.length, relevant };
 }
 
-for (let page = 1; page <= 50; page++) {
+for (let page = 1; page <= (neighborsPerRun > 0 ? 0 : 50); page++) {
   let html;
   try { html = await fetchPage(`https://www.eventbrite.com/d/united-states/${keyword}/${page > 1 ? `?page=${page}` : ""}`); } catch (e) { if (process.env.DEBUG) console.error("national", page, e.message); break; }
   nationalPages++;
@@ -106,7 +115,7 @@ for (let page = 1; page <= 50; page++) {
 }
 // Eventbrite answers datacenter IPs (GitHub runners) with a challenge page of about 10 KB and no listing: checked 2026-10-27, it works from other networks.
 // Do not burn the whole batch on it.
-const blocked = listedPages === 0;
+const blocked = neighborsPerRun > 0 ? false : listedPages === 0;
 for (const c of blocked ? [] : todays) {
   for (let page = 1; page <= 2; page++) {
     let html;
@@ -136,7 +145,7 @@ for (const e of [...found.values()].sort((a, b) => rank(a) - rank(b)).slice(0, M
 
 await closeBrowser();
 if (rows.length === 0) {
-  console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- New events: 0${blocked ? "\n- Eventbrite showed no listing at all from this network (challenge page): not searched further" : ""}`);
+  console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages${neighborInfo ? `; neighbours: ${neighborInfo}` : ""} (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- New events: 0${blocked ? "\n- Eventbrite showed no listing at all from this network (challenge page): not searched further" : ""}`);
   process.exit(3);
 }
 
@@ -195,5 +204,5 @@ for (const [key, list] of byCity) {
   );
   summary.push(`- ${list[0].cityName}, ${list[0].stateCode}${ours ? "" : " (new place)"}: ${list.map((r) => `${r.date} ${r.name}`).join("; ")}`);
 }
-console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- Pages fetched: ${pages()}\n- New events: ${rows.length} in ${byCity.size} places\n${summary.join("\n")}\n- Output: ${outDir}`);
+console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages${neighborInfo ? `; neighbours: ${neighborInfo}` : ""} (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- Pages fetched: ${pages()}\n- New events: ${rows.length} in ${byCity.size} places\n${summary.join("\n")}\n- Output: ${outDir}`);
 process.exit(0);
