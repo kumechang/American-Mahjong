@@ -1,0 +1,23 @@
+[
+ {
+  "slug": "seattle-american-mahjong-20261028",
+  "name": "American Mahjong",
+  "date": "2026-10-28",
+  "owner": "PNW MAHJ",
+  "city": "Seattle"
+ },
+ {
+  "slug": "seattle-mahjong-night-20261104",
+  "name": "Mahjong Night",
+  "date": "2026-11-04",
+  "owner": "PNW MAHJ",
+  "city": "Seattle"
+ },
+ {
+  "slug": "seattle-american-mahjong-open-play-20261111",
+  "name": "American Mahjong - Open Play",
+  "date": "2026-11-11",
+  "owner": "PNW MAHJ",
+  "city": "Seattle"
+ }
+]
