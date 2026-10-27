@@ -1,0 +1,29 @@
+[
+ {
+  "type": "instructor",
+  "slug": "boston-mahjbos",
+  "name": "mahjBOS",
+  "city": "Boston",
+  "state": "MA",
+  "evidence": ", mat, racks, dice, and loaner NMJL cards, making it easy to have your first lesson with no investment required.",
+  "url": "https://www.mahjbos.com/lessons"
+ },
+ {
+  "type": "instructor",
+  "slug": "chicago-the-mahjong-moment-chicago",
+  "name": "The Mahjong Moment - Chicago",
+  "city": "Chicago",
+  "state": "IL",
+  "evidence": "This introductory class is designed for beginners with little or no prior experience. You’ll learn the fundamentals of the game, including tile suits, setup, basic rules, how to read the National Mah Jongg League card, and the flow of play.",
+  "url": "https://www.thismahjongmoment.com/faq-1"
+ },
+ {
+  "type": "instructor",
+  "slug": "columbia-2-bam-loaves",
+  "name": "2 Bam Loaves",
+  "city": "Columbia",
+  "state": "MO",
+  "evidence": "2027 NMJL Card Orders",
+  "url": "https://2bamloaves.com"
+ }
+]
