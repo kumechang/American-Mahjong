@@ -1,0 +1,83 @@
+[
+ {
+  "type": "instructor",
+  "slug": "houston-mahjong-hustlers",
+  "name": "Mahjong Hustlers",
+  "city": "Houston",
+  "state": "TX",
+  "evidence": "Purchase your 2026 card from the National MahJongg League: nationalmahjonggleague.org",
+  "url": "https://mahjonghustlers.com"
+ },
+ {
+  "type": "instructor",
+  "slug": "houston-mahjong-meets-moxie",
+  "name": "Mahjong Meets Moxie",
+  "city": "Houston",
+  "state": "TX",
+  "evidence": "League play follows NMJL rules with Moxie-style scoring and rotations.",
+  "url": "https://www.mahjongmeetsmoxie.com"
+ },
+ {
+  "type": "instructor",
+  "slug": "houston-that-s-amahjzing",
+  "name": "That's Amahjzing",
+  "city": "Houston",
+  "state": "TX",
+  "evidence": "Get ready for the FOURTH round of our signature bracket-style tournament - MAHJ MADNESS! Compete, strategize, and battle your way to the top while playing with the brand-new 2025 NMJL card! Enjoy delicious food, refreshing beverages, and—of",
+  "url": "https://www.thatsamahjzing.com/events"
+ },
+ {
+  "type": "club",
+  "slug": "kailua-east-wind-ward-mahjong",
+  "name": "East Wind-ward Mahjong",
+  "city": "Kailua",
+  "state": "HI",
+  "evidence": "A beginners group lesson in a private setting. This lesson will be for AMERICAN mahjong. All tiles, mats and racks will be provided as well as the National Mahjong League card. You will walk away with a good understanding of the game, the N",
+  "url": "https://east-wind-ward-mahjong.bamgoodtime.com/events/270c1250-239c-4669-a54e-ad32d617c166"
+ },
+ {
+  "type": "instructor",
+  "slug": "kansas-city-kc-mahjong-club",
+  "name": "KC Mahjong Club",
+  "city": "Kansas City",
+  "state": "MO",
+  "evidence": "materials and National Mahj Jongg League card. For just $125 per person (which includes your NMJL card), you can learn the basics of American Mahjong.",
+  "url": "https://kcmahjongclub.com/classes"
+ },
+ {
+  "type": "club",
+  "slug": "lake-harding-tiles-by-the-water",
+  "name": "Tiles by the Water",
+  "city": "Lake Harding",
+  "state": "AL",
+  "evidence": "Official 2026 NMJL Card and COVER",
+  "url": "https://tilesbythewater.bamgoodtime.com/events/99135353-80e1-4605-b614-1d00b6d99946"
+ },
+ {
+  "type": "club",
+  "slug": "longview-mahj-in-the-pines",
+  "name": "Mahj in The Pines",
+  "city": "Longview",
+  "state": "TX",
+  "evidence": "*2026 NMJL Card​",
+  "url": "https://mahj-in-the-pines.bamgoodtime.com"
+ },
+ {
+  "type": "club",
+  "slug": "lonoke-loco-mahjong-society",
+  "name": "LOCO Mahjong Society",
+  "city": "Lonoke",
+  "state": "AR",
+  "evidence": "🀄 Please Note: This event is for players who already know how to play American Mahjong. No lessons will be provided.",
+  "url": "https://loco-mahjong-society.bamgoodtime.com/events/03da83e3-44eb-457a-9a2d-61417e5d2150"
+ },
+ {
+  "type": "instructor",
+  "slug": "los-angeles-modern-mahj",
+  "name": "Modern Mahj",
+  "city": "Los Angeles",
+  "state": "CA",
+  "evidence": "ake your skills to the next level with an in-depth exploration of the game's finer points. We'll cover detailed rules, analysis of the NMJL card, essential etiquette and defensive play. Perfect for players ready to elevate their game. Findi",
+  "url": "https://www.modern-mahj.com/"
+ }
+]

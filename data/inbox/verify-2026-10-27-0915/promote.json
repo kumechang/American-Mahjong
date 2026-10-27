@@ -1,0 +1,38 @@
+[
+ {
+  "type": "instructor",
+  "slug": "longview-longview-mahj-club",
+  "name": "Longview Mahj Club",
+  "city": "Longview",
+  "state": "TX",
+  "evidence": "Join Longview's home for American Mahjong — learn the game, join our league, rent equipment, and find your people, one tile at a time.",
+  "url": "https://longviewmahjclub.com/"
+ },
+ {
+  "type": "club",
+  "slug": "marietta-east-wind-social-club",
+  "name": "East Wind Social Club",
+  "city": "Marietta",
+  "state": "GA",
+  "evidence": "-Please bring your 2026 NMJL cards.",
+  "url": "https://east-wind-social-club.bamgoodtime.com/events/5951404d-8c78-44bf-b215-c2d71d9d080a"
+ },
+ {
+  "type": "club",
+  "slug": "mason-city-north-iowa-mahjong-club",
+  "name": "North Iowa Mahjong Club",
+  "city": "Mason City",
+  "state": "IA",
+  "evidence": "All are welcome to join our fun crew for Mall-jong on Thursdays from 4-6. Bring your 2026 NMJL card and a game set if you have one. We are inside Southbridge Mall - kitty corner from Sports Page, next to the Nail Salon.",
+  "url": "https://north-iowa-mahjong-club.bamgoodtime.com/events/e963c0fe-6698-4a8b-8269-4cbc6d91cce6"
+ },
+ {
+  "type": "instructor",
+  "slug": "minneapolis-the-majh-lodge",
+  "name": "The Majh Lodge",
+  "city": "Minneapolis",
+  "state": "MN",
+  "evidence": "In this friendly, beginner, hands-on intro class, we’ll cover everything from tile basics to reading the NMJL card, breaking down the Charleston, and practicing real hands of play. Our goal is simple: to help you understand the game and enj",
+  "url": "https://www.mahjlodgemn.com/lessons"
+ }
+]
