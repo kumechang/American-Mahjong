@@ -19,6 +19,7 @@ import { arg, today, q, get, lines, OTHER_STYLES } from "./lib/crawl-lib.mjs";
 const stamp = new Date().toISOString().slice(0, 16).replace("T", "-").replace(":", "");
 const outDir = arg("out-dir") ?? `data/inbox/verify-${stamp}`;
 const limit = Number(arg("limit") ?? 60);
+const only = arg("only") ? new Set(arg("only").split("|").map((x) => x.trim().toLowerCase())) : null; // slugs, for a targeted re-run
 const dry = process.argv.includes("--dry-run");
 const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
@@ -33,7 +34,7 @@ const siteOf = (o) => [o.website, o.sourceUrl].find((u) => u && /^https?:\/\//.t
 const rows = [
   ...q(`SELECT x.id, x.slug, x.name, x.website, x.sourceUrl, c.name AS city, c.state, c.slug AS citySlug FROM Club x JOIN City c ON c.id = x.cityId WHERE x.status = 'NEEDS_REVIEW'`).map((o) => ({ ...o, type: "club" })),
   ...q(`SELECT x.id, x.slug, x.name, x.website, x.sourceUrl, c.name AS city, c.state, c.slug AS citySlug FROM Instructor x JOIN City c ON c.id = x.cityId WHERE x.status = 'NEEDS_REVIEW'`).map((o) => ({ ...o, type: "instructor" })),
-].filter((o) => siteOf(o) && !skipped(o)).sort((a, b) => a.slug.localeCompare(b.slug));
+].filter((o) => siteOf(o) && !skipped(o) && (!only || only.has(o.slug.toLowerCase()))).sort((a, b) => a.slug.localeCompare(b.slug));
 
 // each run takes its own slice, so a full pass happens over several runs
 const step = Number(arg("step") ?? Math.floor(Date.parse(today) / 864e5));
@@ -41,7 +42,7 @@ const start = rows.length ? (step * limit) % rows.length : 0;
 const todays = [...rows, ...rows].slice(start, start + Math.min(limit, rows.length));
 
 const AMERICAN = /\bamerican\b.{0,50}\bmah[\s-]?jong+g?\b|\bmah[\s-]?jong+g?\b.{0,50}\bamerican\b|\bnmj?l\b|\bnational mah[\s-]?jong+g?\s+league\b|\bamerican[\s-]style\b/i;
-const BOILERPLATE = /bam good time|bamgoodtime|find your club|start a club|powered by|all rights reserved|cookie/i;
+const BOILERPLATE = /bam good time|bamgoodtime|find your club|start a club|powered by|all rights reserved|cookie|black american/i;
 const SUBPAGE = /href="([^"#?]*(?:about|class|lesson|learn|play|event|schedule|faq|rules)[^"#?]*)"/gi;
 
 async function evidenceFor(o) {

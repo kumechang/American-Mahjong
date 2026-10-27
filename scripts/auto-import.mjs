@@ -22,7 +22,7 @@ import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync, mkdtem
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { arg, today, q, parseCsv, csvCell, NOT_A_SESSION } from "./lib/crawl-lib.mjs";
+import { arg, today, q, parseCsv, csvCell, NOT_A_SESSION, venueOk } from "./lib/crawl-lib.mjs";
 
 const dirs = (arg("dirs") ?? "").split(",").map((d) => d.trim()).filter(Boolean);
 const digestPath = arg("digest");
@@ -97,7 +97,7 @@ for (const id of dirs) {
             const price = r.price === "" ? null : Number(r.price);
             const why = !owner || owners.get(owner) !== "ACTIVE" ? "owner is not ACTIVE"
               : !/^\d{2}:\d{2}$/.test(r.start_time) ? "no start time"
-              : !/[A-Za-z]{3}/.test(r.venue) ? "no venue"
+              : !venueOk(r.venue, r.city) ? "no venue a visitor can go to"
               : price != null && !(price >= 0 && price <= 600) ? "price outside $0-$600"
               : stateIn(r.venue).some((s) => s !== r.state) ? "venue is in another state"
               : (/\b(evening|night)\b/i.test(r.name) && r.start_time < "12:00") || (/\bmorning\b/i.test(r.name) && r.start_time >= "17:00") ? "title and start time disagree"
@@ -148,7 +148,7 @@ const promoteSql = [];
 for (const p of promote.slice(0, MAX_PROMOTIONS)) {
   const table = p.type === "club" ? "Club" : "Instructor";
   const col = p.type === "club" ? "clubId" : "instructorId";
-  const row = q(`SELECT id, slug, status FROM ${table} WHERE slug = ${sqlStr(p.slug)}`)[0];
+  const row = q(`SELECT x.id, x.slug, x.status, c.name AS cityName FROM ${table} x JOIN City c ON c.id = x.cityId WHERE x.slug = ${sqlStr(p.slug)}`)[0];
   if (!row || row.status !== "NEEDS_REVIEW") { skip("promotion: not a NEEDS_REVIEW row any more", p.name); continue; }
   const quote = String(p.evidence).replace(/[\r\n]+/g, " ").slice(0, 200);
   promoteSql.push(`UPDATE "${table}" SET "status" = 'ACTIVE', "lastVerifiedAt" = '${today}', "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(p.slug)} AND "status" = 'NEEDS_REVIEW'; -- ${p.name} (${p.city}, ${p.state}): "${quote}" ${p.url}`);
@@ -156,7 +156,7 @@ for (const p of promote.slice(0, MAX_PROMOTIONS)) {
   let n = 0;
   for (const e of q(`SELECT slug, name, startTime, venue FROM Event WHERE ${col} = ${sqlStr(row.id)} AND status = 'NEEDS_REVIEW' AND eventDate >= '${today} 00:00:00'`)) {
     const t = String(e.startTime ?? "").slice(0, 5);
-    const bad = !/^\d{2}:\d{2}$/.test(t) || !/[A-Za-z]{3}/.test(e.venue ?? "") || /tbd|registration|private|address|to be announced/i.test(e.venue ?? "")
+    const bad = !/^\d{2}:\d{2}$/.test(t) || !venueOk(e.venue, row.cityName)
       || deniedVenue(e.venue) || HOME.test(e.venue ?? "") || HOME.test(e.name) || NOT_A_SESSION.test(e.name)
       || (/\b(evening|night)\b/i.test(e.name) && t < "12:00") || (/\bmorning\b/i.test(e.name) && t >= "17:00");
     if (bad) continue;

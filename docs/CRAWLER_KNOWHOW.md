@@ -136,3 +136,13 @@ Details in the header of `scripts/auto-import.mjs` and in `docs/PROJECT_STATUS.m
 | Auto-import run 1 imported branches whose PRs were closed on purpose | only branches with an open PR |
 | Auto-import run 1 failed: new city slug collided with another state's city | state suffix on collision |
 | Auto-import run 2 failed: `git add` of a missing file | stage directories |
+
+## 11. Covering more cities (2026-10-27)
+
+Goal: every place that has American mahjong. The levers, in order of cost:
+1. **Leads from directories** (no AI, daily): `discover-clubs.yml` also runs `discover-bambuddies.mjs` (BamBuddies, 81 metros) and `discover-mahjong4friends.mjs` (teachers by state: name, business, town, website, a self-written note; phone, email and Instagram are never read). Rows are NEEDS_REVIEW leads. `auto-import.mjs` attaches leads only to cities already on the site (`bb-` and `m4f-` folders); leads for other towns stay in `data/inbox` and feed the nightly "new places" queue (a Mahjong 4 Friends note that says NMJL/American, or a BamBuddies listing, counts as a hint).
+2. **Promotion from the owner's own page** (no AI, twice a day): `verify-owners.mjs` reads a rotating slice of NEEDS_REVIEW clubs and teachers that have a readable own site (home page plus up to three about/class/lesson/play/event pages) and proposes ACTIVE when a line in their own words says American mahjong / NMJL. It skips Bam Good Time boilerplate, "Black American" communities, pages mostly about another style, and anything in `data/promote-skip.txt` (private homes, wrong metro, residents-only groups: **add held-back owners there**). `auto-import.mjs` turns proposals into `UPDATE … ACTIVE` (max 40 owners per run) and also activates that owner's upcoming sessions that have a start time and a place a visitor can go to (`venueOk`: not a town, not "Free (donations welcome)", not a house, not a cruise ship).
+3. **Ready-to-publish list**: the Auto-import digest names unpublished cities with five or more active rows. A person writes the intro (60–100 words, no counts or dates, beginner-friendly last sentence) and publishes; the script never publishes a city for the first time.
+4. **AI nights**: 3 verify, 3 "new places" (3 places each), 1 events per week. This is the token cost lever.
+First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (Belmont's club was dropped: its sessions are held in Chatham), eight cities became publishable.
+`venueOk` also protects the event crawler: an ACTIVE owner's session only goes ACTIVE with a venue that passes it.
