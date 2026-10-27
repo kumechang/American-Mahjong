@@ -56,11 +56,28 @@ jobs:
           done
           echo "ids=$ids" >> "$GITHUB_OUTPUT"
           echo "取り込み対象: ${ids:-なし}"
+      # 自サイトに American / NMJL と書いてある NEEDS_REVIEW の団体・講師を探して ACTIVE の候補にする(scripts/verify-owners.mjs)。
+      # 失敗しても取り込みは続ける。候補は promote.json として取り込みに渡す(上限は auto-import.mjs 側)。
+      - name: 団体の自サイトを確認する
+        id: verify
+        continue-on-error: true
+        env:
+          STEP: ${{ github.run_number }}
+        run: |
+          set +e
+          vid="verify-$(date -u +%Y-%m-%d-%H%M)"
+          node scripts/verify-owners.mjs --limit=40 --step="$STEP" --out-dir="data/inbox/$vid" | tee verify.md
+          rc=${PIPESTATUS[0]}
+          cat verify.md >> "$GITHUB_STEP_SUMMARY"
+          [ "$rc" -eq 0 ] && echo "vid=$vid" >> "$GITHUB_OUTPUT"
+          exit 0
       - name: 取り込みマイグレーションを作る
         id: imp
         run: |
           set +e
-          node scripts/auto-import.mjs --dirs="${{ steps.collect.outputs.ids }}" --digest=digest.md | tee summary.md
+          ids="${{ steps.collect.outputs.ids }}"
+          [ -n "${{ steps.verify.outputs.vid }}" ] && ids="${ids:+$ids,}${{ steps.verify.outputs.vid }}"
+          node scripts/auto-import.mjs --dirs="$ids" --digest=digest.md | tee summary.md
           rc=${PIPESTATUS[0]}
           cat summary.md >> "$GITHUB_STEP_SUMMARY"
           if [ "$rc" -eq 3 ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi

@@ -1,0 +1,14 @@
+# Owners and cities that scripts/verify-owners.mjs must NOT propose for promotion, because a person held them back on purpose.
+# One entry per line: a city slug, an owner name (lower case), or city-slug/owner name.
+# Private-home venues (never publish home addresses)
+bend
+layton
+friendswood
+angleton
+queen-creek
+truckee
+# Wrong metro / country / duplicate
+chatham
+liberty
+mid mo mahjong
+como mahjong
