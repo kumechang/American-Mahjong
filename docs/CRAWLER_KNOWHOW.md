@@ -154,3 +154,11 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 - `auto-import.mjs`: `eb-` leads attach to cities on the site; for a town not on the site they create a (unpublished) city only when the event text mentions American / NMJL. Events never go ACTIVE by themselves (the organiser is NEEDS_REVIEW).
 - Eventbrite hosts are in `verify-owners.mjs`'s DIRECTORY list, so organisers are not promoted from their Eventbrite page. They need their own site (nightly research / outreach).
 - Yield is small (first check: 8 events in 3 Bay Area towns from 6 searches); most hits are social nights that are not clearly American.
+
+## 13. Hand verification notes (2026-10-27)
+- A "verify" night can be done by hand: `build-nightly-prompt.mjs --mode=verify` lists the cities; read each owner's own site (JS sites need `render()`; a Wix/Squarespace home page often hides the real pages behind links such as /learn, /play, /events).
+- `verify-owners.mjs` false positive: a shop selling "American Mahjong Tile Sets" (314mahjong.com) matches the American regex. Check that the owner teaches or hosts play before promoting.
+- A BGT page that says nothing about the style can still have an own site (COMO Mahjong: comomahjong.com says "Columbia's home for American Mahjong"). `promote-skip` entries from a first pass should be re-checked when a city is stuck.
+- Duplicate listings of one business (instructor + club, e.g. Crystal Clear Mahj / The Social Parlor in Bryant, 2 Bam Loaves = Mid MO Mahjong in Columbia MO) stay as one ACTIVE row.
+- Directory-only leads (BamBuddies, no own site) remain NEEDS_REVIEW: the directory is a lead, not a source.
+
