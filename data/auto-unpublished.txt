@@ -8,6 +8,7 @@ hartford
 indianapolis
 jacksonville
 little-elm
+memphis
 new-orleans
 new-york
 orlando
