@@ -34,7 +34,11 @@ const ebId = (u) => (String(u ?? "").match(/tickets-(\d{8,})/) ?? [])[1];
 let plainWorks = true;
 async function fetchPage(url) {
   if (plainWorks) {
-    try { return await get(url); } catch (e) { if (!/HTTP (403|405)/.test(e.message)) throw e; plainWorks = false; }
+    try {
+      const html = await get(url);
+      if (/application\/ld\+json/.test(html)) return html;
+      plainWorks = false; // a 200 without the structured data is a firewall / challenge page (seen on GitHub runners), not the listing
+    } catch (e) { if (!/HTTP (403|405)/.test(e.message)) throw e; plainWorks = false; }
   }
   return (await render(url)).html;
 }
@@ -65,7 +69,7 @@ const start = (step * batch) % span;
 const todays = cities.slice(start, start + batch);
 
 const found = new Map(); // event id -> candidate
-let searched = 0, nationalPages = 0;
+let searched = 0, nationalPages = 0, listedPages = 0, firstLen = 0;
 const NATIONAL = ["mahjong", "mah-jongg", "mahjong", "nmjl"]; // the first is the deep one; the others add a few towns each (checked: american-mahjong overlaps it almost completely)
 const keyword = NATIONAL[(Number.isFinite(step) ? step : 0) % NATIONAL.length];
 
@@ -89,6 +93,7 @@ function collect(html, search) {
     if (search === "national" && !american && !ourCities.has(`${norm(decode(a.addressLocality))}|${a.addressRegion}`)) continue; // a new town needs the event to say so itself
     found.set(id, { id, url: String(it.url).split("?")[0], name: decode(String(it.name)), date: String(it.startDate).slice(0, 10), place: decode(String(it.location.name)), street: a.streetAddress ?? "", city: decode(a.addressLocality), state: a.addressRegion, search, american });
   }
+  if (list.length) listedPages++;
   return { listed: list.length, relevant };
 }
 
@@ -96,6 +101,7 @@ for (let page = 1; page <= 50; page++) {
   let html;
   try { html = await fetchPage(`https://www.eventbrite.com/d/united-states/${keyword}/${page > 1 ? `?page=${page}` : ""}`); } catch (e) { if (process.env.DEBUG) console.error("national", page, e.message); break; }
   nationalPages++;
+  if (page === 1) firstLen = html.length;
   if (collect(html, "national").listed === 0) break;
 }
 for (const c of todays) {
@@ -127,7 +133,7 @@ for (const e of [...found.values()].sort((a, b) => rank(a) - rank(b)).slice(0, M
 
 await closeBrowser();
 if (rows.length === 0) {
-  console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages; ${searched} cities (${start}–${start + batch} of ${cities.length})\n- New events: 0`);
+  console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- New events: 0`);
   process.exit(3);
 }
 
@@ -186,5 +192,5 @@ for (const [key, list] of byCity) {
   );
   summary.push(`- ${list[0].cityName}, ${list[0].stateCode}${ours ? "" : " (new place)"}: ${list.map((r) => `${r.date} ${r.name}`).join("; ")}`);
 }
-console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages; ${searched} cities (${start}–${start + batch} of ${cities.length})\n- Pages fetched: ${pages()}\n- New events: ${rows.length} in ${byCity.size} places\n${summary.join("\n")}\n- Output: ${outDir}`);
+console.log(`# Eventbrite discovery ${today}\n\n- Search pages read: nationwide "${keyword}" ${nationalPages} pages (first ${firstLen} chars, ${plainWorks ? "plain HTTP" : "browser"}, ${listedPages} pages with a listing); ${searched} cities (${start}–${start + batch} of ${cities.length})\n- Pages fetched: ${pages()}\n- New events: ${rows.length} in ${byCity.size} places\n${summary.join("\n")}\n- Output: ${outDir}`);
 process.exit(0);
