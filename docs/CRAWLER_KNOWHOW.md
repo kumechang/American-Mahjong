@@ -172,3 +172,9 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 - `venueOk` no longer treats "Coffee House", "Tea House", "Opera House" ... as someone's house.
 - Result: five towns reached five active rows with this pass and were published with intros (Haymarket VA, New York, Orlando, Albany, Johns Creek); Champaign IL (two venue-hosted series) was held back as thin.
 
+## 15. Neighbouring-town searches (2026-10-27)
+- `node scripts/discover-eventbrite.mjs --neighbors=40 --step=N [--radius=25] [--min-rows=6]` searches Eventbrite for towns around the cities that already have the most mahjong (`scripts/lib/neighbors.mjs`: Census place gazetteer for coordinates + Census population estimates, towns of 8,000+ people within 25 miles of a city with 6+ active rows, nearest and biggest first; 1,092 candidates at the time). Like the nationwide pass it needs a network Eventbrite accepts (not GitHub runners); not wired into a workflow.
+- **What it gives: depth in big metros, not new towns.** An Eventbrite search for a suburb returns the whole metro's events, so 40 neighbour searches (about 12 minutes) gave 38 new sessions from 32 new organisers, all in cities already on the site (New York, Los Angeles, Miami, Washington, Houston, Gainesville VA ...) and no new city. 12 of the 36 organisers had American/NMJL in their own listing and were promoted (0242). New towns come from the nationwide pass (§12).
+- Bam Good Time needs no neighbour step: `discover-clubs.mjs` already walks the whole `bamgoodtime.com/mahjong-clubs` index (every city page, a few dozen per run).
+- Running the importer twice: `auto-import.mjs` also applies what it generates to the local DB, so a second dry run of the same folder says "already on the site: N". Rebuild the local DB (`rm -rf .wrangler/state && npx wrangler d1 migrations apply DB --local`) and delete the stray `migrations/NNNN_auto_*.sql` first.
+
