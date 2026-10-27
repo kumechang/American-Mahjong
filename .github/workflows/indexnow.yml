@@ -1,0 +1,40 @@
+# Bing などの検索エンジン(IndexNow 対応)に、新しい・更新されたページを知らせる。Google は IndexNow に参加していない。
+# 対象は sitemap.xml の lastmod が直近 N 日以内のページ(all=true なら全ページ)。
+# データはマイグレーションの時点で更新され、sitemap の lastmod もそこで変わるので、auto-import が取り込み後に呼ぶ。
+# 鍵ファイルは public/<鍵>.txt(公開前提)。サイトで見えるまで送らない。
+name: indexnow
+on:
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "全ページを送る(初回・サイト全体を変えたとき)"
+        default: "false"
+      since:
+        description: "lastmod が何日以内のページを送るか"
+        default: "2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 送る
+        env:
+          ALL: ${{ inputs.all }}
+          SINCE: ${{ inputs.since }}
+        run: |
+          [[ "${SINCE:-2}" =~ ^[0-9]{1,3}$ ]] || { echo "不正な since"; exit 1; }
+          args=(--since="${SINCE:-2}" --wait=15)
+          [ "${ALL:-false}" = "true" ] && args+=(--all)
+          node scripts/indexnow.mjs "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"

@@ -97,3 +97,5 @@ jobs:
           if [ "$merged" = "false" ]; then echo "::warning::自動マージできませんでした($pr)。人が確認してください。"; exit 0; fi
           # GITHUB_TOKEN の push は他のワークフローを起こさないので、取り込み済みの inbox PR の片付けを直接呼ぶ
           gh workflow run close-imported-inbox.yml || true
+          # 取り込んだページの更新を IndexNow(Bing など)に知らせる。失敗しても取り込みには影響しない
+          gh workflow run indexnow.yml || true

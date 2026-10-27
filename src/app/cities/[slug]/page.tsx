@@ -121,7 +121,9 @@ function buildMetadataCopy(city: {
     );
   }
 
-  return { title, description: `${descParts.join(", ")}.` };
+  // The closing sentence names no data type, so it stays true for every city; it also keeps the description from being
+  // flagged as too short (Bing Webmaster Tools, SEO Recommendations).
+  return { title, description: `${descParts.join(", ")}. See venues, times and how to join.` };
 }
 
 export async function generateMetadata({
