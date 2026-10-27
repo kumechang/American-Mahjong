@@ -12,5 +12,4 @@ memphis
 new-orleans
 new-york
 orlando
-st-louis
 washington

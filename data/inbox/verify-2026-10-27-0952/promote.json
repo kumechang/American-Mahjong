@@ -1,0 +1,38 @@
+[
+ {
+  "type": "club",
+  "slug": "slidell-bayou-bamboos",
+  "name": "Bayou Bamboos",
+  "city": "Slidell",
+  "state": "LA",
+  "evidence": "All table set ups tiles racks etc. will be provided, remember to bring your NMJL card.",
+  "url": "https://bayoubamboos.bamgoodtime.com/events/c8eaa4a3-c8fb-4016-a2ea-627d38801f5b"
+ },
+ {
+  "type": "instructor",
+  "slug": "st-louis-314-mahjong",
+  "name": "314 Mahjong",
+  "city": "St. Louis",
+  "state": "MO",
+  "evidence": "American Mahjong Tile Set, 166 White Tiles, 4 All-in-One Colors Rack/Pushers, Complete Travel Mahjong Set with Light Green Carrying Bag (comes in other colors too!)",
+  "url": "https://314mahjong.com"
+ },
+ {
+  "type": "instructor",
+  "slug": "vienna-the-bamboo-room-mama-mahj-llc",
+  "name": "The Bamboo Room/Mama Mahj, LLC",
+  "city": "Vienna",
+  "state": "VA",
+  "evidence": "The Bamboo Room | American Mahjong · Vienna, VA",
+  "url": "https://www.bambooroomvienna.com"
+ },
+ {
+  "type": "instructor",
+  "slug": "washington-let-s-play-mah-jongg",
+  "name": "Let's Play Mah Jongg",
+  "city": "Washington",
+  "state": "DC",
+  "evidence": "Caryn clearly explains the intricacies of American Mah Jongg in a patient manner. She teaches beginners how to read the Chinese tiles, how to read the National Mah Jongg League card, how they work together and ends with teaching advanced ma",
+  "url": "https://www.letsplaymahjongg.com"
+ }
+]
