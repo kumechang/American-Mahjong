@@ -1,0 +1,47 @@
+[
+ {
+  "type": "club",
+  "slug": "omaha-american-mah-jongg-at-camelot",
+  "name": "American Mah Jongg at Camelot",
+  "city": "Omaha",
+  "state": "NE",
+  "evidence": "American Mah Jongg at Camelot — Omaha, NE",
+  "url": "https://omaha.bamgoodtime.com"
+ },
+ {
+  "type": "instructor",
+  "slug": "omaha-omahjong",
+  "name": "Omahjong",
+  "city": "Omaha",
+  "state": "NE",
+  "evidence": "&bull; Each student must purchase their own current National Mah Jongg League Card.",
+  "url": "https://www.omahjong.com/"
+ },
+ {
+  "type": "instructor",
+  "slug": "panama-city-the-portal-downtown",
+  "name": "The Portal Downtown",
+  "city": "Panama City",
+  "state": "FL",
+  "evidence": "Our beginner-friendly American Mahjong class covers the tiles, the basics of the National Mah Jongg League card, and how to play a full game.",
+  "url": "https://BayCountyMahjong.com"
+ },
+ {
+  "type": "instructor",
+  "slug": "raleigh-bonmahj",
+  "name": "BonMahj",
+  "city": "Raleigh",
+  "state": "NC",
+  "evidence": "Learn about the tiles, how to read the NMJL card, and the basic flow of the game. We cover everything from setting up the wall to picking and discarding tiles.",
+  "url": "https://bonmahj.com/learn"
+ },
+ {
+  "type": "instructor",
+  "slug": "rye-the-modern-mahj",
+  "name": "The Modern Mahj",
+  "city": "Rye",
+  "state": "NY",
+  "evidence": "Perfect for beginners! We&rsquo;ll cover tile identification, game setup, the rules of play, and how to read the National Mah Jongg League card. You&rsquo;ll end the session with guided gameplay so you can put your new skills into practice.",
+  "url": "https://www.the-modern-mahj.com/"
+ }
+]
