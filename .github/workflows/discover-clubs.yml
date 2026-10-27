@@ -24,7 +24,7 @@ concurrency:
 jobs:
   discover:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,6 +32,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: ブラウザを入れる(Eventbrite は普通の取得を弾くので、ブラウザで開く)
+        run: npx playwright-core install --with-deps chromium
       - name: ローカル DB を作る
         run: npx wrangler d1 migrations apply DB --local
       - name: 探す
@@ -54,9 +56,13 @@ jobs:
           node scripts/discover-mahjong4friends.mjs --out-dir="data/inbox/$id" | tee -a summary.md
           rc3=${PIPESTATUS[0]}
           [ "$rc3" -eq 0 ] || [ "$rc3" -eq 3 ] || exit "$rc3"
+          # 四つ目の情報源: Eventbrite の検索(日付・会場・主催者つきのイベント。eb-… フォルダに出る。失敗しても他の結果は残す)
+          node scripts/discover-eventbrite.mjs --batch=40 --max=40 --step="${STEP}" --out-dir="data/inbox/$id" | tee -a summary.md
+          rc4=${PIPESTATUS[0]}
+          [ "$rc4" -eq 0 ] || [ "$rc4" -eq 3 ] || { echo "::warning::Eventbrite の探索が失敗しました(終了コード $rc4)"; rc4=3; }
           cat summary.md >> "$GITHUB_STEP_SUMMARY"
           echo "id=$id" >> "$GITHUB_OUTPUT"
-          if [ "$rc" -eq 3 ] && [ "$rc2" -eq 3 ] && [ "$rc3" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$rc" -eq 3 ] && [ "$rc2" -eq 3 ] && [ "$rc3" -eq 3 ] && [ "$rc4" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           echo "found=true" >> "$GITHUB_OUTPUT"
       - name: 検証して PR を作る
         if: steps.discover.outputs.found == 'true'

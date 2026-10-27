@@ -9,8 +9,7 @@
 //   node scripts/discover-eventbrite.mjs [--batch=60] [--step=N] [--out-dir=data/inbox/<id>] [--max=60]
 //
 // The cities (every city on the site, published or not) rotate with --step, so a full pass takes a few runs.
-// NOT WIRED INTO A WORKFLOW YET: only the search-page parsing was checked by hand; run it once with a small --batch and read the
-// output before adding it to discover-clubs.yml (it needs Chromium: set CA_SPKI/PW_CHROMIUM/PW_PROXY in a sandbox).
+// Needs Chromium (Eventbrite's firewall refuses plain HTTP): in a sandbox set CA_SPKI / PW_CHROMIUM / PW_PROXY. Checked end to end on 2026-10-27.
 // Output: <out-dir>/eb-<city>-<st>/events.csv + report.md. Exit code 3 = nothing new.
 
 import { mkdirSync, writeFileSync, readdirSync, readFileSync, existsSync } from "node:fs";
@@ -48,6 +47,8 @@ if (existsSync("data/inbox")) { // events an earlier run (any crawler) already w
     }
   }
 }
+const knownClubs = q(`SELECT c.name, c.website, c.sourceUrl, ci.name AS city, ci.state FROM Club c JOIN City ci ON ci.id = c.cityId`);
+const orgKey = (u) => (String(u ?? "").match(/eventbrite\.[a-z.]+\/o\/([^/?#]+)/) ?? [])[1] ?? "";
 const takenSlugs = new Set(q(`SELECT slug FROM Event`).map((r) => r.slug.replace(/^event_/, "")));
 const eventSlug = (cityName, name, date) => `${slugify(cityName)}-${slugify(name)}-${date.replace(/-/g, "")}`;
 const clock12 = (t) => { const [h, m] = t.split(":").map(Number); return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`; };
@@ -88,16 +89,18 @@ for (const c of todays) {
 // ---------- read each new event page: start time, price, organiser ----------
 const rows = [];
 for (const e of [...found.values()].slice(0, MAX_NEW)) {
-  let time = "", price = null, organizer = "";
+  let time = "", price = null, organizer = "", organizerUrl = "";
   try {
     const html = await fetchPage(e.url);
-    const ld = jsonLdFromHtml(html, e.url).find((x) => x.date === e.date) ?? jsonLdFromHtml(html, e.url)[0];
+    const all = jsonLdFromHtml(html, e.url);
+    const ld = all.find((x) => x.date === e.date) ?? all[0];
     if (ld) { time = ld.time; price = ld.price; }
+    organizerUrl = all.organizer ?? "";
     organizer = decode((html.match(/"organizer"\s*:\s*\{[^}]*?"name"\s*:\s*"([^"]+)"/) ?? [])[1] ?? "");
   } catch { /* keep what the search page gave */ }
   if (!time) continue; // no start time: not listed
   const sameName = e.place.toLowerCase().includes(e.street.split(" ")[0] ?? "~");
-  rows.push({ ...e, time, price: price != null && price > 0 && price <= 600 ? price : "", organizer, venue: [e.place, sameName ? "" : e.street, e.city, e.state].filter(Boolean).join(", ") });
+  rows.push({ ...e, time, price: price != null && price > 0 && price <= 600 ? price : "", organizer, organizerUrl, venue: [e.place, sameName ? "" : e.street, e.city, e.state].filter(Boolean).join(", ") });
 }
 
 await closeBrowser();
@@ -110,10 +113,9 @@ if (rows.length === 0) {
 const EVENT_H = "name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status".split(",");
 const byCity = new Map();
 for (const r of rows) {
-  const ours = ourCities.has(`${norm(r.city)}|${r.state}`);
-  const city = ours ? r.city : r.search.name, state = ours ? r.state : r.search.state; // a suburb we do not have goes under the metro that was searched
-  r.cityName = city; r.stateCode = state;
-  const key = `eb-${slugify(city)}-${state.toLowerCase()}`;
+  // the event's own town (a search for one city also lists its neighbours: Oakland and San Leandro events must not go under Alamo)
+  r.cityName = r.city; r.stateCode = r.state;
+  const key = `eb-${slugify(r.cityName)}-${r.stateCode.toLowerCase()}`;
   if (!byCity.has(key)) byCity.set(key, []);
   byCity.get(key).push(r);
 }
@@ -122,6 +124,15 @@ for (const [key, list] of byCity) {
   const dir = `${outDir}/${key}`;
   mkdirSync(dir, { recursive: true });
   const used = new Set();
+  // organisers become club leads (NEEDS_REVIEW) so the events have an owner; one already on the site (same Eventbrite page or name in this town) is linked by its own name
+  const leads = new Map();
+  const ownerName = (r) => {
+    const org = r.organizer || r.place;
+    const hit = knownClubs.find((c) => c.state === r.stateCode && norm(c.city) === norm(r.cityName) && (norm(c.name) === norm(org) || (orgKey(r.organizerUrl) && [c.website, c.sourceUrl].some((u) => orgKey(u) === orgKey(r.organizerUrl)))));
+    if (hit) return hit.name;
+    if (!leads.has(norm(org))) leads.set(norm(org), { name: org, url: r.organizerUrl, american: r.american, example: r.name });
+    return org;
+  };
   const out = list.map((r) => {
     let name = r.name;
     const taken = (n) => used.has(eventSlug(r.cityName, n, r.date)) || takenSlugs.has(eventSlug(r.cityName, n, r.date));
@@ -129,11 +140,22 @@ for (const [key, list] of byCity) {
     for (let i = 2; taken(name); i++) name = `${r.name} (${i})`;
     used.add(eventSlug(r.cityName, name, r.date));
     return {
-      name, city: r.cityName, state: r.stateCode, event_date: r.date, start_time: r.time, end_time: "", venue: r.venue, club_name: "", instructor_name: "",
+      name, city: r.cityName, state: r.stateCode, event_date: r.date, start_time: r.time, end_time: "", venue: r.venue, club_name: ownerName(r), instructor_name: "",
       event_type: /open play|guided play|social|mixer|game night/i.test(r.name) ? "OPEN_PLAY" : guessType(r.name),
       beginner_friendly: /101|beginner|intro|learn/i.test(r.name) ? "TRUE" : "FALSE", price: r.price, registration_url: r.url, source_url: r.url, last_verified_at: today, status: "NEEDS_REVIEW",
     };
   });
+  if (leads.size) {
+    const CLUB_H = "name,city,state,description,address,website,phone,email,latitude,longitude,beginner_friendly,lessons_available,open_play,social_play,women_only,free,price,schedule,source_url,last_verified_at,status".split(",");
+    const crow = [...leads.values()].map((l) => ({
+      name: l.name, city: list[0].cityName, state: list[0].stateCode,
+      description: `Organiser of mahjong events on Eventbrite (for example "${l.example}"). ${l.american ? "An event text mentions American / NMJL." : "American / NMJL not stated yet."} The organiser's own page has not been checked.`.slice(0, 600),
+      address: "", website: l.url, phone: "", email: "", latitude: "", longitude: "",
+      beginner_friendly: "FALSE", lessons_available: "FALSE", open_play: "FALSE", social_play: "TRUE", women_only: "FALSE", free: "FALSE", price: "",
+      schedule: "Events listed on Eventbrite", source_url: l.url || "https://www.eventbrite.com", last_verified_at: today, status: "NEEDS_REVIEW",
+    }));
+    writeFileSync(`${dir}/clubs.csv`, [CLUB_H.join(","), ...crow.map((r) => CLUB_H.map((h) => csvCell(r[h])).join(","))].join("\n") + "\n");
+  }
   writeFileSync(`${dir}/events.csv`, [EVENT_H.join(","), ...out.map((r) => EVENT_H.map((h) => csvCell(r[h])).join(","))].join("\n") + "\n");
   const ours = ourCities.has(`${norm(list[0].cityName)}|${list[0].stateCode}`);
   writeFileSync(
