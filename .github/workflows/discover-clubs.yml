@@ -57,7 +57,7 @@ jobs:
           rc3=${PIPESTATUS[0]}
           [ "$rc3" -eq 0 ] || [ "$rc3" -eq 3 ] || exit "$rc3"
           # 四つ目の情報源: Eventbrite の検索(日付・会場・主催者つきのイベント。eb-… フォルダに出る。失敗しても他の結果は残す)
-          node scripts/discover-eventbrite.mjs --batch=40 --max=40 --step="${STEP}" --out-dir="data/inbox/$id" | tee -a summary.md
+          node scripts/discover-eventbrite.mjs --batch=20 --max=50 --step="${STEP}" --out-dir="data/inbox/$id" | tee -a summary.md
           rc4=${PIPESTATUS[0]}
           [ "$rc4" -eq 0 ] || [ "$rc4" -eq 3 ] || { echo "::warning::Eventbrite の探索が失敗しました(終了コード $rc4)"; rc4=3; }
           cat summary.md >> "$GITHUB_STEP_SUMMARY"
