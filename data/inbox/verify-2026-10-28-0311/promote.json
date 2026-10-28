@@ -1,0 +1,29 @@
+[
+ {
+  "type": "instructor",
+  "slug": "dallas-mahjong-moore",
+  "name": "Mahjong Moore",
+  "city": "Dallas",
+  "state": "TX",
+  "evidence": "Hi, I’m Susanne Moore—founder of Mahjong Moore. I’ve been playing American Mahjong for over four years after learning the game during a monthly get-together with my son’s preschool moms.",
+  "url": "https://www.mahjongmoore.com/about"
+ },
+ {
+  "type": "instructor",
+  "slug": "denver-8-flowers-mahjong",
+  "name": "8 Flowers Mahjong",
+  "city": "Denver",
+  "state": "CO",
+  "evidence": "All levels of play are welcome, but should have at least beginner knowledge. Bring your 2026 National Mah Jongg League card. No instruction will be provided.",
+  "url": "https://www.8flowersmahjong.com/upcomingclasses"
+ },
+ {
+  "type": "instructor",
+  "slug": "gettysburg-mah-jongg-class",
+  "name": "Mah Jongg Class",
+  "city": "Gettysburg",
+  "state": "PA",
+  "evidence": "League (NMJL) card.",
+  "url": "https://mahjonggclass.wixsite.com/mahjongg/classes-1"
+ }
+]
