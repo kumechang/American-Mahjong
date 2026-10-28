@@ -178,3 +178,9 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 - Bam Good Time needs no neighbour step: `discover-clubs.mjs` already walks the whole `bamgoodtime.com/mahjong-clubs` index (every city page, a few dozen per run).
 - Running the importer twice: `auto-import.mjs` also applies what it generates to the local DB, so a second dry run of the same folder says "already on the site: N". Rebuild the local DB (`rm -rf .wrangler/state && npx wrangler d1 migrations apply DB --local`) and delete the stray `migrations/NNNN_auto_*.sql` first.
 
+## 16. First Chrome-assisted pass (2026-10-28)
+- Prompt `docs/browser-prompts/01-directory-leads.md` (batch 1: Milwaukee, Jacksonville, Birmingham, 32 leads) was run in a chat that drives a real Chrome. Of 32 leads it confirmed 7 ACTIVE with own-page quotes (3 clubs with dated sessions, 1 city rec-class listing, 2 instructors with American wording on their own site or Facebook page, and a venue-hosted series), left 21 UNCONFIRMED (Instagram/Facebook pages without the word, JS-only pages it could not read, individuals' pages it rightly skipped) and found 2 NEW rows.
+- Lesson: the window did not see our database, so 2 of its ACTIVE answers and both NEW rows were **duplicates of rows already ACTIVE under another name** (O'Neal Library meetup, Mahjong Social Club Jax / Grazing Parlor, MKE Mahjong / Julie Littman, Whole Foods, Levite JCC). Before importing a CSV, match each `name_exact` against existing ACTIVE rows in the same city (same venue / same website) and retire the lead as INACTIVE instead of promoting it (0245 does this).
+- A restaurant that hosts a travelling club's series (Grazing Parlor / Mahjong Social Club Jax) is a venue, not a club: file the sessions under the club.
+- Result: Birmingham (16 active rows), Jacksonville (6) and Milwaukee (5) published.
+
