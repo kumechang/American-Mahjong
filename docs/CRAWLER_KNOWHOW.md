@@ -184,3 +184,8 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 - A restaurant that hosts a travelling club's series (Grazing Parlor / Mahjong Social Club Jax) is a venue, not a club: file the sessions under the club.
 - Result: Birmingham (16 active rows), Jacksonville (6) and Milwaukee (5) published.
 
+## 17. AI inbox review notes (2026-10-29)
+- Held back on purpose, although the AI sent them as ACTIVE: **Mahjong for a Cause (Friendswood TX)**. Its booking page says "Complete all 72 hands on the 2026 NMJL Card", but the venue was a private-looking address (504 Lakeside Ln) until a recent move to "Hall's Hall", 906 Anna Lane; a person must confirm Hall's Hall is a commercial or community space before it is published. **The Mahjmont Society (Belmont MA)**: only "American Mahjong" in the site tagline, sessions at Oakley Country Club (Watertown, a private club) or on Cape Cod, so the city assignment and public access are doubtful.
+- Reports only (nothing imported): Billings MT (Montana Mahj: the article says American, the club's own pages do not; part of the house is members-only), Louisville (Keneseth Israel weekly Thursday game is public but never says American), Mountain Home AR, Downers Grove, Lincolnton GA, Jacksonville (Del Webb: residents only), Sarasota, Johns Creek / Johns Island / Orlando / Portsmouth.
+- Leads worth a Chrome-assisted look: Johns Creek city "Mahjong Mondays" (Northeast Spruill Oaks Library, Mondays 1-3 pm, American), Holland Center "Beginner Guided Open Play - American Mah Jongg", Ellora Mahjong (Orlando), Diversions Puzzles & Games (Portsmouth NH, American-style 3-week course).
+
