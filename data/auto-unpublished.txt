@@ -12,4 +12,5 @@ memphis
 new-orleans
 new-york
 orlando
+salt-lake-city
 washington
