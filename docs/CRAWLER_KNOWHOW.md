@@ -214,3 +214,9 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 ## 22. Production incident: /cities returned 500 at 101 published cities (2026-10-31)
 - Cause: `getCityCounts` filtered its three grouped queries with `IN (<every published city id>)`. D1 allows at most 100 bound variables per statement, so the day the 101st city was published (Belmont and Cherry Hill, migration `*_publish_belmont_cherry_hill`) `/cities` failed with `D1_ERROR: too many SQL variables`. The home page and city pages were unaffected.
 - Fix: no `IN` list; the queries group every city and the code keeps the ones asked for. **Rule: never bind a list of ids that grows with the data into one D1 statement** (100 variables); check any new `inArray(...)` against the number of published cities, events and clubs.
+
+## 23. Facebook / Instagram pass 2 (2026-11-01)
+- 18 rows read in the logged-in window: 1 new ACTIVE instructor (904 Mahj, quote from its open-play announcement), 1 new club found while checking (Mah Jong Social Club, Mountain Home AR: "Official Standard Hands and Rules of the National Mah Jongg League, Inc."), 2 duplicates retired (MKE Mahjong Social Group = MKE Mahjong, whose Nov 10 American Mahj 101 at The Ruby Tap was added; Mahjong IRL instructor = the Cleveland club), 1 session added, 14 UNCONFIRMED.
+- Most Instagram profiles of instructors carry only "Mahjong lessons. Parties." or a hashtag (#AmericanMahjong); the window rightly kept those UNCONFIRMED. Hashtag-only and tile-shop wording are not accepted.
+- Held with an NMJL mention but no tie to our row: Nicolet Recreation Department Mah Jongg 101 (Glendale WI; dates in the past, instructor link is third-party), Birdie Blue Mahj (Marietta area; class on 11-04, location unconfirmed), Palmetto Mahjong Social ("American Mahjong Enthusiast & Host" bio, Simpsonville; not shown to host the Grand Holland beginners night).
+
