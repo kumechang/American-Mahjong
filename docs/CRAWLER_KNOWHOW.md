@@ -226,3 +226,8 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 - The Villages is a large age-restricted community: its recreation classes may be residents-only, so check before publishing (prompt `docs/browser-prompts/08-florida-east-coast.md`).
 - Watch list printed by the importer: Wyckoff NJ, Newburyport MA, Bryant AR, Centennial CO, Knoxville TN are published cities now under five active rows (dated sessions have passed); they will be unpublished by the importer after three days unless new sessions are added.
 
+
+## 25. Florida east coast pass (2026-11-01)
+- Prompt `docs/browser-prompts/08-florida-east-coast.md` covered the 31 leads in the seven new towns. Promoted: Levis JCC Mah Jongg lessons (Boca Raton; "students are required to bring a 2026 National Mah Jongg card"; 5 lesson sessions), Mahj on the Beach (instructor; museum sessions already sit under West Palm Beach), The Villages Mah Jongg 101 ("Learn to play American Mah Jongg"; non-residents allowed but every section is full, so no sessions), and a new club found on the way, Palm Beach Mahjong (Palm Beach Gardens, 5 sessions). Temple Beth El Mah Jongg Day circle was retired (INACTIVE).
+- Held: School of American Mah Jongg (online only), Robin Tartarkin, Four Sparrows; the rest stayed UNCONFIRMED.
+- Published: Boca Raton and Palm Beach Gardens. The Villages stays unpublished (one active row and nothing bookable).
