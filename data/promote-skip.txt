@@ -13,5 +13,3 @@ liberty
 # Residents-only community groups (HOA / 55+ clubhouse): not open to the public
 del webb etown mah jongg interest group
 # Venues are in another town (Chatham): the Belmont page would show events that are not in Belmont
-the mahjmont society
-belmont
