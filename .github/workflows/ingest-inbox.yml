@@ -9,6 +9,12 @@ permissions:
   contents: read
   pull-requests: write
 
+# The research server pushes its files one by one, so a single run used to start on a half-finished branch (a clubs.csv without its events.csv,
+# or no CSV at all) and post a comment for each push. Only the newest push of a branch is validated; the earlier runs are cancelled.
+concurrency:
+  group: ingest-inbox-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
