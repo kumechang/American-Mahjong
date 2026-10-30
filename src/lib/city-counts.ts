@@ -1,4 +1,4 @@
-import { and, eq, gte, inArray, count } from "drizzle-orm";
+import { and, eq, gte, count } from "drizzle-orm";
 import type { getDb } from "@/lib/db";
 import { clubs, instructors, events } from "@/db/schema";
 
@@ -20,6 +20,10 @@ export type CityCounts = {
 
 // One grouped query per table instead of three per city. Counts match what
 // each city page shows publicly: ACTIVE rows only, upcoming events only.
+// The queries deliberately do not filter by `IN (cityIds)`: D1 allows at most
+// 100 bound variables per statement, and /cities broke the day more than 100
+// cities were published. Grouping every city (a few hundred rows at most) and
+// keeping the ones asked for is cheaper than splitting the list.
 export async function getCityCounts(
   db: Db,
   cityIds: string[],
@@ -34,34 +38,33 @@ export async function getCityCounts(
     db
       .select({ cityId: clubs.cityId, value: count() })
       .from(clubs)
-      .where(and(inArray(clubs.cityId, cityIds), eq(clubs.status, "ACTIVE")))
+      .where(eq(clubs.status, "ACTIVE"))
       .groupBy(clubs.cityId),
     db
       .select({ cityId: instructors.cityId, value: count() })
       .from(instructors)
-      .where(
-        and(
-          inArray(instructors.cityId, cityIds),
-          eq(instructors.status, "ACTIVE"),
-        ),
-      )
+      .where(eq(instructors.status, "ACTIVE"))
       .groupBy(instructors.cityId),
     db
       .select({ cityId: events.cityId, value: count() })
       .from(events)
       .where(
-        and(
-          inArray(events.cityId, cityIds),
-          eq(events.status, "ACTIVE"),
-          gte(events.eventDate, todayEventDate()),
-        ),
+        and(eq(events.status, "ACTIVE"), gte(events.eventDate, todayEventDate())),
       )
       .groupBy(events.cityId),
   ]);
 
-  for (const row of clubRows) result.get(row.cityId)!.clubCount = row.value;
-  for (const row of instructorRows)
-    result.get(row.cityId)!.instructorCount = row.value;
-  for (const row of eventRows) result.get(row.cityId)!.eventCount = row.value;
+  for (const row of clubRows) {
+    const c = result.get(row.cityId);
+    if (c) c.clubCount = row.value;
+  }
+  for (const row of instructorRows) {
+    const c = result.get(row.cityId);
+    if (c) c.instructorCount = row.value;
+  }
+  for (const row of eventRows) {
+    const c = result.get(row.cityId);
+    if (c) c.eventCount = row.value;
+  }
   return result;
 }
