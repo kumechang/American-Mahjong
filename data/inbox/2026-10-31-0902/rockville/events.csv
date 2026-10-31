@@ -1,0 +1,6 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Beginner Mah Jongg (4 weeks),Rockville,MD,2026-11-09,10:00,12:00,Bender JCC,Bender JCC Mah Jongg,,LESSON,TRUE,,https://community.benderjccgw.org/s/registration?courseSessionId=a42Rh000001bEbJIAU&courseOptionId=a40Rh00000B4zwDIAR,https://www.benderjccgw.org/?p=57780,2026-10-31,ACTIVE
+Tuesday PM Beginner Mah Jongg (4 weeks),Rockville,MD,2026-11-03,18:00,20:00,Bender JCC,Bender JCC Mah Jongg,,LESSON,TRUE,,,https://www.benderjccgw.org/calendar/beginner-mah-jongg-nov-dec-2025/,2026-10-31,NEEDS_REVIEW
+Tuesday AM Beginner Mah Jongg (4 weeks),Rockville,MD,2026-11-10,10:00,12:00,Bender JCC,Bender JCC Mah Jongg,,LESSON,TRUE,,,https://www.benderjccgw.org/calendar/beginner-mah-jongg-nov-dec-2025/,2026-10-31,NEEDS_REVIEW
+Mahjong 101 @ 7 Locks Brewing,Rockville,MD,2026-11-08,13:00,15:30,7 Locks Brewing,Morah Mahjong,,LESSON,TRUE,,,https://morah-mahjong.bamgoodtime.com,2026-10-31,NEEDS_REVIEW
+Open Play @ Clear Skies Meadery,Rockville,MD,2026-11-22,13:00,15:30,Clear Skies Meadery,Morah Mahjong,,OPEN_PLAY,FALSE,,,https://morah-mahjong.bamgoodtime.com,2026-10-31,NEEDS_REVIEW
