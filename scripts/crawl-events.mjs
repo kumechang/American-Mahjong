@@ -16,7 +16,7 @@
 //   - WordPress sites with The Events Calendar (/wp-json/tribe/events/v1/events), then anything else:
 //     schema.org Event data (JSON-LD) found on the page (clubs only)
 //
-//   node scripts/crawl-events.mjs [--only=browser] [--out-dir=data/inbox/crawl-YYYY-MM-DD-HHMM] [--today=YYYY-MM-DD]
+//   node scripts/crawl-events.mjs [--only=browser] [--cities=slug,slug] [--out-dir=data/inbox/crawl-YYYY-MM-DD-HHMM] [--today=YYYY-MM-DD]
 //
 // Needs the local D1 (`npx wrangler d1 migrations apply DB --local`).
 // Exit code 3 = nothing new. Be polite: one request per host per second,
@@ -64,7 +64,12 @@ for (const e of known) {
 function sourceFor(owner) {
   for (const u of [owner.website, owner.sourceUrl]) {
     if (!u || !/^https?:\/\//.test(u)) continue;
-    const url = new URL(u);
+    let url;
+    try {
+      url = new URL(u);
+    } catch {
+      continue; // a malformed address in the database must not stop the whole run
+    }
     if (/\.bamgoodtime\.com$/.test(url.host) && url.host !== "www.bamgoodtime.com") return { kind: "bgt", key: url.origin };
     if (url.host === "bookwhen.com" && url.pathname.split("/")[1]) return { kind: "bookwhen", key: url.pathname.split("/")[1] };
     if (/(^|\.)eventbrite\.[a-z.]+$/.test(url.host) && /^\/(o|cc)\//.test(url.pathname)) return { kind: "ebrite", key: u };
@@ -85,9 +90,13 @@ const note = (city, text) => {
   if (!results.has(city.slug)) results.set(city.slug, { city, rows: [], notes: [] });
   results.get(city.slug).notes.push(text);
 };
+const MAHJONG_WORD = /mah[\s-]?j|jongg?|nmjl|\bmahj\b/i;
+const MAHJONG_OWNER = /mah[\s-]?j|jongg?|\btiles?\b|\bbam\b|crak|sparrow|dragon|pung|joker|charleston|racks?\b|\bwinds?\b/i;
 const seenSources = new Set();
 const order = { bgt: 0, bookwhen: 1, linktree: 2, calendly: 2, meetup: 2, ebrite: 3, jsonld: 4, browser: 5, calendar: 5, ics: 5 };
-const work = [...clubs, ...teachers].map((o) => ({ owner: o, src: sourceFor(o) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
+// --cities=slug,slug limits the run to the owners of those cities (a quick top-up for a few cities).
+const onlyCities = (arg("cities") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+const work = [...clubs, ...teachers].filter((o) => !onlyCities.length || onlyCities.includes(cityById.get(o.cityId)?.slug)).map((o) => ({ owner: o, src: sourceFor(o) })).filter((w) => w.src).sort((a, b) => order[a.src.kind] - order[b.src.kind]);
 // Sites that only show their schedule after JavaScript runs: read with a headless browser (data/browser-sources.json).
 const browserSources = existsSync("data/browser-sources.json") ? JSON.parse(readFileSync("data/browser-sources.json", "utf8")) : [];
 for (const b of browserSources) {
@@ -153,6 +162,9 @@ for (const { owner, src } of work) {
   for (const e of found) {
     if (e.date < today) continue;
     if (e.date > horizonDate || NOT_A_SESSION.test(e.name) || deniedVenue(e.venue)) continue;
+    // An Eventbrite organiser or a library/venue calendar lists everything it does (candle making, board meetings, author talks):
+    // outside a mahjong-named owner, only entries that say mahjong in their title count.
+    if (["ebrite", "jsonld"].includes(src.kind) && !MAHJONG_WORD.test(e.name) && !MAHJONG_OWNER.test(owner.name)) continue;
     if (knownKey.has(`${ok}|${e.date}|${norm(e.name)}`) || (e.time && knownKey.has(`${ok}|${e.date}|t${e.time}`))) continue;
     const dupKey = `${ok}|${e.date}|${e.time}|${e.name.toLowerCase()}`;
     if (seenEvent.has(dupKey)) continue;

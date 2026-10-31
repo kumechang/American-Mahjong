@@ -1,0 +1,7 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Design Your Own Table,Boston,MA,2026-11-09,19:00,,,Bay State Bam,,OTHER,FALSE,,https://www.baystatebam.com/upcoming-events,https://www.baystatebam.com/upcoming-events,2026-10-31,NEEDS_REVIEW
+Design Your Own Table,Boston,MA,2026-11-13,19:00,,,Bay State Bam,,OTHER,FALSE,,https://www.baystatebam.com/upcoming-events,https://www.baystatebam.com/upcoming-events,2026-10-31,NEEDS_REVIEW
+Midmorning Mahj,Boston,MA,2026-11-16,09:30,,,Bay State Bam,,OTHER,FALSE,,https://www.baystatebam.com/upcoming-events,https://www.baystatebam.com/upcoming-events,2026-10-31,NEEDS_REVIEW
+Midmorning Mahj,Boston,MA,2026-12-09,09:30,,,Bay State Bam,,OTHER,FALSE,,https://www.baystatebam.com/upcoming-events,https://www.baystatebam.com/upcoming-events,2026-10-31,NEEDS_REVIEW
+Holiday Brain Break Open Play,Boston,MA,2026-12-15,19:00,,,Bay State Bam,,OPEN_PLAY,FALSE,,https://www.baystatebam.com/upcoming-events,https://www.baystatebam.com/upcoming-events,2026-10-31,NEEDS_REVIEW
+Midmorning Mahj,Boston,MA,2026-12-18,09:30,,,Bay State Bam,,OTHER,FALSE,,https://www.baystatebam.com/upcoming-events,https://www.baystatebam.com/upcoming-events,2026-10-31,NEEDS_REVIEW

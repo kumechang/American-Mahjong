@@ -92,7 +92,8 @@ export async function bamGoodTime(origin) {
     let hh = d[4], mm = d[5], ap = d[6];
     if (!hh) {
       if (/^[•·]$/.test(l[j] ?? "")) j++;
-      const t = (l[j] ?? "").match(/^(\d{1,2}):(\d{2}) ([AP]M)$/);
+      // the card shows either "6:00 PM" or a range "6:00 PM - 8:00 PM" (the range appeared in late October 2026)
+      const t = (l[j] ?? "").match(/^(\d{1,2}):(\d{2}) ([AP]M)(?:\s*[-\u2013]\s*\d{1,2}:\d{2} [AP]M)?$/);
       if (t) { [, hh, mm, ap] = t; j++; }
     }
     if (seen.has(m[1])) continue;
