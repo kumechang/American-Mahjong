@@ -1,5 +1,7 @@
 aurora
 birmingham
+bryant
+centennial
 cumming
 fort-worth
 fresno
@@ -7,10 +9,12 @@ georgetown
 hartford
 indianapolis
 jacksonville
+knoxville
 little-elm
 memphis
 new-orleans
 new-york
+newburyport
 orlando
 salt-lake-city
 washington
