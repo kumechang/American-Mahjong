@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Open Play (morning),Marion,IL,2026-10-31,10:30,12:30,La La's Mahjong Room,La La's Mahjong Room,,OPEN_PLAY,TRUE,10,https://lalas-mahjong-room.bamgoodtime.com,https://lalas-mahjong-room.bamgoodtime.com,2026-10-30,ACTIVE
+Open Play (afternoon),Marion,IL,2026-10-31,13:00,15:00,La La's Mahjong Room,La La's Mahjong Room,,OPEN_PLAY,TRUE,10,https://lalas-mahjong-room.bamgoodtime.com,https://lalas-mahjong-room.bamgoodtime.com,2026-10-30,ACTIVE
+An Evening of Mahjong to Support Hospice of Southern Illinois,Marion,IL,2026-11-19,17:30,20:30,La La's Mahjong Room,La La's Mahjong Room,,SOCIAL,TRUE,50,https://lalas-mahjong-room.bamgoodtime.com,https://lalas-mahjong-room.bamgoodtime.com,2026-10-30,ACTIVE
