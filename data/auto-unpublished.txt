@@ -1,8 +1,6 @@
-aurora
 birmingham
 cumming
 fort-worth
-fresno
 georgetown
 hartford
 indianapolis
