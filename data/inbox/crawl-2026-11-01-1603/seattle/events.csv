@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Monday Mahj,Seattle,WA,2026-11-02,19:00,,Natalie's House,Queen Anne Mahj,,OPEN_PLAY,FALSE,,https://queen-anne-mahj.bamgoodtime.com/events/21c77e72-32bd-475d-b227-f6c89cc3c9fc,https://queen-anne-mahj.bamgoodtime.com/events/21c77e72-32bd-475d-b227-f6c89cc3c9fc,2026-11-01,NEEDS_REVIEW
+Daytime American Mahjong Free Play,Seattle,WA,2026-12-28,13:00,,"SJCC Makom, WA",American Mahjong at the J,,OPEN_PLAY,FALSE,,https://sjcc.org/event/daytime-drop-in-mahjong/2026-12-28/,https://sjcc.org/event/daytime-drop-in-mahjong/2026-12-28/,2026-11-01,ACTIVE
+Evening Mahjong Free Play,Seattle,WA,2026-12-28,18:00,,"SJCC Makom, WA",American Mahjong at the J,,OPEN_PLAY,FALSE,,https://sjcc.org/event/evening-mahjong-free-play/2026-12-28/,https://sjcc.org/event/evening-mahjong-free-play/2026-12-28/,2026-11-01,ACTIVE

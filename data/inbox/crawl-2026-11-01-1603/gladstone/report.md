@@ -1,0 +1,66 @@
+# Gladstone, MO: event crawler (2026-11-01)
+
+## New events
+- 2026-11-03 12:00 Beginner-Friendly Open Play — Event #1 (The Lucky League) [ACTIVE]
+- 2026-11-04 12:00 Wednesday Open Play — Event #1 (The Lucky League) [ACTIVE]
+- 2026-11-04 18:30 Wednesday Open Play — Event #3 (The Lucky League) [ACTIVE]
+- 2026-11-07 12:00 Saturday Open Play — Event #1 (The Lucky League) [ACTIVE]
+- 2026-11-07 16:00 Saturday Open Play — Event #3 (The Lucky League) [ACTIVE]
+- 2026-11-10 12:00 Beginner-Friendly Open Play — Event #2 (The Lucky League) [ACTIVE]
+- 2026-11-11 12:00 Wednesday Open Play — Event #4 (The Lucky League) [ACTIVE]
+- 2026-11-11 14:00 Wednesday Open Play — Event #5 (The Lucky League) [ACTIVE]
+- 2026-11-11 18:30 Wednesday Open Play — Event #6 (The Lucky League) [ACTIVE]
+- 2026-11-14 12:00 Saturday Open Play — Event #4 (The Lucky League) [ACTIVE]
+- 2026-11-14 14:00 Saturday Open Play — Event #5 (The Lucky League) [ACTIVE]
+- 2026-11-14 16:00 Saturday Open Play — Event #6 (The Lucky League) [ACTIVE]
+- 2026-11-17 12:00 Mahjong 101 (The Lucky League) [ACTIVE]
+- 2026-11-18 12:00 Wednesday Open Play — Event #7 (The Lucky League) [ACTIVE]
+- 2026-11-18 14:00 Wednesday Open Play — Event #8 (The Lucky League) [ACTIVE]
+- 2026-11-18 18:30 Wednesday Open Play — Event #9 (The Lucky League) [ACTIVE]
+- 2026-11-21 12:00 Mahjong 101 (The Lucky League) [ACTIVE]
+- 2026-11-21 12:00 Saturday Open Play — Event #7 (The Lucky League) [ACTIVE]
+- 2026-11-21 14:00 Saturday Open Play — Event #8 (The Lucky League) [ACTIVE]
+- 2026-11-21 16:00 Saturday Open Play — Event #9 (The Lucky League) [ACTIVE]
+- 2026-11-24 12:00 Beginner-Friendly Open Play — Event #3 (The Lucky League) [ACTIVE]
+- 2026-11-25 12:00 Wednesday Open Play — Event #10 (The Lucky League) [ACTIVE]
+- 2026-11-25 14:00 Wednesday Open Play — Event #11 (The Lucky League) [ACTIVE]
+- 2026-11-25 18:30 Wednesday Open Play — Event #12 (The Lucky League) [ACTIVE]
+- 2026-11-28 10:00 Saturday Open Play — Event #10 (The Lucky League) [ACTIVE]
+- 2026-11-28 12:00 Saturday Open Play — Event #11 (The Lucky League) [ACTIVE]
+- 2026-11-28 14:00 Saturday Open Play — Event #12 (The Lucky League) [ACTIVE]
+- 2026-11-28 16:00 Saturday Open Play — Event #13 (The Lucky League) [ACTIVE]
+- 2026-12-01 12:00 Beginner-Friendly Open Play — Event #4 (The Lucky League) [ACTIVE]
+- 2026-12-08 12:00 Mahjong 201 (The Lucky League) [ACTIVE]
+- 2026-12-08 12:00 Beginner-Friendly Open Play — Event #5 (The Lucky League) [ACTIVE]
+- 2026-12-12 12:00 Mahjong 201 (The Lucky League) [ACTIVE]
+- 2026-12-15 10:00 Tuesday Morning League — Event #6 (The Lucky League) [ACTIVE]
+- 2026-12-15 12:00 Beginner-Friendly Open Play — Event #6 (The Lucky League) [ACTIVE]
+- 2026-12-22 12:00 Beginner-Friendly Open Play — Event #7 (The Lucky League) [ACTIVE]
+- 2026-12-29 12:00 Beginner-Friendly Open Play — Event #8 (The Lucky League) [ACTIVE]
+
+## Notes
+- Possibly gone: "Tuesday Open Play — Event #2" on 2026-11-03 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Thursday Open Play — Event #2" on 2026-11-05 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Friday Open Play — Event #2" on 2026-11-06 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Tuesday Open Play — Event #3" on 2026-11-10 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Wednesday Open Play — Event #3" on 2026-11-11 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Thursday Open Play — Event #3" on 2026-11-12 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Friday Open Play — Event #3" on 2026-11-13 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Tuesday Open Play — Event #4" on 2026-11-17 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Wednesday Open Play — Event #4" on 2026-11-18 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Thursday Open Play — Event #4" on 2026-11-19 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Friday Open Play — Event #4" on 2026-11-20 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Tuesday Open Play — Event #5" on 2026-11-24 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Wednesday Open Play — Event #5" on 2026-11-25 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Tuesday Open Play — Event #6" on 2026-12-01 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Wednesday Open Play — Event #6" on 2026-12-02 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Thursday Open Play — Event #5" on 2026-12-03 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Friday Open Play — Event #6" on 2026-12-04 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Tuesday Open Play — Event #7" on 2026-12-08 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Wednesday Open Play — Event #7" on 2026-12-09 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Thursday Open Play — Event #6" on 2026-12-10 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Friday Open Play — Event #7" on 2026-12-11 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Tuesday Open Play — Event #8" on 2026-12-15 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Wednesday Open Play — Event #8" on 2026-12-16 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Thursday Open Play — Event #7" on 2026-12-17 (The Lucky League) is not in The Lucky League's current listing
+- Possibly gone: "Friday Open Play — Event #8" on 2026-12-18 (The Lucky League) is not in The Lucky League's current listing
