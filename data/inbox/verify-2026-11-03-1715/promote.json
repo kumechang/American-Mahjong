@@ -1,0 +1,20 @@
+[
+ {
+  "type": "club",
+  "slug": "mobile-bam-bay-mahj",
+  "name": "Bam Bay Mahj",
+  "city": "Mobile",
+  "state": "AL",
+  "evidence": "• Bring your NMJL card, small side table & Angel Tree donation.",
+  "url": "https://bam-bay-mahj.bamgoodtime.com/events/9b882340-2bea-445e-9471-bd7ce78129f4"
+ },
+ {
+  "type": "club",
+  "slug": "mountain-home-laughing-with-friends",
+  "name": "Laughing With Friends",
+  "city": "Mountain Home",
+  "state": "AR",
+  "evidence": "NMJL Meetup Event",
+  "url": "https://laughing-with-friends.bamgoodtime.com"
+ }
+]
