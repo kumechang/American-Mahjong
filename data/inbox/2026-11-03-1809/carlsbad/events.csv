@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+CLASS - Mahj 101,Carlsbad,CA,2026-11-04,18:00,21:00,Mahjong Republic,Mahjong Republic,,LESSON,TRUE,,https://www.tickettailor.com/events/mahjongrepublic/2102039,https://www.tickettailor.com/events/mahjongrepublic/2102039,2026-11-04,ACTIVE
+Beyond the Tiles: Mahjong + Mimosas + The Connection Factor,Carlsbad,CA,2026-11-14,10:30,12:30,Mahjong Republic,Mahjong Republic,,SOCIAL,FALSE,,https://www.tickettailor.com/events/mahjongrepublic/2405160,https://www.tickettailor.com/events/mahjongrepublic/2405160,2026-11-04,NEEDS_REVIEW
+Holiday Tournament,Carlsbad,CA,2026-12-12,11:00,16:30,Mahjong Republic,Mahjong Republic,,TOURNAMENT,FALSE,,https://www.tickettailor.com/events/mahjongrepublic/2310857,https://www.tickettailor.com/events/mahjongrepublic/2310857,2026-11-04,NEEDS_REVIEW
