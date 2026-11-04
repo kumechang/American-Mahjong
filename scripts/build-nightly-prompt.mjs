@@ -250,6 +250,7 @@ if (mode === "verify") {
 - **確認できた**: clubs.csv か instructors.csv に、**一覧と完全に同じ name** で、status を \`ACTIVE\` にして送る。description / notes に、引用した一文を書く。見つけた今後のイベントは events.csv に入れる(club_name / instructor_name は一覧と同じ)。
 - **別の種類・閉鎖・会員限定と分かった**: 同じ name で \`INACTIVE\` にして送り、理由を report.md に書く。
 - **確認できなかった**: CSV には入れず、report.md の「確認できなかったこと」に、調べたページと、足りない情報を書く(問い合わせが必要なものはそう書く)。
+- **Facebook / Instagram だけ、またはログインが必要で読めない**: 上と同じく、report.md に \`## Chrome調査が必要\` という見出しをつくり、1 団体 1 行で \`- 一覧と完全に同じ name | club か instructor | City, ST | URL | 理由\` と書く(後で人が Chrome で読む)。
 推測で ACTIVE にしない。` ;
   focus = picked.map((x) => `- ${x.c.name}: いま ACTIVE ${x.act} 行。確認待ちが ${x.review.length} 件。確認できたものが増えれば公開基準に届く。`).join("\n");
 } else if (mode === "find") {
@@ -278,6 +279,7 @@ if (mode === "verify") {
 - **確認できた**: clubs.csv か instructors.csv に、**一覧と完全に同じ name** で、status を \`ACTIVE\` にして送る。**website 列に団体自身のページの URL、source_url 列に一文が載っているページの URL** を入れ、description / notes に引用した一文を書く。見つけた今後のイベントは events.csv に入れる。
 - **別の種類・閉鎖・会員限定・個人宅だけ**: 同じ name で \`INACTIVE\` にして送り、理由を report.md に書く。
 - **自分のページが見つからない、または American の明記がない**: CSV には入れず、report.md の「確認できなかったこと」に、調べた検索語とページを書く。
+- **見つかった自分のページが Facebook / Instagram だけ、またはログインが必要で読めない**: CSV には入れず、report.md に \`## Chrome調査が必要\` という見出しをつくり、1 団体 1 行で \`- 一覧と完全に同じ name | club か instructor | City, ST | 見つけたページの URL | 理由(Facebook のみ、ログイン壁 など)\` と書く(後で人が Chrome で読む。ここに書いた団体は、あとで自動的に集められる)。
 推測で ACTIVE にしない。個人の電話番号・メールアドレスは書かない。` ;
   focus = places.map((x) => `- ${x.c.name}: いま ACTIVE ${x.act} 行。自分のページが見つかって確認できれば公開基準に近づく。`).join("\n");
 } else if (mode === "events") {
