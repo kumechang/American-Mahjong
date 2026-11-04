@@ -1,8 +1,6 @@
-aurora
 birmingham
 cumming
 fort-worth
-fresno
 georgetown
 hartford
 indianapolis
@@ -15,3 +13,4 @@ new-york
 orlando
 salt-lake-city
 washington
+whitehouse-station
