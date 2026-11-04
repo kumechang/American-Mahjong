@@ -4,7 +4,8 @@
 //
 // The daily crawlers (scripts/crawl-events.mjs, scripts/discover-clubs.mjs) collect dates and
 // leads cheaply; the AI is for judgment. Modes, over a week:
-//   - verify (4 nights): groups the crawlers left as NEEDS_REVIEW, in the cities closest to
+//   - find: owners only a directory knows (no page of their own): find the page, quote American / NMJL
+//   - verify (3 of 8 runs a day): groups the crawlers left as NEEDS_REVIEW, in the cities closest to
 //     publishing: confirm American / NMJL on the group's own pages and promote to ACTIVE
 //   - cities (2 nights): a place not on the site yet (leads from the directory crawler first,
 //     then data/city-queue.txt), looking outside the platforms the crawlers read
@@ -24,7 +25,7 @@ const out = arg("out");
 const forced = arg("mode");
 const today = arg("today") ?? new Date().toISOString().slice(0, 10);
 if (!out) { console.error("--out=FILE is required"); process.exit(2); }
-if (forced && !["verify", "events", "cities"].includes(forced)) { console.error("--mode must be verify, events or cities"); process.exit(2); }
+if (forced && !["verify", "find", "events", "cities"].includes(forced)) { console.error("--mode must be verify, find, events or cities"); process.exit(2); }
 
 const q = (sql) =>
   JSON.parse(
@@ -33,7 +34,6 @@ const q = (sql) =>
 
 const MIN_ROWS = 5;
 const SOON = new Date(Date.parse(today) + 14 * 864e5).toISOString().slice(0, 10);
-const dayOfYear = Math.floor((Date.parse(today) - Date.parse(today.slice(0, 4) + "-01-01")) / 864e5) + 1;
 
 const cities = q(`SELECT id, slug, name, state, published FROM City ORDER BY name`);
 const clubs = q(`SELECT cityId, name, status FROM Club ORDER BY status, name`);
@@ -142,6 +142,20 @@ const verifyQueue = [...verifiable.filter((x) => !recent.has(x.c.slug)), ...veri
 // Owners the server cannot learn anything from (a Bam Good Time page with no sessions and no American wording): ask the owner instead.
 const outreach = verifyAll.flatMap((x) => x.unreadable.map((o) => `${x.c.name}, ${x.c.state}: ${o.name} ${ownUrl(o)}`));
 
+// ---------- find queue: NEEDS_REVIEW owners that only a directory knows (no page of their own, 650-odd clubs and most teachers) ----------
+// The server cannot "verify" what has no address, so it is asked to find the owner's own page by searching name + town. Cities closest to
+// publishing come first: published ones about to fall under five rows, then cities with 2-4 active rows, then the rest by number of leads.
+const FIND_OWNERS = 8, FIND_PER_CITY = 4;
+const findByCity = cities
+  .map((c) => {
+    const act = stats(c).n;
+    const leads = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && !ownUrl(o));
+    return { c, act, leads, atRisk: Boolean(c.published) && atRiskAll.some((r) => r.c.id === c.id) };
+  })
+  .filter((x) => x.leads.length > 0 && !cooldown.has(x.c.slug))
+  .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(b.act >= 2 && b.act < MIN_ROWS) - Number(a.act >= 2 && a.act < MIN_ROWS) || b.act - a.act || b.leads.length - a.leads.length);
+const findQueue = [...findByCity.filter((x) => !recent.has(x.c.slug)), ...findByCity.filter((x) => recent.has(x.c.slug))];
+
 // ---------- discovery leads: places the directory crawler found whose club says it plays American mahjong ----------
 function parseCsv(text) {
   const rows = []; let row = [], cell = "", inQ = false;
@@ -195,20 +209,22 @@ const leadQueue = [...leadPlaces.entries()]
 const explore = [...leadQueue, ...queueOrdered].filter((k, i, all) => all.indexOf(k) === i);
 
 // ---------- today's mode ----------
-// A week: three nights of verification (turn the crawlers' NEEDS_REVIEW rows into confirmed ones; the owner's own page is also
-// checked by scripts/verify-owners.mjs), three nights exploring places not on the site yet, one night for events the crawlers cannot read.
-const week = ["verify", "verify", "verify", "cities", "cities", "cities", "events"]; // 3 nights verifying, 3 nights on places not on the site yet, 1 on events
-const has = { verify: verifyQueue.length > 0, cities: explore.length > 0, events: atRisk.length > 0 };
+// The workflow runs about eight times a day (every three hours), so the mode follows the run, not the date: a day used to be one mode, and
+// all eight runs asked for the same towns. Eight slots: three nights of verification (the owner has a page of its own: confirm American / NMJL),
+// two of finding the page of owners that only a directory knows, two exploring places not on the site yet, one for events the crawlers cannot read.
+// A slot with nothing to do hands over to the next one. (scripts/verify-owners.mjs also checks the owner's own page without the AI.)
+const SLOTS = ["verify", "find", "cities", "verify", "find", "cities", "events", "verify"];
+const slot = Number(arg("slot") ?? Math.floor(new Date().getUTCHours() / 3)) % SLOTS.length;
+const has = { verify: verifyQueue.length > 0, find: findQueue.length > 0, cities: explore.length > 0, events: atRisk.length > 0 };
 let mode = forced;
 if (!mode) {
-  const start = dayOfYear % 7;
-  for (let i = 0; i < 7 && !mode; i++) {
-    const m = week[(start + i) % 7];
+  for (let i = 0; i < SLOTS.length && !mode; i++) {
+    const m = SLOTS[(slot + i) % SLOTS.length];
     if (has[m]) mode = m;
   }
 }
 if (!mode || !has[mode]) {
-  console.log(`# Nightly research ${today}\n\nNothing to do (verify: ${verifyQueue.length}, cities: ${explore.length}, at-risk: ${atRisk.length}).`);
+  console.log(`# Nightly research ${today}\n\nNothing to do (verify: ${verifyQueue.length}, find: ${findQueue.length}, cities: ${explore.length}, at-risk: ${atRisk.length}).`);
   process.exit(3);
 }
 
@@ -236,6 +252,34 @@ if (mode === "verify") {
 - **確認できなかった**: CSV には入れず、report.md の「確認できなかったこと」に、調べたページと、足りない情報を書く(問い合わせが必要なものはそう書く)。
 推測で ACTIVE にしない。` ;
   focus = picked.map((x) => `- ${x.c.name}: いま ACTIVE ${x.act} 行。確認待ちが ${x.review.length} 件。確認できたものが増えれば公開基準に届く。`).join("\n");
+} else if (mode === "find") {
+  const picked = [];
+  for (const x of findQueue) {
+    for (const o of x.leads.slice(0, FIND_PER_CITY)) if (picked.length < FIND_OWNERS) picked.push({ x, o });
+    if (picked.length >= FIND_OWNERS) break;
+  }
+  const places = [...new Map(picked.map((p) => [p.x.c.id, p.x])).values()];
+  targets = places.map((x) => `- ${x.c.name}, ${x.c.state}`).join("\n");
+  for (const x of places) {
+    const act = owners.filter((o) => o.cityId === x.c.id && o.status === "ACTIVE");
+    const mine = picked.filter((p) => p.x.c.id === x.c.id).map((p) => p.o);
+    existing += `### ${x.c.name}, ${x.c.state}  (ACTIVE ${x.act} 行。公開には5行必要${x.c.published ? "。公開中だが基準を割りそう" : ""})\nすでに ACTIVE(再送しない):\n${fmt(act, (o) => `- ${o.name} [${o.type}]`)}\n自分のページを探してほしい団体・講師(ディレクトリにだけ載っている):\n${fmt(mine, (o) => `- ${o.name} [${o.type}] ${(o.description ?? "").replace(/\s+/g, " ").slice(0, 200)}`)}\n\n`;
+  }
+  modeText = `## 今夜のモード: 自分のページを探す(ディレクトリにだけ載っている団体)
+
+下の団体・講師は、BamBuddies、Mahjong 4 Friends、MahJongg Maven などの**ディレクトリにだけ**載っていて、団体自身のページの URL がわからないため、非公開(NEEDS_REVIEW)で止まっている。**今夜の仕事は、その団体自身のページを見つけて、American / NMJL の明記を確認すること**。新しい団体を探すことが目的ではない。以降の項目と食い違う場合は、この節を優先する。
+
+各団体・講師について:
+1. 名前と町で WebSearch して、**その団体自身のページ**を探す(公式サイト、予約ページ、会場や主催者のイベントページ、Facebook / Instagram のページ)。ディレクトリ、ニュース記事、他人のまとめページは、団体自身のページではない。
+2. 見つかったページに American / NMJL / National Mah Jongg League の**明記**があれば、その一文を**一字一句そのまま**引用する。「mahjong」とだけ書いてあるものは確認できたことにしない。riichi / Hong Kong / Chinese だけのものは INACTIVE。
+3. 実際に参加できるか(会員限定でない、閉鎖していない、今も活動している)、今後の日付・時刻・会場のあるセッションがあるかを確かめる。
+
+結果の送り方:
+- **確認できた**: clubs.csv か instructors.csv に、**一覧と完全に同じ name** で、status を \`ACTIVE\` にして送る。**website 列に団体自身のページの URL、source_url 列に一文が載っているページの URL** を入れ、description / notes に引用した一文を書く。見つけた今後のイベントは events.csv に入れる。
+- **別の種類・閉鎖・会員限定・個人宅だけ**: 同じ name で \`INACTIVE\` にして送り、理由を report.md に書く。
+- **自分のページが見つからない、または American の明記がない**: CSV には入れず、report.md の「確認できなかったこと」に、調べた検索語とページを書く。
+推測で ACTIVE にしない。個人の電話番号・メールアドレスは書かない。` ;
+  focus = places.map((x) => `- ${x.c.name}: いま ACTIVE ${x.act} 行。自分のページが見つかって確認できれば公開基準に近づく。`).join("\n");
 } else if (mode === "events") {
   const picked = atRisk.slice(0, 4);
   targets = picked.map((x) => `- ${x.c.name}, ${x.c.state}`).join("\n");
@@ -285,4 +329,4 @@ swap("EXISTING", existing);
 swap("FOCUS", `### 今夜の重点\n\n${focus}`);
 writeFileSync(out, s);
 
-console.log(`# Nightly research ${today}\n\n- Mode: **${mode}**\n- Cities: ${targets.replace(/^- /gm, "").split("\n").join("; ")}\n- Verify queue: ${verifyQueue.length} cities; lead places: ${leadQueue.length}\n- At-risk published cities: ${atRisk.length} (${atRisk.slice(0, 6).map((x) => `${x.c.name} ${x.n}→${x.after}`).join(", ")})\n- City queue left: ${queue.length}\n- Resting after an unconfirmed night (${COOLDOWN_DAYS} days): ${[...cooldown].join(", ") || "none"}\n- Outreach candidates (nothing for the server to read; ${outreach.length}): ${outreach.slice(0, 12).join("; ") || "none"}\n- Prompt: ${s.length} characters`);
+console.log(`# Nightly research ${today}\n\n- Mode: **${mode}**\n- Cities: ${targets.replace(/^- /gm, "").split("\n").join("; ")}\n- Slot: ${slot}\n- Verify queue: ${verifyQueue.length} cities; find queue: ${findQueue.length} cities; lead places: ${leadQueue.length}\n- At-risk published cities: ${atRisk.length} (${atRisk.slice(0, 6).map((x) => `${x.c.name} ${x.n}→${x.after}`).join(", ")})\n- City queue left: ${queue.length}\n- Resting after an unconfirmed night (${COOLDOWN_DAYS} days): ${[...cooldown].join(", ") || "none"}\n- Outreach candidates (nothing for the server to read; ${outreach.length}): ${outreach.slice(0, 12).join("; ") || "none"}\n- Prompt: ${s.length} characters`);
