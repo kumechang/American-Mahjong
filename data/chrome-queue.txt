@@ -1,0 +1,4 @@
+# Groups to be read later in a logged-in Chrome window (Facebook / Instagram pages, login walls). One per line:
+#   - <name exactly as listed on the site> | <club|instructor> | <City, ST> | <URL> | <why>
+# Lines under "## Chrome調査が必要" in the research server's report.md files are collected automatically (scripts/chrome-queue.mjs);
+# add by hand here what you notice yourself. Settled rows (ACTIVE / INACTIVE) and names already put to a Chrome window drop out by themselves.
