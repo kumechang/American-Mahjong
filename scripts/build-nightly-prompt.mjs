@@ -64,21 +64,24 @@ if (existsSync("data/inbox")) {
     for (const slug of readdirSync(`data/inbox/${run}`)) recent.add(slug);
   }
 }
-// A city the server looked at and could confirm nothing in (its folder has a report but no CSV) rests for COOLDOWN_DAYS: asking again
-// tomorrow about the same Bam Good Time page with no events and no American wording only burns tokens. A later run that does produce a
-// CSV for the city ends the rest. The folders come from main plus, in the nightly workflow, from the branches of PRs still open.
+// A place the server has visited rests, so one town does not take the slot night after night (Kaka'ako, Moiliili and UH Manoa came back
+// eight times in a week). After a visit that produced nothing (a report but no CSV) it rests COOLDOWN_DAYS; after one that produced rows
+// it rests RESULT_REST_DAYS, long enough for the result to be imported (once imported the city is on the site and drops out of the queue anyway).
+// The folders come from main plus, in the nightly workflow, from the branches of PRs still open.
 const COOLDOWN_DAYS = 14;
+const RESULT_REST_DAYS = 5;
 const cooldown = new Set();
 if (existsSync("data/inbox")) {
   for (const run of readdirSync("data/inbox").filter((d) => /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d)).sort()) {
-    if ((Date.parse(today) - Date.parse(run.slice(0, 10))) / 864e5 >= COOLDOWN_DAYS) continue;
+    const age = (Date.parse(today) - Date.parse(run.slice(0, 10))) / 864e5;
     for (const slug of readdirSync(`data/inbox/${run}`, { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name)) {
       const files = readdirSync(`data/inbox/${run}/${slug}`);
-      if (files.some((f) => /^(clubs|instructors|events)\.csv$/.test(f))) cooldown.delete(slug); else cooldown.add(slug);
+      const gotRows = files.some((f) => /^(clubs|instructors|events)\.csv$/.test(f));
+      if (age < (gotRows ? RESULT_REST_DAYS : COOLDOWN_DAYS)) cooldown.add(slug);
     }
   }
 }
-const slugOf = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const slugOf = (name) => name.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/['\u2019\u02bb\u02bc`]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const atRiskAll = cities
   .filter((c) => c.published)
@@ -184,7 +187,11 @@ if (existsSync("data/inbox")) {
     }
   }
 }
-const leadQueue = [...leadPlaces.entries()].filter(([k, l]) => l.some((x) => x.american) && !cooldown.has(slugOf(k.split(",")[0]))).map(([k]) => k);
+// Best first: places whose leads say American most often, then the ones with the most leads (a town with one lead comes last).
+const leadQueue = [...leadPlaces.entries()]
+  .filter(([k, l]) => l.some((x) => x.american) && !cooldown.has(slugOf(k.split(",")[0])))
+  .sort((a, b) => b[1].filter((x) => x.american).length - a[1].filter((x) => x.american).length || b[1].length - a[1].length)
+  .map(([k]) => k);
 const explore = [...leadQueue, ...queueOrdered].filter((k, i, all) => all.indexOf(k) === i);
 
 // ---------- today's mode ----------
