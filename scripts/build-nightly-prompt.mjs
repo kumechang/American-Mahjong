@@ -55,13 +55,15 @@ const stats = (c) => {
 
 // Cities the server already looked at in the last few days (folders in data/inbox/<date-time>/<slug>/)
 // go to the back of the line, so one stubborn city doesn't take the slot every night.
+// The server sometimes nests the folder (data/inbox/<run>/data/inbox/<run>/<city>/...): read through that too, or those towns never rest.
+const runBase = (run) => (existsSync(`data/inbox/${run}/data/inbox/${run}`) ? `data/inbox/${run}/data/inbox/${run}` : `data/inbox/${run}`);
 const RECENT_DAYS = 3;
 const recent = new Set();
 if (existsSync("data/inbox")) {
   for (const run of readdirSync("data/inbox")) {
     const m = run.match(/^(\d{4}-\d{2}-\d{2})/);
     if (!m || (Date.parse(today) - Date.parse(m[1])) / 864e5 >= RECENT_DAYS) continue;
-    for (const slug of readdirSync(`data/inbox/${run}`)) recent.add(slug);
+    for (const slug of readdirSync(runBase(run))) recent.add(slug);
   }
 }
 // A place the server has visited rests, so one town does not take the slot night after night (Kaka'ako, Moiliili and UH Manoa came back
@@ -74,8 +76,8 @@ const cooldown = new Set();
 if (existsSync("data/inbox")) {
   for (const run of readdirSync("data/inbox").filter((d) => /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d)).sort()) {
     const age = (Date.parse(today) - Date.parse(run.slice(0, 10))) / 864e5;
-    for (const slug of readdirSync(`data/inbox/${run}`, { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name)) {
-      const files = readdirSync(`data/inbox/${run}/${slug}`);
+    for (const slug of readdirSync(runBase(run), { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name)) {
+      const files = readdirSync(`${runBase(run)}/${slug}`);
       const gotRows = files.some((f) => /^(clubs|instructors|events)\.csv$/.test(f));
       if (age < (gotRows ? RESULT_REST_DAYS : COOLDOWN_DAYS)) cooldown.add(slug);
     }
