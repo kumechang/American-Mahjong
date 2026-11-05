@@ -11,7 +11,7 @@ import { pluralize } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Find American Mahjong Near You",
   description:
-    "Find beginner-friendly American Mahjong clubs, lessons, instructors, open play, and events by city.",
+    "Find beginner-friendly American Mahjong clubs, lessons, instructors, open play and events by city. Compare venues and times, and see how to join a table.",
 };
 
 // The D1 binding is only available at request time (in the Workers

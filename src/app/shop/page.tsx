@@ -6,7 +6,7 @@ import { products } from "@/db/schema";
 export const metadata: Metadata = {
   title: "American Mahjong Sets & Supplies",
   description:
-    "Curated American Mahjong sets, tiles, cards, and accessories for beginners.",
+    "Curated American Mahjong sets, tiles, cards and accessories for beginners. See what you need for your first game, from a full set to the small extras.",
 };
 
 // The D1 binding is only available at request time (in the Workers

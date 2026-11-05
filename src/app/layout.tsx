@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     template: "%s | American Mahjong Guide",
   },
   description:
-    "Learn American Mahjong, find beginner-friendly clubs, lessons, and events near you, and start playing.",
+    "Learn American Mahjong, find beginner-friendly clubs, lessons, and events near you, and start playing. Guides, rules and a city-by-city directory of groups.",
   // Share image: see docs/OG_IMAGE_PROMPTS.md. Pages that define their own
   // openGraph replace this object, so keep images in sync if that happens.
   openGraph: {

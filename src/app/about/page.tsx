@@ -4,7 +4,7 @@ import { ContactLink } from "@/components/ContactLink";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "How American Mahjong Guide researches and verifies the clubs, lessons, and events it lists.",
+    "How American Mahjong Guide researches and verifies the clubs, lessons, and events it lists, and what a group must show before it is listed on the site.",
 };
 
 export default function AboutPage() {

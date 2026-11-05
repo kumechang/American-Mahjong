@@ -9,7 +9,7 @@ import { StateTileMap, cityCountsByState } from "@/components/StateTileMap";
 export const metadata: Metadata = {
   title: "American Mahjong by City",
   description:
-    "Find beginner-friendly American Mahjong clubs, lessons, and events in your city.",
+    "Browse American Mahjong clubs, lessons, instructors and events by city. Every listing is checked against the group's own page, with venues, times and contacts.",
 };
 
 // The D1 binding is only available at request time (in the Workers
