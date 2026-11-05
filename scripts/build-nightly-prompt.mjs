@@ -85,6 +85,13 @@ if (existsSync("data/inbox")) {
 }
 const slugOf = (name) => name.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/['\u2019\u02bb\u02bc`]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+// Cities whose pages get many Search Console impressions at a poor position (data/seo-priority-cities.txt): researched first, after at-risk cities.
+const seoPriority = new Set(
+  existsSync("data/seo-priority-cities.txt")
+    ? readFileSync("data/seo-priority-cities.txt", "utf8").split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#"))
+    : [],
+);
+
 const atRiskAll = cities
   .filter((c) => c.published)
   .map((c) => ({ c, ...stats(c) }))
@@ -129,7 +136,7 @@ const verifyAll = cities
     const unreadable = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && ownUrl(o) && !workable(o));
     return { c, act, review, unreadable };
   })
-  .filter((x) => x.act < MIN_ROWS || atRiskAll.some((r) => r.c.id === x.c.id))
+  .filter((x) => x.act < MIN_ROWS || atRiskAll.some((r) => r.c.id === x.c.id) || seoPriority.has(x.c.slug))
   .filter((x) => x.review.length > 0 || x.unreadable.length > 0)
   .map((x) => {
     // confirming a group also lets its dated sessions go ACTIVE, so they count towards the five rows
@@ -138,7 +145,7 @@ const verifyAll = cities
   })
   // 1) published cities about to fall under five rows, 2) the rest; inside each: ones that can reach five, then most dated sessions waiting
   .map((x) => ({ ...x, atRisk: Boolean(x.c.published) && atRiskAll.some((r) => r.c.id === x.c.id) }))
-  .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(b.reachable) - Number(a.reachable) || b.dated - a.dated || b.act - a.act || b.review.length - a.review.length);
+  .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(seoPriority.has(b.c.slug)) - Number(seoPriority.has(a.c.slug)) || Number(b.reachable) - Number(a.reachable) || b.dated - a.dated || b.act - a.act || b.review.length - a.review.length);
 const verifiable = verifyAll.filter((x) => x.review.length > 0 && !cooldown.has(x.c.slug));
 const verifyQueue = [...verifiable.filter((x) => !recent.has(x.c.slug)), ...verifiable.filter((x) => recent.has(x.c.slug))];
 // Owners the server cannot learn anything from (a Bam Good Time page with no sessions and no American wording): ask the owner instead.
@@ -155,7 +162,7 @@ const findByCity = cities
     return { c, act, leads, atRisk: Boolean(c.published) && atRiskAll.some((r) => r.c.id === c.id) };
   })
   .filter((x) => x.leads.length > 0 && !cooldown.has(x.c.slug))
-  .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(b.act >= 2 && b.act < MIN_ROWS) - Number(a.act >= 2 && a.act < MIN_ROWS) || b.act - a.act || b.leads.length - a.leads.length);
+  .sort((a, b) => Number(b.atRisk) - Number(a.atRisk) || Number(seoPriority.has(b.c.slug)) - Number(seoPriority.has(a.c.slug)) || Number(b.act >= 2 && b.act < MIN_ROWS) - Number(a.act >= 2 && a.act < MIN_ROWS) || b.act - a.act || b.leads.length - a.leads.length);
 const findQueue = [...findByCity.filter((x) => !recent.has(x.c.slug)), ...findByCity.filter((x) => recent.has(x.c.slug))];
 
 // ---------- discovery leads: places the directory crawler found whose club says it plays American mahjong ----------

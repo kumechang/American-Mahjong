@@ -21,15 +21,15 @@ Stop using one fixed template for every city (`American Mahjong in
 scale). Build title/description from which data types the city
 actually has — never claim a category with zero ACTIVE rows:
 
-- Has clubs + events: `American Mahjong in {City}, {State} — {N} Clubs & Events`
-- Has clubs only: `American Mahjong in {City}, {State} — {N} Beginner-Friendly Clubs`
-- Has instructors only: `American Mahjong Lessons in {City}, {State}`
+- Has lessons (a teacher, a club that offers lessons, or a lesson event) and clubs: `American Mahjong Lessons & Clubs in {City}, {State}`, with ` — {M} Events` when there are events and it fits
+- Has lessons only (instructors): `American Mahjong Lessons in {City}, {State}`
+- Has clubs but nothing that backs "lessons": `American Mahjong Clubs in {City}, {State}`
+
+Why "Lessons" first: the searches that reach city pages are "mahjong lessons in {city}", "learn mahjong in {city}" and "classes near me" (Search Console, 2026-11-05); the old titles ("American Mahjong in {City} — 2 Clubs") contained none of those words. "Lessons" is claimed only when the page has something that backs it.
 
 City titles are set without the site-wide " | American Mahjong Guide" suffix and kept to 60 characters (Bing's site scan flags titles over about 65; the suffix alone is 25). When the full form is longer, it falls back to `American Mahjong in {City}, {State}`, then `Mahjong in {City}, {State}`.
 
-Meta description follows the same rule — describe only what's ACTIVE:
-`{N} beginner-friendly American Mahjong club{s} in {City}, {State}{, plus {M} upcoming events if any}. See venues, times and how to join.`
-(The last sentence names no data type, so it is always true; it keeps the description above the length Bing flags as too short.)
+Meta description is 150-160 characters (Bing's SEO report flags shorter ones as "too short"; Google cuts at about 160). It starts with what is ACTIVE, `{N} beginner-friendly American Mahjong club{s} in {City}, {State}{, plus {M} upcoming events if any}`, and `fillDescription` (`src/lib/seo.ts`) adds the smallest set of true filler sentences ("Find lessons, classes, venues and times." only when the page has lessons; "Listings are checked against each group's own page.", ...) that reaches 150. Fillers name no data type that might be empty.
 Never say "clubs, lessons, and events" if one of those is empty.
 
 ## 2. Every city page needs real, unique content — not just a data list

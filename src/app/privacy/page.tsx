@@ -4,7 +4,7 @@ import { ContactLink } from "@/components/ContactLink";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "What American Mahjong Guide collects when you visit, how it is used, and how to reach us about your information.",
+    "What American Mahjong Guide collects when you visit, how that information is used, and how to reach us with questions or requests about your information.",
 };
 
 const H2 = "text-lg font-semibold text-zinc-900 dark:text-zinc-100";

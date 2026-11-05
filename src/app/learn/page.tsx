@@ -6,7 +6,7 @@ import { readingMinutes } from "@/lib/learn-utils";
 export const metadata: Metadata = {
   title: "Learn American Mahjong",
   description:
-    "Beginner guides to American Mahjong: rules, terms, the Charleston, scoring, jokers and etiquette.",
+    "Beginner guides to American Mahjong: rules, terms, the Charleston, scoring, jokers and etiquette, with diagrams and plain-English explanations for new players.",
 };
 
 export default function LearnPage() {

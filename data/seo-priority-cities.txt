@@ -1,0 +1,15 @@
+# Cities that Google Search Console shows with many impressions but a poor position (2026-11-05): their pages are thin for the size of the
+# city, so the nightly research (verify / find modes) takes them first, right after published cities that are about to fall under five rows.
+# One city slug per line. Review against the Search Console export every few weeks.
+atlanta
+scottsdale
+phoenix
+washington-dc
+chicago
+austin
+nashville
+denver
+houston
+seattle
+baltimore
+san-diego

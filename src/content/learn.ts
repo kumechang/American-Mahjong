@@ -18,6 +18,10 @@ export type LearnTopicMeta = {
   slug: string;
   title: string;
   description: string;
+  // Page title for search results (set without the site suffix, kept under 60 characters); `title` stays the short heading.
+  seoTitle: string;
+  // Meta description for search results: 150-160 characters (Bing flags shorter ones). `description` stays the short card text.
+  seoDescription: string;
 };
 
 // Every Learn topic that should appear in the index page, sitemap, and
@@ -28,43 +32,67 @@ export const LEARN_TOPIC_META: LearnTopicMeta[] = [
   {
     slug: "what-is-american-mahjong",
     title: "What Is American Mahjong?",
+    seoTitle: "What Is American Mahjong? A Beginner's Introduction",
     description:
       "How American Mahjong differs from Chinese and Japanese Riichi Mahjong, and why it's played with a card.",
+    seoDescription:
+      "What is American Mahjong? How it is played with a card, how it differs from Chinese and Japanese Riichi Mahjong, and why it has become so popular in the US.",
   },
   {
     slug: "beginner-guide",
     title: "Beginner Guide",
+    seoTitle: "American Mahjong for Beginners: Your First Game",
     description: "Everything a first-time player needs before their first game.",
+    seoDescription:
+      "A step-by-step walkthrough of your first game of American Mahjong: what to bring, how a round starts, and what really happens at the table, in plain English.",
   },
   {
     slug: "rules",
     title: "Rules",
+    seoTitle: "American Mahjong Rules: A Step-by-Step Guide",
     description: "The full rules of American Mahjong, step by step.",
+    seoDescription:
+      "The full rules of American Mahjong, step by step: setup, dealing, the Charleston, gameplay, going out, dead hands and wall games, with beginner examples.",
   },
   {
     slug: "terms",
     title: "Terms",
+    seoTitle: "American Mahjong Terms and Slang: A Glossary",
     description: "A glossary of American Mahjong terms and slang.",
+    seoDescription:
+      "A plain-English glossary of American Mahjong terms and slang, from the Charleston, jokers and exposures to the card, Bams, Dots and Craks, for new players.",
   },
   {
     slug: "charleston",
     title: "The Charleston",
+    seoTitle: "The Charleston in American Mahjong: How It Works",
     description: "How the tile-passing phase works and basic strategy.",
+    seoDescription:
+      "How the Charleston works in American Mahjong: the tile-passing phase at the start of every game, who passes what and when, and basic strategy for beginners.",
   },
   {
     slug: "scoring",
     title: "Scoring",
+    seoTitle: "American Mahjong Scoring Explained",
     description: "How hands are scored using the National Mah Jongg League card.",
+    seoDescription:
+      "How scoring works in American Mahjong: where point values come from on the National Mah Jongg League card, what it takes to go out, and how points are settled.",
   },
   {
     slug: "jokers",
     title: "Jokers",
+    seoTitle: "Jokers in American Mahjong: How They Work",
     description: "How jokers work and when they can and can't be used.",
+    seoDescription:
+      "How jokers work in American Mahjong: when they can stand in for other tiles, when they can't, and how to trade for one mid-game, with beginner examples.",
   },
   {
     slug: "etiquette",
     title: "Etiquette",
+    seoTitle: "American Mahjong Etiquette for New Players",
     description: "Unwritten rules and etiquette for playing with a new group.",
+    seoDescription:
+      "Unwritten rules and etiquette for American Mahjong with a new group, from table manners and handling tiles to what to expect during your first few games.",
   },
 ];
 

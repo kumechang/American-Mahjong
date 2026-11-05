@@ -10,6 +10,7 @@ import { VerifiedNote } from "@/components/VerifiedNote";
 import { CityHighlights } from "@/components/CityHighlights";
 import { EventList } from "@/components/EventList";
 import { todayEventDate } from "@/lib/city-counts";
+import { fillDescription } from "@/lib/seo";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so this route can't be statically
@@ -84,49 +85,47 @@ async function getNearbyCities(city: { id: string; slug: string; state: string }
 function buildMetadataCopy(city: {
   name: string;
   state: string;
-  clubs: unknown[];
+  clubs: { lessonsAvailable?: boolean | null }[];
   instructors: unknown[];
-  events: unknown[];
+  events: { eventType?: string | null }[];
 }) {
   const hasClubs = city.clubs.length > 0;
   const hasInstructors = city.instructors.length > 0;
   const hasEvents = city.events.length > 0;
+  // "Lessons" is claimed only when something on the page backs it: a teacher, a club that offers lessons, or a lesson event.
+  const hasLessons = hasInstructors || city.clubs.some((c) => c.lessonsAvailable) || city.events.some((e) => e.eventType === "LESSON");
 
-  const titleParts: string[] = [];
-  if (hasClubs) {
-    titleParts.push(`${city.clubs.length} Club${city.clubs.length === 1 ? "" : "s"}`);
-  }
-  if (hasEvents) {
-    titleParts.push(`${city.events.length} Event${city.events.length === 1 ? "" : "s"}`);
-  }
-  if (!hasClubs && hasInstructors) titleParts.push("Lessons");
-
-  // Bing flags titles over about 65 characters, and the site-wide " | American Mahjong Guide" suffix alone is 25: city titles
-  // are set as-is (no suffix) and kept to 60 characters, falling back to shorter forms for long city names.
+  // Searches are "mahjong lessons in {city}" / "learn mahjong in {city}" / "classes near me", so the title leads with Lessons
+  // when the page has them. Bing flags titles over about 65 characters, and the site-wide " | American Mahjong Guide" suffix alone
+  // is 25: city titles are set as-is (no suffix) and kept to 60 characters, falling back to shorter forms for long city names.
   const MAX_TITLE = 60;
   const place = `${city.name}, ${city.state}`;
-  const full = titleParts.length ? `American Mahjong in ${place} — ${titleParts.join(" & ")}` : `American Mahjong in ${place}`;
-  const title = [full, `American Mahjong in ${place}`, `Mahjong in ${place}`].find((t) => t.length <= MAX_TITLE) ?? place;
+  const eventsPart = hasEvents ? ` — ${city.events.length} Event${city.events.length === 1 ? "" : "s"}` : "";
+  const headline = hasLessons && hasClubs ? "American Mahjong Lessons & Clubs" : hasLessons ? "American Mahjong Lessons" : hasClubs ? "American Mahjong Clubs" : "American Mahjong";
+  const candidates = [`${headline} in ${place}${eventsPart}`, `${headline} in ${place}`, `American Mahjong in ${place}`, `Mahjong in ${place}`];
+  const title = candidates.find((t) => t.length <= MAX_TITLE) ?? place;
 
-  const descParts: string[] = [];
+  let lead: string;
   if (hasClubs) {
-    descParts.push(
-      `${city.clubs.length} beginner-friendly American Mahjong club${city.clubs.length === 1 ? "" : "s"} in ${city.name}, ${city.state}`,
-    );
+    lead = `${city.clubs.length} beginner-friendly American Mahjong club${city.clubs.length === 1 ? "" : "s"} in ${place}`;
   } else if (hasInstructors) {
-    descParts.push(`American Mahjong lessons in ${city.name}, ${city.state}`);
+    lead = `American Mahjong lessons in ${place}`;
   } else {
-    descParts.push(`American Mahjong in ${city.name}, ${city.state}`);
+    lead = `American Mahjong in ${place}`;
   }
-  if (hasEvents) {
-    descParts.push(
-      `plus ${city.events.length} upcoming event${city.events.length === 1 ? "" : "s"}`,
-    );
-  }
+  if (hasEvents) lead += `, plus ${city.events.length} upcoming event${city.events.length === 1 ? "" : "s"}`;
 
-  // The closing sentence names no data type, so it stays true for every city; it also keeps the description from being
-  // flagged as too short (Bing Webmaster Tools, SEO Recommendations).
-  return { title: { absolute: title }, description: `${descParts.join(", ")}. See venues, times and how to join.` };
+  // The filler sentences name no data type that might be missing (lessons only when the page has them), so they stay true for every
+  // city; they bring the description to 150-160 characters (Bing Webmaster Tools: "meta description too short").
+  const fillers = [
+    hasLessons ? "Find lessons, classes, venues and times." : "See venues, times and how to join.",
+    "Listings are checked against each group's own page.",
+    "See how to join and what to bring.",
+    "Check dates before you go.",
+    "Compare schedules and prices.",
+    "Find the venue, the time and who to contact.",
+  ];
+  return { title: { absolute: title }, description: fillDescription(lead, fillers) };
 }
 
 export async function generateMetadata({

@@ -7,7 +7,7 @@ import { cities, clubs, instructors } from "@/db/schema";
 export const metadata: Metadata = {
   title: "American Mahjong Community",
   description:
-    "Beginner groups, social Mahjong, women's groups, and online lessons for American Mahjong players.",
+    "Beginner groups, social Mahjong, women's groups and online lessons for American Mahjong players. Find a community to learn with and play with regularly.",
 };
 
 // The D1 binding is only available at request time (in the Workers

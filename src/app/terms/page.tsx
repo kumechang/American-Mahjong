@@ -5,7 +5,7 @@ import { ContactLink } from "@/components/ContactLink";
 export const metadata: Metadata = {
   title: "Terms of Use",
   description:
-    "The terms for using American Mahjong Guide, including how listings work and our affiliate and advertising disclosure.",
+    "The terms for using American Mahjong Guide, including how listings work, what we do and do not guarantee, and our affiliate and advertising disclosure.",
 };
 
 const H2 = "text-lg font-semibold text-zinc-900 dark:text-zinc-100";
