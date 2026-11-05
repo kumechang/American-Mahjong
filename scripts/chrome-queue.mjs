@@ -63,8 +63,9 @@ const sectionOf = (text) => {
 };
 if (existsSync("data/inbox")) {
   for (const run of readdirSync("data/inbox")) {
-    for (const d of readdirSync(`data/inbox/${run}`, { withFileTypes: true }).filter((x) => x.isDirectory())) {
-      const f = `data/inbox/${run}/${d.name}/report.md`;
+    const base = existsSync(`data/inbox/${run}/data/inbox/${run}`) ? `data/inbox/${run}/data/inbox/${run}` : `data/inbox/${run}`;
+    for (const d of readdirSync(base, { withFileTypes: true }).filter((x) => x.isDirectory())) {
+      const f = `${base}/${d.name}/report.md`;
       if (existsSync(f)) parseLines(sectionOf(readFileSync(f, "utf8")), `${run}/${d.name}`);
     }
   }

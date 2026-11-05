@@ -1,0 +1,6 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mah Jongg Social,Johnson County KS,KS,2026-11-14,09:00,12:00,Meadowbrook Park Clubhouse,JCPRD 50 Plus Mah Jongg,,SOCIAL,TRUE,12,https://www.jcprd.com/50Plus,https://www.jcprd.com/CivicAlerts.aspx?AID=1267,2026-11-05,NEEDS_REVIEW
+Mah Jongg 102,Johnson County KS,KS,2026-11-19,10:00,,New Century Fieldhouse,JCPRD 50 Plus Mah Jongg,,LESSON,TRUE,22,https://www.jcprd.com/50Plus,https://www.jcprd.com/CivicAlerts.aspx?AID=1267,2026-11-05,NEEDS_REVIEW
+Winter Tiles Mah Jongg Classic,Johnson County KS,KS,2026-12-01,09:00,14:00,New Century Fieldhouse,JCPRD 50 Plus Mah Jongg,,TOURNAMENT,FALSE,20,https://www.jcprd.com/50Plus,https://www.jcprd.com/CivicAlerts.aspx?AID=1267,2026-11-05,NEEDS_REVIEW
+Mah Jongg 103,Johnson County KS,KS,2026-12-10,10:00,,New Century Fieldhouse,JCPRD 50 Plus Mah Jongg,,LESSON,FALSE,22,https://www.jcprd.com/50Plus,https://www.jcprd.com/CivicAlerts.aspx?AID=1267,2026-11-05,NEEDS_REVIEW
+Sisterhood Beginners' Mah Jongg,Johnson County KS,KS,2026-11-18,18:30,20:00,Congregation B'nai Jehudah,Congregation B'nai Jehudah Sisterhood Mah Jongg,,LESSON,TRUE,,https://bnaijehudah.org/events/categories/sisterhood,https://bnaijehudah.org/events/categories/sisterhood,2026-11-05,NEEDS_REVIEW
