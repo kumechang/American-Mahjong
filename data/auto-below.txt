@@ -1,3 +1,7 @@
 bonita-springs 2026-11-03
 downers-grove 2026-11-03
+fresno 2026-11-04
+haddonfield 2026-11-04
+kansas-city 2026-11-04
 roswell 2026-11-03
+sarasota 2026-11-04
