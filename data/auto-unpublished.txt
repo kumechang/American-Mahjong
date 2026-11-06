@@ -1,5 +1,7 @@
 birmingham
+bonita-springs
 cumming
+downers-grove
 fort-worth
 georgetown
 hartford
@@ -11,6 +13,7 @@ memphis
 new-orleans
 new-york
 orlando
+roswell
 salt-lake-city
 washington
 whitehouse-station
