@@ -1,0 +1,3 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+American Mahjong 101 (3 weeks),Brighton,NY,2026-12-01,14:00,16:00,Erdle Lounge,Louis S. Wolk JCC of Greater Rochester,,LESSON,TRUE,,,https://jccrochester.org/events/american-mahjong-101/,2026-11-06,ACTIVE
+Mah Jongg Club,Brighton,NY,2026-11-10,10:00,12:00,Erdle Lounge,Louis S. Wolk JCC of Greater Rochester,,OPEN_PLAY,FALSE,,,https://jccrochester.org/events/mahjongg-club/,2026-11-06,NEEDS_REVIEW
