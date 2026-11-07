@@ -72,15 +72,24 @@ if (existsSync("data/inbox")) {
 // The folders come from main plus, in the nightly workflow, from the branches of PRs still open.
 const COOLDOWN_DAYS = 14;
 const RESULT_REST_DAYS = 5;
+const LONG_REST_DAYS = 30; // two visits in a row that produced nothing: the town has nothing the server can read; rest longer
 const cooldown = new Set();
 if (existsSync("data/inbox")) {
+  const visits = new Map(); // slug -> [{ age, gotRows }]
   for (const run of readdirSync("data/inbox").filter((d) => /^\d{4}-\d{2}-\d{2}-\d{4}$/.test(d)).sort()) {
     const age = (Date.parse(today) - Date.parse(run.slice(0, 10))) / 864e5;
     for (const slug of readdirSync(runBase(run), { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name)) {
       const files = readdirSync(`${runBase(run)}/${slug}`);
       const gotRows = files.some((f) => /^(clubs|instructors|events)\.csv$/.test(f));
-      if (age < (gotRows ? RESULT_REST_DAYS : COOLDOWN_DAYS)) cooldown.add(slug);
+      if (!visits.has(slug)) visits.set(slug, []);
+      visits.get(slug).push({ age, gotRows });
     }
+  }
+  for (const [slug, list] of visits) {
+    list.sort((x, y) => x.age - y.age); // most recent first
+    const last = list[0];
+    if (last.age < (last.gotRows ? RESULT_REST_DAYS : COOLDOWN_DAYS)) cooldown.add(slug);
+    else if (list.length >= 2 && !list[0].gotRows && !list[1].gotRows && last.age < LONG_REST_DAYS) cooldown.add(slug);
   }
 }
 const slugOf = (name) => name.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/['\u2019\u02bb\u02bc`]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -121,12 +130,34 @@ const ownUrl = (o) => [o.website, o.sourceUrl].find((u) => u && /^https?:\/\//.t
 // Something the server can actually work with: the owner's own site, or a Bam Good Time page that shows dated sessions or American wording.
 // A Bam Good Time page with no sessions and no wording has nothing to read; it goes to the outreach list instead.
 const hasOwnSite = (o) => [o.website, o.sourceUrl].some((u) => u && /^https?:\/\//.test(u) && !DIRECTORY_ONLY.test(u) && !/\.bamgoodtime\.com/.test(u));
-const workable = (o) => Boolean(ownUrl(o)) && (hasOwnSite(o) || (pendingEvents.get(`${o.type}:${o.id}`) ?? 0) > 0 || /american|nmjl|national mah/i.test((o.description ?? "").replace(/American\/NMJL not stated[^.]*\./gi, "")));
+// A Bam Good Time page the crawler already reads, whose American / NMJL check came back empty ("not stated"), cannot be settled by asking the
+// server to read it again: what is missing is another page of the owner's own (a site, Instagram, a venue page), so it goes to the find queue.
+const bgtNotStated = (o) => !hasOwnSite(o) && /\.bamgoodtime\.com/.test([o.website, o.sourceUrl].filter(Boolean).join(" ")) && /(American|NMJL)[^.]{0,20}not stated/i.test(o.description ?? "");
+const workable = (o) => Boolean(ownUrl(o)) && !bgtNotStated(o) && (hasOwnSite(o) || (pendingEvents.get(`${o.type}:${o.id}`) ?? 0) > 0 || /american|nmjl|national mah/i.test((o.description ?? "").replace(/American\/NMJL not stated[^.]*\./gi, "")));
 // the daily crawler already reads these (see scripts/crawl-events.mjs)
 const crawlerPlatform = (o) => {
   const u = [o.website, o.sourceUrl].filter(Boolean).join(" ");
   return /\.bamgoodtime\.com/.test(u) ? "Bam Good Time" : /bookwhen\.com/.test(u) ? "Bookwhen" : /eventbrite\./.test(u) ? "Eventbrite" : /calendly\.com|linktr\.ee/.test(u) ? "Calendly/Linktree" : /meetup\.com/.test(u) ? "Meetup" : null;
 };
+
+// Sites already on the site (ACTIVE owners with a page of their own). The server only got names before and kept returning the same group under
+// another name or town (Blue Tiger in three towns, JCC Milwaukee = Samson JCC, KC Mahjong Club = Mahjong Club KC), so the hosts go into the prompt.
+const SHARED_HOST = /(^|\.)(bamgoodtime\.com|eventbrite\.[a-z.]+|meetup\.com|facebook\.com|instagram\.com|linktr\.ee|bookwhen\.com|calendly\.com|simpletix\.com|tickettailor\.com|active\.com|mahjong4friends\.com|bambuddies\.org|mahjonggmaven\.com)$/i;
+const siteHost = (u) => { try { return new URL(u).hostname.replace(/^www\./, "").toLowerCase(); } catch { return null; } };
+const cityOf = new Map(cities.map((c) => [c.id, c]));
+const activeSites = new Map();
+for (const o of owners.filter((x) => x.status === "ACTIVE")) {
+  for (const u of [o.website, o.sourceUrl]) {
+    const h = u ? siteHost(u) : null;
+    if (!h || SHARED_HOST.test(h) || activeSites.has(h)) continue;
+    const c = cityOf.get(o.cityId);
+    activeSites.set(h, `${o.name} (${c?.name}, ${c?.state})`);
+  }
+}
+const activeSitesBlock = `### すでにサイトにある団体の公式サイト(同じサイトの団体は、別名・別の町でも新しい行として送らない)
+調べた団体のページが、下のドメインと同じなら、CSV には入れず、report.md に \`DUPLICATE_OF: <下の団体名>\` と書く。
+${[...activeSites].slice(0, 450).map(([h, n]) => `- ${h} — ${n}`).join("\n")}
+`;
 
 // ---------- verification candidates: the cities closest to publishing with NEEDS_REVIEW groups to confirm ----------
 const verifyAll = cities
@@ -158,7 +189,7 @@ const FIND_OWNERS = 8, FIND_PER_CITY = 4;
 const findByCity = cities
   .map((c) => {
     const act = stats(c).n;
-    const leads = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && !ownUrl(o));
+    const leads = owners.filter((o) => o.cityId === c.id && o.status === "NEEDS_REVIEW" && (!ownUrl(o) || bgtNotStated(o)));
     return { c, act, leads, atRisk: Boolean(c.published) && atRiskAll.some((r) => r.c.id === c.id) };
   })
   .filter((x) => x.leads.length > 0 && !cooldown.has(x.c.slug))
@@ -273,7 +304,7 @@ if (mode === "verify") {
   for (const x of places) {
     const act = owners.filter((o) => o.cityId === x.c.id && o.status === "ACTIVE");
     const mine = picked.filter((p) => p.x.c.id === x.c.id).map((p) => p.o);
-    existing += `### ${x.c.name}, ${x.c.state}  (ACTIVE ${x.act} 行。公開には5行必要${x.c.published ? "。公開中だが基準を割りそう" : ""})\nすでに ACTIVE(再送しない):\n${fmt(act, (o) => `- ${o.name} [${o.type}]`)}\n自分のページを探してほしい団体・講師(ディレクトリにだけ載っている):\n${fmt(mine, (o) => `- ${o.name} [${o.type}] ${(o.description ?? "").replace(/\s+/g, " ").slice(0, 200)}`)}\n\n`;
+    existing += `### ${x.c.name}, ${x.c.state}  (ACTIVE ${x.act} 行。公開には5行必要${x.c.published ? "。公開中だが基準を割りそう" : ""})\nすでに ACTIVE(再送しない):\n${fmt(act, (o) => `- ${o.name} [${o.type}]`)}\n自分のページを探してほしい団体・講師(ディレクトリにだけ載っている):\n${fmt(mine, (o) => `- ${o.name} [${o.type}]${bgtNotStated(o) ? `(分かっているページ ${ownUrl(o)} には American / NMJL の明記がない。別のページを探す)` : ""} ${(o.description ?? "").replace(/\s+/g, " ").slice(0, 200)}`)}\n\n`;
   }
   modeText = `## 今夜のモード: 自分のページを探す(ディレクトリにだけ載っている団体)
 
@@ -336,7 +367,7 @@ const swap = (name, text) => {
 };
 swap("MODE", modeText);
 swap("TARGETS", targets);
-swap("EXISTING", existing);
+swap("EXISTING", mode === "events" ? existing : `${existing}\n${activeSitesBlock}`);
 swap("FOCUS", `### 今夜の重点\n\n${focus}`);
 writeFileSync(out, s);
 
