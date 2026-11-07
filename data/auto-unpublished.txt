@@ -3,10 +3,13 @@ bonita-springs
 cumming
 downers-grove
 fort-worth
+fresno
 georgetown
+haddonfield
 hartford
 indianapolis
 jacksonville
+kansas-city
 knoxville
 little-elm
 memphis
@@ -15,5 +18,6 @@ new-york
 orlando
 roswell
 salt-lake-city
+sarasota
 washington
 whitehouse-station
