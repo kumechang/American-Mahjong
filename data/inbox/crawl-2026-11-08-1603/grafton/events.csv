@@ -1,0 +1,3 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Guided Play,Grafton,MA,2027-01-06,17:30,,"2 South Street, Grafton MA",Central MA Mahjong,,OPEN_PLAY,FALSE,25,https://central-ma-mahjong.bamgoodtime.com/events/6d28dc83-65a6-4578-986a-b846c01cfcd8,https://central-ma-mahjong.bamgoodtime.com/events/6d28dc83-65a6-4578-986a-b846c01cfcd8,2026-11-08,ACTIVE
+Open Play,Grafton,MA,2027-01-06,17:30,,"2 South Street, Grafton MA",Central MA Mahjong,,OPEN_PLAY,FALSE,10,https://central-ma-mahjong.bamgoodtime.com/events/d5868e2b-183c-410e-a6f1-ebfef86d74d7,https://central-ma-mahjong.bamgoodtime.com/events/d5868e2b-183c-410e-a6f1-ebfef86d74d7,2026-11-08,ACTIVE
