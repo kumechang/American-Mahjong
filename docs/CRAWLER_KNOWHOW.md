@@ -294,3 +294,7 @@ First run (verify-owners over all 267 readable owners): 50 proposals, 49 kept (B
 ## 36. Third batch of `find` results (2026-11-09)
 - Nine PRs (#420-#430, 11-08 to 11-09): one usable row, TC Metro & Suburban Mah Jongg Club (Minneapolis, promoted on its Meetup page, three sessions). Everything else was report-only or NEEDS_REVIEW (Whole Foods Milwaukee, Four Winds Lounge, McLean drop-in, Warren County, the Troy Meetup with a member venue). Friendswood (Mahjong for a Cause) came back again with ten sessions and the "72 hands on the 2026 NMJL Card" quote; it stays held until someone decides whether Hall's Hall is a public venue.
 - The nightly changes of §35 only reached the server from 11-09, so this batch is mostly the old behaviour; judge the yield on the next one.
+
+## 37. First batch after the §35 changes (2026-11-11)
+- 12 PRs (#432-#448, 44 town visits, 26 with a CSV = 59%, up from 38%) and 22 `DUPLICATE_OF` lines in the reports: the site list in the prompt works. Usable: Peace Love Mahjong (Dallas, plus eight sessions), Let's Mahj RVA, La Jolla Community Center, Lucky Tiles (The Atelier), MahjWithMoxi, Newbury Town Library, Denton (new), Pinot's Palette Olathe and the JCCC courses (filed under Kansas City, which is published again). Three groups turned out not to be American (Hidden Tile, San Diego Mahjong Club x3, Seattle Mahjong Club Group) and were retired.
+- The server files Johnson County groups under invented places ("Johnson County KS", "Overland Park"); file them under the metro city (Kansas City) and keep the real town in the address.
