@@ -1,0 +1,30 @@
+# 手作業のマイグレーション(PR を squash マージして main に入るもの)の後に IndexNow を送る。
+# 自動取り込み(タイトルが "Auto-import" で始まる)は auto-import.yml が自分で indexnow.yml を呼ぶので、ここでは送らない。
+# データはデプロイ時のマイグレーションで変わり、sitemap の lastmod もそこで変わるので、デプロイが終わるまで待ってから送る。
+name: indexnow-on-merge
+on:
+  push:
+    branches: [main]
+    paths:
+      - "migrations/**"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: indexnow-on-merge
+  cancel-in-progress: true # 続けてマージされたら、最後の 1 回だけ送れば足りる
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    if: ${{ !startsWith(github.event.head_commit.message, 'Auto-import') }}
+    steps:
+      - name: デプロイが終わるまで待つ
+        run: sleep 540
+      - name: IndexNow を送る
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run indexnow.yml --repo "$GITHUB_REPOSITORY" --ref main -f since=2
