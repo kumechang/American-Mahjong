@@ -1,0 +1,30 @@
+# 夜間リサーチの週次の数字(実行回数・訪問・CSV を出した割合・ACTIVE 行・DUPLICATE_OF・同じ町の再訪・Chrome 調査待ち)を
+# ジョブのサマリーに出す。データは data/inbox と、開いている inbox/* ブランチから読むだけ。
+name: nightly-stats
+on:
+  workflow_dispatch:
+    inputs:
+      weeks:
+        description: "何週間分を出すか"
+        default: "6"
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 集計
+        env:
+          WEEKS: ${{ inputs.weeks }}
+        run: |
+          [[ "${WEEKS:-6}" =~ ^[0-9]{1,2}$ ]] || { echo "不正な weeks"; exit 1; }
+          { echo "## 夜間リサーチの週次集計"; node scripts/nightly-stats.mjs --weeks="${WEEKS:-6}" --branches; } | tee -a "$GITHUB_STEP_SUMMARY"

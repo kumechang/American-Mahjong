@@ -159,6 +159,14 @@ const activeSitesBlock = `### すでにサイトにある団体の公式サイ�
 ${[...activeSites].slice(0, 450).map(([h, n]) => `- ${h} — ${n}`).join("\n")}
 `;
 
+// The server names towns as it likes ("Johnson County KS", "ny", "san-francisco-bay-area", "Newington" for a West Hartford bookshop), and each
+// one had to be re-filed by hand. It now gets the list of cities the site has and must choose from it.
+const cityListBlock = `### サイトにある都市の一覧(CSV の city / state 列は、必ずこの一覧から選ぶ)
+近くの町は、一番近い(同じ metro の)この一覧の都市に入れ、実際の町名は address / description に書く。フォルダ名(city-slug)は対象に渡された都市名のままにする。
+一覧に無い町は、今夜の「対象都市」に渡された新規都市(cities モード)のときだけ、その名前を使う。
+${cities.map((c) => `${c.name}, ${c.state}`).join(" / ")}
+`;
+
 // ---------- verification candidates: the cities closest to publishing with NEEDS_REVIEW groups to confirm ----------
 const verifyAll = cities
   .map((c) => {
@@ -367,7 +375,7 @@ const swap = (name, text) => {
 };
 swap("MODE", modeText);
 swap("TARGETS", targets);
-swap("EXISTING", mode === "events" ? existing : `${existing}\n${activeSitesBlock}`);
+swap("EXISTING", mode === "events" ? `${existing}\n${cityListBlock}` : `${existing}\n${activeSitesBlock}\n${cityListBlock}`);
 swap("FOCUS", `### 今夜の重点\n\n${focus}`);
 writeFileSync(out, s);
 
