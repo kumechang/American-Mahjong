@@ -18,6 +18,8 @@ memphis
 new-orleans
 new-york
 orlando
+palm-beach-gardens
+portsmouth
 roswell
 salt-lake-city
 sarasota
