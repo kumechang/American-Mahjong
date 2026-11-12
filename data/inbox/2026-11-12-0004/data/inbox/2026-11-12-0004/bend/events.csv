@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Open Play American Mahjong,Bend,OR,2026-11-17,17:30,19:30,"698 NW York Drive, Bend, OR",Three Sisters Mahjong,,OPEN_PLAY,TRUE,15,https://three-sisters-mahjong.bamgoodtime.com,https://three-sisters-mahjong.bamgoodtime.com,2026-11-12,ACTIVE
+Mahjong 101: Learn to Play American Mahjong,Bend,OR,2026-11-21,09:30,12:30,"698 NW York Drive, Bend, OR",Three Sisters Mahjong,,LESSON,TRUE,50,https://three-sisters-mahjong.bamgoodtime.com,https://three-sisters-mahjong.bamgoodtime.com,2026-11-12,ACTIVE
+Mahjong 101 Refresher: Guided Play & Confidence Builder,Bend,OR,2026-11-21,13:30,15:30,"698 NW York Drive, Bend, OR",Three Sisters Mahjong,,LESSON,TRUE,30,https://three-sisters-mahjong.bamgoodtime.com,https://three-sisters-mahjong.bamgoodtime.com,2026-11-12,ACTIVE
+Mahjong 101: Learn to Play American Mahjong,Bend,OR,2027-01-02,09:30,12:30,"698 NW York Drive, Bend, OR",Three Sisters Mahjong,,LESSON,TRUE,50,https://three-sisters-mahjong.bamgoodtime.com,https://three-sisters-mahjong.bamgoodtime.com,2026-11-12,ACTIVE
