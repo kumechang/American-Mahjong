@@ -1,0 +1,3 @@
+name,city,state,website,contact,private_lesson,group_lesson,online_lesson,beginner_lesson,price,notes,source_url,last_verified_at,status
+Ling Maris,New York,NY,,,TRUE,TRUE,TRUE,TRUE,,"Manhattan-based. MahjongCompare directory lists style 'American (NMJL)' and price range $25-50/hr; no own site found. Directory-only evidence.",https://mahjongcompare.com/teachers/ling-maris,2026-11-13,NEEDS_REVIEW
+Manhattan Mah Jongg Club (Linda Feinstein),New York,NY,https://www.manhattanmahjonggclub.com/,,TRUE,TRUE,FALSE,TRUE,,"Upper East Side; private and group lessons for beginners and experienced players; 'Mah Jongg Mondays' mentioned. Her own site does not mention American / NMJL, so variant unconfirmed.",https://www.manhattanmahjonggclub.com/,2026-11-13,NEEDS_REVIEW
