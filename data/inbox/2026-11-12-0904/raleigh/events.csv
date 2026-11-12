@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mah Jongg Mondays,Raleigh,NC,2026-11-23,09:30,11:00,Cary Regional Library,Mah Jongg Mondays (Cary Regional Library),,OPEN_PLAY,FALSE,,,https://www.wake.gov/events/mah-jongg-mondays-34,2026-11-12,ACTIVE
+Mah Jongg Mondays,Raleigh,NC,2026-12-14,09:30,11:00,Cary Regional Library,Mah Jongg Mondays (Cary Regional Library),,OPEN_PLAY,FALSE,,,https://www.wake.gov/events/mah-jongg-mondays-35,2026-11-12,ACTIVE
+Mah Jongg Mondays,Raleigh,NC,2026-12-28,09:30,11:00,Cary Regional Library,Mah Jongg Mondays (Cary Regional Library),,OPEN_PLAY,FALSE,,,https://www.wake.gov/events/mah-jongg-mondays-36,2026-11-12,ACTIVE
