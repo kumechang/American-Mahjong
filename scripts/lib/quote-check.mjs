@@ -9,22 +9,24 @@ export const words = (s) => String(s ?? "").toLowerCase().normalize("NFKD").repl
 
 const cache = new Map();
 // -> { text, how: "plain" | "browser" | "none" }
-export async function pageText(url) {
-  if (cache.has(url)) return cache.get(url);
+// forceBrowser: the plain page was readable but lacked the quote (Meetup and many calendars fill the page with JavaScript) -> render it.
+export async function pageText(url, forceBrowser = false) {
+  const key = forceBrowser ? `b|${url}` : url;
+  if (cache.has(key)) return cache.get(key);
   let out = { text: "", how: "none" };
-  try {
+  if (!forceBrowser) try {
     const html = await get(url);
     const t = words(lines(html).join(" "));
     if (t.length > 200) out = { text: t, how: "plain" };
   } catch { /* fall through to the browser */ }
-  if (out.how === "none") {
+  if (out.how === "none" || forceBrowser) {
     try {
       const r = await render(url);
       const t = words(r.lines.join(" "));
       if (t.length > 200) out = { text: t, how: "browser" };
     } catch { /* unreadable */ }
   }
-  cache.set(url, out);
+  cache.set(key, out);
   return out;
 }
 

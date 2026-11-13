@@ -26,6 +26,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { arg, q, parseCsv, csvCell, closeBrowser, venueOk } from "./lib/crawl-lib.mjs";
+import { inboxBranchRoots } from "./lib/inbox-branches.mjs";
 import { pageText, quoteFound, quotesIn, AMERICAN_WORDING } from "./lib/quote-check.mjs";
 
 const verify = !process.argv.includes("--no-verify");
@@ -36,18 +37,7 @@ mkdirSync(outDir, { recursive: true });
 const roots = []; // [{run, dir}]
 if (arg("runs")) for (const r of arg("runs").split(",").map((x) => x.trim()).filter(Boolean)) roots.push({ run: r, dir: join("data/inbox", r) });
 if (process.argv.includes("--branches") || roots.length === 0) {
-  const heads = execFileSync("git", ["ls-remote", "--heads", "origin", "inbox/*"], { encoding: "utf8" }).split("\n").filter(Boolean).map((l) => l.split("\t")[1].replace("refs/heads/", ""));
-  const tmp = mkdtempSync(join(tmpdir(), "inbox-branches-"));
-  for (const b of heads) {
-    try {
-      execFileSync("git", ["fetch", "-q", "origin", b], { stdio: "ignore" });
-      const dir = join(tmp, b.replace(/\//g, "_"));
-      mkdirSync(dir, { recursive: true });
-      const tar = execFileSync("git", ["archive", "FETCH_HEAD", "data/inbox"], { maxBuffer: 200e6 });
-      execFileSync("tar", ["-x", "-C", dir], { input: tar });
-      roots.push({ run: b.replace(/^inbox\//, ""), dir: join(dir, "data/inbox") });
-    } catch (e) { console.error(`skip ${b}: ${e.message.split("\n")[0]}`); }
-  }
+  roots.push(...inboxBranchRoots());
 }
 if (roots.length === 0) { console.error("no inbox runs found (use --runs=<folder,...> or --branches)"); process.exit(3); }
 
@@ -141,12 +131,27 @@ for (const type of ["club", "instructor"]) {
           const t = await pageText(u);
           if (t.how === "none") { unreadable++; continue; }
           if (qs.some((x) => quoteFound(t.text, x))) { ok = true; row.verifiedOn = u; break; }
+          if (t.how === "plain") { const b = await pageText(u, true); if (b.how === "browser" && qs.some((x) => quoteFound(b.text, x))) { ok = true; row.verifiedOn = `${u} (rendered)`; break; } }
         }
         if (!ok) row.why.push(unreadable === pages.length ? "pages unreadable for the quote check (check by hand)" : "quote NOT found on the page");
       }
       if (row.why.length) row.cls = "HOLD";
     }
     rows.push(row);
+  }
+}
+
+// The same owner often comes back in several runs: keep one row per owner (the best class, then the latest run).
+{
+  const rank = { SAME: 9, PROMOTE: 0, NEW: 0, HOLD: 1, RETIRE: 2, LEAD: 3, KNOWN: 4, "DUP-OF": 4, DUP: 5, SKIP: 6 };
+  const groups = new Map();
+  for (const r of rows) {
+    const k = `${r.type}|${r.match?.slug ?? `${norm(r.name)}|${(r.city ?? "").toLowerCase()}`}`;
+    (groups.get(k) ?? groups.set(k, []).get(k)).push(r);
+  }
+  for (const g of groups.values()) {
+    const best = g.reduce((a, b) => (rank[b.cls] <= rank[a.cls] ? b : a));
+    for (const r of g) if (r !== best) r.cls = "SAME";
   }
 }
 
@@ -174,7 +179,7 @@ const tally = (arr) => arr.reduce((m, r) => (m[r.cls] = (m[r.cls] ?? 0) + 1, m),
 const md = [];
 md.push(`# Inbox draft (${roots.map((r) => r.run).join(", ")})`, "");
 md.push(`Owners: ${JSON.stringify(tally(rows))}  ·  Events: ${JSON.stringify(tally(evRows))}  ·  quote check: ${verify ? "on" : "off"}`, "");
-const order = ["PROMOTE", "NEW", "HOLD", "RETIRE", "DUP-OF", "LEAD", "KNOWN", "DUP", "SKIP"];
+const order = ["PROMOTE", "NEW", "HOLD", "RETIRE", "DUP-OF", "LEAD", "KNOWN", "DUP", "SKIP", "SAME"];
 md.push("| class | type | name | city | matches site | why / quote |", "|---|---|---|---|---|---|");
 for (const cls of order) for (const r of rows.filter((x) => x.cls === cls)) {
   const m = r.match ? `${r.match.name} (${r.match.status})` : "—";
