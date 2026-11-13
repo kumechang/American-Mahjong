@@ -38,6 +38,9 @@ export const cities = sqliteTable(
     published: integer("published", { mode: "boolean" })
       .notNull()
       .default(false),
+    // A town folded into a nearby city's area page (data/city-areas.txt): the id of that city. The town's own rows keep
+    // their cityId; the area page shows them, counts them toward its five rows, and the town's URL redirects to it.
+    areaId: text("areaId"),
     createdAt: text("createdAt")
       .notNull()
       .default(sql`CURRENT_TIMESTAMP`),

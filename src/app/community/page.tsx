@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { eq, and, asc, desc, count } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors } from "@/db/schema";
+import { areaPage, onAreaPage } from "@/lib/areas";
 
 export const metadata: Metadata = {
   title: "American Mahjong Community",
@@ -28,22 +29,23 @@ async function citiesWithClubFlag(
 ): Promise<{ top: CityLink[]; total: number }> {
   const rows = await db
     .select({
-      slug: cities.slug,
-      name: cities.name,
-      state: cities.state,
+      slug: areaPage.slug,
+      name: areaPage.name,
+      state: areaPage.state,
       n: count(),
     })
     .from(clubs)
     .innerJoin(cities, eq(clubs.cityId, cities.id))
+    .innerJoin(areaPage, onAreaPage)
     .where(
       and(
         eq(clubs.status, "ACTIVE"),
-        eq(cities.published, true),
+        eq(areaPage.published, true),
         eq(clubs[flag], true),
       ),
     )
-    .groupBy(cities.id)
-    .orderBy(desc(count()), asc(cities.name));
+    .groupBy(areaPage.id)
+    .orderBy(desc(count()), asc(areaPage.name));
 
   return { top: rows.slice(0, TOP_CITIES), total: rows.length };
 }
@@ -60,16 +62,17 @@ export default async function CommunityPage() {
         .select({
           name: instructors.name,
           website: instructors.website,
-          citySlug: cities.slug,
-          cityName: cities.name,
-          cityState: cities.state,
+          citySlug: areaPage.slug,
+          cityName: areaPage.name,
+          cityState: areaPage.state,
         })
         .from(instructors)
         .innerJoin(cities, eq(instructors.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(
           and(
             eq(instructors.status, "ACTIVE"),
-            eq(cities.published, true),
+            eq(areaPage.published, true),
             eq(instructors.onlineLesson, true),
           ),
         )

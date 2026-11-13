@@ -208,9 +208,11 @@ if (parts.length) {
   try { execFileSync("npx", ["wrangler", "d1", "migrations", "apply", "DB", "--local"], { stdio: ["ignore", "pipe", "pipe"] }); }
   catch (e) { console.error(`the new migration does not apply:\n${e.stdout ?? ""}${e.stderr ?? ""}`); try { execFileSync("rm", ["-f", out]); } catch { /* ignore */ } process.exit(1); }
 }
+// Rows are counted over the whole area page (the city and the towns folded into it, City.areaId); a folded town is never published itself.
+const inArea = "cityId IN (SELECT t.id FROM City t WHERE t.id = c.id OR t.areaId = c.id)";
 const counts = q(`SELECT c.slug, c.name, c.state, c.published,
-  (SELECT count(*) FROM Club WHERE cityId = c.id AND status = 'ACTIVE') + (SELECT count(*) FROM Instructor WHERE cityId = c.id AND status = 'ACTIVE') +
-  (SELECT count(*) FROM Event WHERE cityId = c.id AND status = 'ACTIVE' AND eventDate >= '${today} 00:00:00') AS n FROM City c`);
+  (SELECT count(*) FROM Club WHERE ${inArea} AND status = 'ACTIVE') + (SELECT count(*) FROM Instructor WHERE ${inArea} AND status = 'ACTIVE') +
+  (SELECT count(*) FROM Event WHERE ${inArea} AND status = 'ACTIVE' AND eventDate >= '${today} 00:00:00') AS n FROM City c WHERE c.areaId IS NULL`);
 for (const c of counts) {
   if (c.published && c.n < MIN_ROWS) {
     const since = below.get(c.slug) ?? today;

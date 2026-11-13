@@ -1,0 +1,363 @@
+# US cities and towns to sweep for American mahjong with a Google search in the Chrome chat (scripts/city-sweep.mjs).
+# One "City, ST" per line, in the order they are asked: big cities and metros first, then suburbs and retirement areas where
+# the game is known to be played. Cities the site already has (any status) are skipped by the script; the rest are asked in
+# batches. Edit freely: add a line to ask for a town, delete a line to never ask.
+# --- 100 largest cities and metros
+Los Angeles, CA
+Chicago, IL
+Houston, TX
+Phoenix, AZ
+Philadelphia, PA
+San Antonio, TX
+San Diego, CA
+Dallas, TX
+Jacksonville, FL
+Fort Worth, TX
+San Jose, CA
+Austin, TX
+Charlotte, NC
+Columbus, OH
+Indianapolis, IN
+San Francisco, CA
+Seattle, WA
+Denver, CO
+Oklahoma City, OK
+Nashville, TN
+Washington, DC
+El Paso, TX
+Las Vegas, NV
+Boston, MA
+Detroit, MI
+Portland, OR
+Louisville, KY
+Memphis, TN
+Baltimore, MD
+Milwaukee, WI
+Albuquerque, NM
+Tucson, AZ
+Fresno, CA
+Sacramento, CA
+Mesa, AZ
+Atlanta, GA
+Kansas City, MO
+Colorado Springs, CO
+Omaha, NE
+Raleigh, NC
+Miami, FL
+Virginia Beach, VA
+Long Beach, CA
+Oakland, CA
+Minneapolis, MN
+Bakersfield, CA
+Tulsa, OK
+Tampa, FL
+Arlington, TX
+Wichita, KS
+Aurora, CO
+New Orleans, LA
+Cleveland, OH
+Honolulu, HI
+Anaheim, CA
+Henderson, NV
+Orlando, FL
+Lexington, KY
+Stockton, CA
+Riverside, CA
+Irvine, CA
+Corpus Christi, TX
+Newark, NJ
+Santa Ana, CA
+Cincinnati, OH
+Pittsburgh, PA
+St. Paul, MN
+Greensboro, NC
+Jersey City, NJ
+Durham, NC
+Lincoln, NE
+Plano, TX
+Anchorage, AK
+Gilbert, AZ
+Madison, WI
+Reno, NV
+Chandler, AZ
+St. Louis, MO
+Chula Vista, CA
+Buffalo, NY
+Fort Wayne, IN
+Lubbock, TX
+St. Petersburg, FL
+Toledo, OH
+Laredo, TX
+Port St. Lucie, FL
+Glendale, AZ
+Irving, TX
+Winston-Salem, NC
+Chesapeake, VA
+Garland, TX
+Scottsdale, AZ
+Boise, ID
+Frisco, TX
+Richmond, VA
+Cary, NC
+Norfolk, VA
+Spokane, WA
+Fremont, CA
+Tacoma, WA
+Baton Rouge, LA
+Huntsville, AL
+Des Moines, IA
+Rochester, NY
+Fayetteville, NC
+Worcester, MA
+Little Rock, AR
+Augusta, GA
+Birmingham, AL
+Montgomery, AL
+Amarillo, TX
+Salt Lake City, UT
+Grand Rapids, MI
+Huntington Beach, CA
+Overland Park, KS
+Tallahassee, FL
+McKinney, TX
+Cape Coral, FL
+Sioux Falls, SD
+Providence, RI
+Knoxville, TN
+Akron, OH
+Shreveport, LA
+Mobile, AL
+Newport News, VA
+Chattanooga, TN
+Tempe, AZ
+Santa Rosa, CA
+Eugene, OR
+Salem, OR
+Fort Collins, CO
+Springfield, MO
+Pasadena, CA
+Alexandria, VA
+Rockford, IL
+Bellevue, WA
+Naperville, IL
+Savannah, GA
+Bridgeport, CT
+Syracuse, NY
+Charleston, SC
+Columbia, SC
+Olathe, KS
+Dayton, OH
+Gainesville, FL
+Stamford, CT
+Waco, TX
+Coral Springs, FL
+Cedar Rapids, IA
+Round Rock, TX
+Sandy Springs, GA
+Topeka, KS
+Pearland, TX
+Athens, GA
+Allentown, PA
+Evansville, IN
+Berkeley, CA
+Provo, UT
+Ann Arbor, MI
+Lafayette, LA
+Murfreesboro, TN
+Lansing, MI
+Ventura, CA
+Springfield, IL
+Fargo, ND
+Peoria, IL
+Santa Barbara, CA
+Wilmington, NC
+Albany, NY
+Lakeland, FL
+Norman, OK
+Rio Rancho, NM
+Green Bay, WI
+Boulder, CO
+Clearwater, FL
+Burlington, VT
+Portland, ME
+Manchester, NH
+New Haven, CT
+Hartford, CT
+# --- New York area suburbs
+White Plains, NY
+New Rochelle, NY
+Bronxville, NY
+Pleasantville, NY
+Armonk, NY
+Nyack, NY
+Great Neck, NY
+Manhasset, NY
+Garden City, NY
+Plainview, NY
+Syosset, NY
+Port Washington, NY
+Woodmere, NY
+Staten Island, NY
+Brooklyn, NY
+Huntington, NY
+Montclair, NJ
+Livingston, NJ
+Short Hills, NJ
+Teaneck, NJ
+Englewood, NJ
+Princeton, NJ
+Fair Lawn, NJ
+Paramus, NJ
+Fort Lee, NJ
+Edison, NJ
+East Brunswick, NJ
+Marlboro, NJ
+Toms River, NJ
+Fairfield, CT
+Norwalk, CT
+Ridgefield, CT
+Glastonbury, CT
+# --- Chicago, Midwest and Great Lakes suburbs
+Highland Park, IL
+Skokie, IL
+Northbrook, IL
+Deerfield, IL
+Evanston, IL
+Oak Park, IL
+Schaumburg, IL
+Arlington Heights, IL
+Buffalo Grove, IL
+Lincolnshire, IL
+Shaker Heights, OH
+Beachwood, OH
+Dublin, OH
+Upper Arlington, OH
+Carmel, IN
+Zionsville, IN
+Edina, MN
+Minnetonka, MN
+Bloomfield Hills, MI
+West Bloomfield, MI
+Birmingham, MI
+Ladue, MO
+Chesterfield, MO
+Clayton, MO
+Leawood, KS
+Prairie Village, KS
+Mequon, WI
+Whitefish Bay, WI
+# --- East coast, DC and New England suburbs
+Bethesda, MD
+Silver Spring, MD
+Potomac, MD
+Columbia, MD
+Annapolis, MD
+Frederick, MD
+Towson, MD
+Reston, VA
+McLean, VA
+Great Falls, VA
+Leesburg, VA
+Newton, MA
+Brookline, MA
+Needham, MA
+Wellesley, MA
+Framingham, MA
+Lexington, MA
+Hingham, MA
+Marblehead, MA
+Plymouth, MA
+Bala Cynwyd, PA
+Wynnewood, PA
+Newtown, PA
+Doylestown, PA
+West Chester, PA
+Wilmington, DE
+Rehoboth Beach, DE
+Cape May, NJ
+Hilton Head Island, SC
+Mount Pleasant, SC
+Kiawah Island, SC
+Alpharetta, GA
+Decatur, GA
+Dunwoody, GA
+Brookhaven, GA
+Brentwood, TN
+Greenville, SC
+Wilmington, NC
+Pinehurst, NC
+Southern Pines, NC
+Winston-Salem, NC
+# --- Florida
+Coral Gables, FL
+Aventura, FL
+Weston, FL
+Parkland, FL
+Wellington, FL
+Palm Beach, FL
+Stuart, FL
+Vero Beach, FL
+Hollywood, FL
+Pembroke Pines, FL
+Tallahassee, FL
+St. Augustine, FL
+Ponte Vedra Beach, FL
+Amelia Island, FL
+Daytona Beach, FL
+Melbourne, FL
+Punta Gorda, FL
+Venice, FL
+Longboat Key, FL
+Clearwater Beach, FL
+Fort Walton Beach, FL
+Pensacola, FL
+# --- Texas, Southwest and Mountain West
+The Woodlands, TX
+Sugar Land, TX
+Katy, TX
+Southlake, TX
+Colleyville, TX
+Plano, TX
+Lakeway, TX
+Georgetown, TX
+New Braunfels, TX
+Corpus Christi, TX
+Sun City, AZ
+Paradise Valley, AZ
+Carefree, AZ
+Sedona, AZ
+Prescott, AZ
+Santa Fe, NM
+Park City, UT
+St. George, UT
+Aspen, CO
+Vail, CO
+Fort Collins, CO
+Sun Valley, ID
+Missoula, MT
+Bozeman, MT
+# --- West coast
+Beverly Hills, CA
+Encino, CA
+Calabasas, CA
+Westlake Village, CA
+Newport Beach, CA
+La Jolla, CA
+Rancho Santa Fe, CA
+Pleasanton, CA
+Walnut Creek, CA
+Palo Alto, CA
+Los Altos, CA
+Menlo Park, CA
+Mill Valley, CA
+Carmel, CA
+Palm Springs, CA
+Palm Desert, CA
+Lake Oswego, OR
+Bainbridge Island, WA
+Mercer Island, WA
+Kirkland, WA
+Redmond, WA
+Olympia, WA
+Honolulu, HI
+Maui, HI

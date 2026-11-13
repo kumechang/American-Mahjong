@@ -25,8 +25,8 @@ Darien, CT > Greenwich, CT
 Stamford, CT > Greenwich, CT
 New Canaan, CT > Greenwich, CT
 Westport, CT > Greenwich, CT
-Newington, CT > Hartford, CT
-West Hartford, CT > Hartford, CT
+Hartford, CT > West Hartford, CT
+Newington, CT > West Hartford, CT
 # Florida
 Palm Beach Gardens, FL > West Palm Beach, FL
 Jupiter, FL > West Palm Beach, FL

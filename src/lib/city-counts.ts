@@ -1,6 +1,7 @@
 import { and, eq, gte, count } from "drizzle-orm";
 import type { getDb } from "@/lib/db";
 import { clubs, instructors, events } from "@/db/schema";
+import { getAreaMap } from "@/lib/areas";
 
 type Db = Awaited<ReturnType<typeof getDb>>;
 
@@ -34,7 +35,9 @@ export async function getCityCounts(
   }
   if (cityIds.length === 0) return result;
 
-  const [clubRows, instructorRows, eventRows] = await Promise.all([
+  // towns folded into an area page count toward that page
+  const [areaOf, clubRows, instructorRows, eventRows] = await Promise.all([
+    getAreaMap(db),
     db
       .select({ cityId: clubs.cityId, value: count() })
       .from(clubs)
@@ -55,16 +58,16 @@ export async function getCityCounts(
   ]);
 
   for (const row of clubRows) {
-    const c = result.get(row.cityId);
-    if (c) c.clubCount = row.value;
+    const c = result.get(areaOf.get(row.cityId) ?? row.cityId);
+    if (c) c.clubCount += row.value;
   }
   for (const row of instructorRows) {
-    const c = result.get(row.cityId);
-    if (c) c.instructorCount = row.value;
+    const c = result.get(areaOf.get(row.cityId) ?? row.cityId);
+    if (c) c.instructorCount += row.value;
   }
   for (const row of eventRows) {
-    const c = result.get(row.cityId);
-    if (c) c.eventCount = row.value;
+    const c = result.get(areaOf.get(row.cityId) ?? row.cityId);
+    if (c) c.eventCount += row.value;
   }
   return result;
 }

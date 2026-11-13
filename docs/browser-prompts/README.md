@@ -10,6 +10,7 @@ Chrome を実際に操作できるチャットで、機械では読めないペ�
 | `09-connecticut-southwest.md` | Darien・New Canaan・Stamford・Westport(コネチカット南西部の新しい町。ディレクトリ掲載のみ) | 13 | 図書館・JCC・市のページで American / NMJL を読む |
 | `10-evidence-urls.md` | すでに ACTIVE で載っているが証拠ページの URL が記録に残っていない 6 件 | 6 | 一文の引用と URL を固める |
 | (生成) `scripts/chrome-queue.mjs --prompt=…` | 夜間リサーチが「Chrome調査が必要」と印を付けた団体 | 〜30 | Facebook / Instagram だけの団体を読む(§32) |
+| (生成) `scripts/city-sweep.mjs --prompt=docs/browser-prompts/12-city-sweep-NN.md` | `data/us-city-targets.txt` の町(まだサイトに無い町・公開に届かない町)を Google 検索で探す | 40 町 | 町名+州+American mahjong で検索し、団体自身のページで American / NMJL を確認する。クリックの間隔を毎回ランダムに空け、何時間かけてもよい |
 
 ## 返ってきた結果の取り込み
 返却は CSV(`name_exact,type,city,state,verdict,evidence_quote,evidence_url,own_website,venue_name_and_address,venue_is_public,beginner_friendly,next_sessions,notes`)。`verdict=ACTIVE` で `venue_is_public=Y` のものだけを、引用文(evidence_quote)付きで ACTIVE にし、next_sessions を events に入れる(開始時刻と公開の会場名があるものだけ ACTIVE)。`INACTIVE` は別の種類・会員限定として外す。`NEW:` の行は新しい手がかり(NEEDS_REVIEW)として入れる。個人の連絡先は受け取らない設計。

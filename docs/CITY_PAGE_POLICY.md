@@ -202,3 +202,14 @@ before a new city goes live:
       (2-3 unverified-feeling listings) should wait, same as Phoenix
       was held back per the 2026-09-28 note in `DATA_COLLECTION.md`,
       rather than shipping just to grow the city count
+
+## 12. Area pages (nearby towns on one page)
+
+A town with too few groups for its own page can be folded into a nearby city's page (`data/city-areas.txt`, `City.areaId`):
+
+- Only towns of the same metro (about 30 miles or less) go together. The page keeps the hub city's name and URL; the towns are named on each card ("Elmhurst") and in a line under the heading ("Also covers nearby …").
+- The five-row rule is counted over the whole area. Each town's rows keep their own town in the database, so addresses and JSON-LD `addressLocality` stay true.
+- A folded town has no page of its own: `/cities/<town>` answers with a permanent redirect (308) to the hub, it is not in the sitemap or the city lists, and it is never published itself.
+- The same group or teacher filed under two towns of one area is shown once (the copy is set to INACTIVE).
+- The hub's intro is written for the whole area (`data/area-intros.json`), same rules as §2.
+- To change the grouping: edit `data/city-areas.txt`, then `node scripts/city-areas-sql.mjs --out=migrations/NNNN_….sql` (without `--alter`) and review the SQL. The first grouping is migration 0284.
