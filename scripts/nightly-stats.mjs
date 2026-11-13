@@ -12,22 +12,14 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
+import { inboxBranchRoots } from "./lib/inbox-branches.mjs";
 import { arg, parseCsv } from "./lib/crawl-lib.mjs";
 
 const weeks = Number(arg("weeks") ?? 4);
 const roots = [];
 if (existsSync("data/inbox")) for (const r of readdirSync("data/inbox")) if (/^\d{4}-\d{2}-\d{2}/.test(r)) roots.push({ run: r, dir: join("data/inbox", r) });
 if (process.argv.includes("--branches")) {
-  const tmp = mkdtempSync(join(tmpdir(), "stats-"));
-  const heads = execFileSync("git", ["ls-remote", "--heads", "origin", "inbox/*"], { encoding: "utf8" }).split("\n").filter(Boolean).map((l) => l.split("\t")[1].replace("refs/heads/", ""));
-  for (const b of heads) {
-    try {
-      execFileSync("git", ["fetch", "-q", "origin", b], { stdio: "ignore" });
-      const dir = join(tmp, b.replace(/\//g, "_")); mkdirSync(dir, { recursive: true });
-      execFileSync("tar", ["-x", "-C", dir], { input: execFileSync("git", ["archive", "FETCH_HEAD", "data/inbox"], { maxBuffer: 200e6 }) });
-      roots.push({ run: b.replace(/^inbox\//, ""), dir: join(dir, "data/inbox") });
-    } catch { /* skip */ }
-  }
+  roots.push(...inboxBranchRoots());
 }
 
 function* walk(dir) {
