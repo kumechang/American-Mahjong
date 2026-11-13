@@ -9,7 +9,7 @@
 - 1 つの町にかけるのは **3〜6 分**。検索は 1 町につき **最大 3 回**。結果は **1 ページ目だけ**を読み、開くのは **最大 4 ページ**まで。ページを開いたら、少なくとも 20 秒は読んでから次へ。同じサイトを続けて何ページも素早く開かない。
 - 検索結果のページはスクロールしながら読む(一気に最後まで飛ばさない)。ページを開いたら戻って次の結果を開く、を繰り返す(同じタブで連続して開かない)。
 - 1 回の検索の結果の中身が出たら、それで足りる。無理に深追いしない。
-- **CAPTCHA、「通常と異なるトラフィック」、ログインの要求、ブロックの表示が出たら、その場で止める。** 解こうとしない・別の方法で回避しようとしない。止まった所までの結果を返して、「止まった町」を書く。再開は私が指示します。
+- **Google 自身が CAPTCHA や「通常と異なるトラフィック」を出したら、その場で止める。** 解こうとしない・別の方法で回避しようとしない。止まった所までの結果を返して、「止まった町」を書く。再開は私が指示します。**調べている団体のサイトが 403 やブロックのページを返したときは止めない。** そのページは読めなかったと notes に書いて(UNCONFIRMED)、次の団体・次の町へ進む。
 - **10 町終わるたびに、そこまでの CSV をチャットに出す**(長時間のとき、途中で切れても結果が残るように)。最後に全体を 1 つにまとめて返す。
 
 # 町ごとにやること
@@ -51,43 +51,43 @@ CSV のあとに、日本語で 8 行以内の要約(ACTIVE にできた数、�
 
 | # | town | state | on the site | already listed (answer DUPLICATE if you find the same group) |
 |---|---|---|---|---|
-| 1 | Fort Worth | TX | on the site, not published (2 active) | The Mahj Clubhouse; American Mah Jongg; Bam Good Time Fort Worth; Mahj Gone Wild!; The Fort Mahj club; So Bam Fun (Piattello); The Bowie House - Billet Room Mahjong; The Mahj Clubhouse Learning Series (Fort Worth) |
-| 2 | San Jose | CA | on the site, not published (1 active) | City of San Jose Mah Jong American Style Open Play (Camden Community Center) |
-| 3 | El Paso | TX | not on the site | - |
-| 4 | Louisville | KY | on the site, not published (3 active) | Keneseth Israel Mahjong Club; Trager Family JCC Mahjong; Douglass Community Center American Mah Jongg; United Crescent Hill Ministries Mahjong Night; Mahjong Studio One; Derby City Mahjong; Mahjong Studio 1; Gilda's Club Kentuckiana American Mahjong |
-| 5 | Albuquerque | NM | on the site, not published (1 active) | San Pedro Library Let's Mahj-Get-Along; Let's Mahj-Get-Along Mahjong Club (San Pedro Library); Mah Jongg Tile Lovers - Santa Fe; Ronald Gardenswartz Jewish Community Center of Greater Albuquerque; Cyndi Heller; Michelle Weinstein / ABQ Mahjong; ABQ Mahjong (Michelle Weinstein); Cyndi Heller - American Mah Jongg Instructor |
-| 6 | Mesa | AZ | not on the site | - |
-| 7 | Colorado Springs | CO | on the site, not published (2 active) | Front Range Mahjong; Alpine Mahjong; Courtney / Front Range Mahjong |
-| 8 | Long Beach | CA | not on the site | - |
-| 9 | Bakersfield | CA | on the site, not published (1 active) | Wine Me Up; Bakersfield Mah Jongg Group |
-| 10 | Tulsa | OK | not on the site | - |
-| 11 | Arlington | TX | not on the site | - |
-| 12 | Wichita | KS | on the site, not published (1 active) | Green Table Club; Wichita Mahjong Club; Amy Johnson; Tracy Callard |
-| 13 | Honolulu | HI | not on the site | - |
-| 14 | Anaheim | CA | not on the site | - |
-| 15 | Henderson | NV | not on the site | - |
-| 16 | Lexington | KY | on the site, not published (0 active) | Just Games Lexington; Mahjong Maidens Lexington; Karen Fister; Bring It On Mahjong, LLC; Mahjong-Lex |
-| 17 | Stockton | CA | not on the site | - |
-| 18 | Riverside | CA | not on the site | - |
-| 19 | Irvine | CA | not on the site | - |
-| 20 | Corpus Christi | TX | not on the site | - |
-| 21 | Santa Ana | CA | not on the site | - |
-| 22 | Pittsburgh | PA | on the site, not published (1 active) | Lauri Ann West Community Center - Beginner Mah Jongg; Cooper-Siegel Community Library - Open Mah Jong Play; Pittsburgh Mahjong Club at Rodef Shalom; PGH Mahjong Club at The Picket Fence; Hillel JUC of Pittsburgh - Mahjong Club; Temple Sinai Mahjong Club; The Mahji Bird; Moon Township Public Library - Mah Jongg |
-| 23 | St. Paul | MN | not on the site | - |
-| 24 | Jersey City | NJ | not on the site | - |
-| 25 | Lincoln | NE | not on the site | - |
-| 26 | Plano | TX | not on the site | - |
-| 27 | Anchorage | AK | not on the site | - |
-| 28 | Madison | WI | not on the site | - |
-| 29 | Reno | NV | not on the site | - |
-| 30 | Chandler | AZ | not on the site | - |
-| 31 | Chula Vista | CA | not on the site | - |
-| 32 | Fort Wayne | IN | on the site, not published (2 active) | Two Bamboo Mahjong; Birdie Bam |
-| 33 | Lubbock | TX | not on the site | - |
-| 34 | Toledo | OH | not on the site | - |
-| 35 | Laredo | TX | not on the site | - |
-| 36 | Port St. Lucie | FL | not on the site | - |
-| 37 | Glendale | AZ | not on the site | - |
-| 38 | Irving | TX | not on the site | - |
-| 39 | Winston-Salem | NC | not on the site | - |
-| 40 | Chesapeake | VA | not on the site | - |
+| 1 | Mesa | AZ | not on the site | - |
+| 2 | Colorado Springs | CO | on the site, not published (2 active) | Front Range Mahjong; Alpine Mahjong; Courtney / Front Range Mahjong |
+| 3 | Long Beach | CA | not on the site | - |
+| 4 | Bakersfield | CA | on the site, not published (1 active) | Wine Me Up; Bakersfield Mah Jongg Group |
+| 5 | Tulsa | OK | not on the site | - |
+| 6 | Arlington | TX | not on the site | - |
+| 7 | Wichita | KS | on the site, not published (1 active) | Green Table Club; Wichita Mahjong Club; Amy Johnson; Tracy Callard |
+| 8 | Honolulu | HI | not on the site | - |
+| 9 | Anaheim | CA | not on the site | - |
+| 10 | Henderson | NV | not on the site | - |
+| 11 | Lexington | KY | on the site, not published (0 active) | Just Games Lexington; Mahjong Maidens Lexington; Karen Fister; Bring It On Mahjong, LLC; Mahjong-Lex |
+| 12 | Stockton | CA | not on the site | - |
+| 13 | Riverside | CA | not on the site | - |
+| 14 | Irvine | CA | not on the site | - |
+| 15 | Corpus Christi | TX | not on the site | - |
+| 16 | Santa Ana | CA | not on the site | - |
+| 17 | Pittsburgh | PA | on the site, not published (1 active) | Lauri Ann West Community Center - Beginner Mah Jongg; Cooper-Siegel Community Library - Open Mah Jong Play; Pittsburgh Mahjong Club at Rodef Shalom; PGH Mahjong Club at The Picket Fence; Hillel JUC of Pittsburgh - Mahjong Club; Temple Sinai Mahjong Club; The Mahji Bird; Moon Township Public Library - Mah Jongg |
+| 18 | St. Paul | MN | not on the site | - |
+| 19 | Jersey City | NJ | not on the site | - |
+| 20 | Lincoln | NE | not on the site | - |
+| 21 | Plano | TX | not on the site | - |
+| 22 | Anchorage | AK | not on the site | - |
+| 23 | Madison | WI | not on the site | - |
+| 24 | Reno | NV | not on the site | - |
+| 25 | Chandler | AZ | not on the site | - |
+| 26 | Chula Vista | CA | not on the site | - |
+| 27 | Fort Wayne | IN | on the site, not published (2 active) | Two Bamboo Mahjong; Birdie Bam |
+| 28 | Lubbock | TX | not on the site | - |
+| 29 | Toledo | OH | not on the site | - |
+| 30 | Laredo | TX | not on the site | - |
+| 31 | Port St. Lucie | FL | not on the site | - |
+| 32 | Glendale | AZ | not on the site | - |
+| 33 | Irving | TX | not on the site | - |
+| 34 | Winston-Salem | NC | not on the site | - |
+| 35 | Chesapeake | VA | not on the site | - |
+| 36 | Garland | TX | not on the site | - |
+| 37 | Boise | ID | on the site, not published (2 active) | OK LET'S MAHJONG; Mahjong at the Local |
+| 38 | Frisco | TX | not on the site | - |
+| 39 | Spokane | WA | on the site, not published (0 active) | Spokane Club Mahjong |
+| 40 | Fremont | CA | not on the site | - |

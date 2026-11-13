@@ -1,0 +1,6 @@
+# Towns whose Chrome city-sweep answers have been imported (one "City, ST" per line). Batch 01 stopped after five towns (a site's bot-block page).
+Fort Worth, TX
+San Jose, CA
+El Paso, TX
+Louisville, KY
+Albuquerque, NM

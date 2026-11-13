@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Builds the Chrome-chat prompt that sweeps US towns for American mahjong with plain Google searches
 // ("<town> <state> American mahjong", ...). The towns come from data/us-city-targets.txt, in order; towns the site already has
-// (published, folded into an area page, or with five active rows) are skipped, and so are towns already put to a window
-// (any docs/browser-prompts/12-city-sweep-*.md table) unless --include-asked is given.
+// (published, folded into an area page, or with five active rows) are skipped, and so are towns whose answers already came back
+// (data/city-sweep-done.txt) unless --include-asked is given.
 //
 //   node scripts/city-sweep.mjs                                   # prints the next batch as Markdown (counts first)
 //   node scripts/city-sweep.mjs --prompt=docs/browser-prompts/12-city-sweep-02.md [--max=40] [--include-asked]
@@ -22,13 +22,13 @@ const cities = q(`SELECT c.id, c.name, c.state, c.published, c.areaId,
   FROM City c`);
 const byKey = new Map(cities.map((c) => [key(c.name, c.state), c]));
 
+// Towns whose answers have come back (a run can stop part-way, so a prompt's table does not count as asked): data/city-sweep-done.txt,
+// one "City, ST" per line, added by hand when the results are imported.
 const asked = new Set();
-if (existsSync("docs/browser-prompts")) {
-  for (const f of readdirSync("docs/browser-prompts").filter((f) => /^12-city-sweep-.*\.md$/.test(f))) {
-    for (const l of readFileSync(`docs/browser-prompts/${f}`, "utf8").split("\n")) {
-      const m = l.match(/^\|\s*\d+\s*\|\s*([^|]+?)\s*\|\s*([A-Z]{2})\s*\|/);
-      if (m) asked.add(key(m[1], m[2]));
-    }
+if (existsSync("data/city-sweep-done.txt")) {
+  for (const l of readFileSync("data/city-sweep-done.txt", "utf8").split("\n")) {
+    const m = l.trim().match(/^([^#].*), ([A-Z]{2})$/);
+    if (m) asked.add(key(m[1], m[2]));
   }
 }
 
