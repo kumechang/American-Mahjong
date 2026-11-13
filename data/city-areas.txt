@@ -11,6 +11,7 @@ Gulf Shores, AL > Daphne, AL
 # Arkansas
 Lonoke, AR > Little Rock, AR
 # Arizona
+Mesa, AZ > Gilbert, AZ
 Cave Creek, AZ > Phoenix, AZ
 Queen Creek, AZ > Gilbert, AZ
 # California
