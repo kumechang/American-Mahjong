@@ -2,6 +2,7 @@ import { and, eq, gte, count } from "drizzle-orm";
 import type { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { todayEventDate } from "@/lib/city-counts";
+import { areaPage, onAreaPage } from "@/lib/areas";
 
 type Db = Awaited<ReturnType<typeof getDb>>;
 
@@ -20,10 +21,11 @@ export type CategoryKey =
   | "events"
   | "tournaments";
 
+// the page a listing belongs to (its own city, or the area page it was folded into)
 const cityCols = {
-  slug: cities.slug,
-  name: cities.name,
-  state: cities.state,
+  slug: areaPage.slug,
+  name: areaPage.name,
+  state: areaPage.state,
 };
 
 // For each Find category, the published cities that have the most ACTIVE
@@ -32,7 +34,7 @@ const cityCols = {
 export async function getCategoryCities(
   db: Db,
 ): Promise<Record<CategoryKey, CategoryCity[]>> {
-  const published = eq(cities.published, true);
+  const published = eq(areaPage.published, true);
   const today = todayEventDate();
 
   const [clubRows, lessonClubRows, openPlayRows, instructorRows, eventRows, tournamentRows] =
@@ -41,40 +43,46 @@ export async function getCategoryCities(
         .select({ ...cityCols, n: count() })
         .from(clubs)
         .innerJoin(cities, eq(clubs.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(and(published, eq(clubs.status, "ACTIVE")))
-        .groupBy(cities.id),
+        .groupBy(areaPage.id),
       db
         .select({ ...cityCols, n: count() })
         .from(clubs)
         .innerJoin(cities, eq(clubs.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(
           and(published, eq(clubs.status, "ACTIVE"), eq(clubs.lessonsAvailable, true)),
         )
-        .groupBy(cities.id),
+        .groupBy(areaPage.id),
       db
         .select({ ...cityCols, n: count() })
         .from(clubs)
         .innerJoin(cities, eq(clubs.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(and(published, eq(clubs.status, "ACTIVE"), eq(clubs.openPlay, true)))
-        .groupBy(cities.id),
+        .groupBy(areaPage.id),
       db
         .select({ ...cityCols, n: count() })
         .from(instructors)
         .innerJoin(cities, eq(instructors.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(and(published, eq(instructors.status, "ACTIVE")))
-        .groupBy(cities.id),
+        .groupBy(areaPage.id),
       db
         .select({ ...cityCols, n: count() })
         .from(events)
         .innerJoin(cities, eq(events.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(
           and(published, eq(events.status, "ACTIVE"), gte(events.eventDate, today)),
         )
-        .groupBy(cities.id),
+        .groupBy(areaPage.id),
       db
         .select({ ...cityCols, n: count() })
         .from(events)
         .innerJoin(cities, eq(events.cityId, cities.id))
+        .innerJoin(areaPage, onAreaPage)
         .where(
           and(
             published,
@@ -83,7 +91,7 @@ export async function getCategoryCities(
             gte(events.eventDate, today),
           ),
         )
-        .groupBy(cities.id),
+        .groupBy(areaPage.id),
     ]);
 
   // Lessons = cities with teachers or clubs that offer lessons.

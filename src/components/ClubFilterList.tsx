@@ -21,7 +21,7 @@ function ScheduleLines({ text }: { text: string | null }) {
   );
 }
 
-type Club = typeof clubs.$inferSelect;
+type Club = typeof clubs.$inferSelect & { town?: string | null };
 
 type FilterKey =
   | "beginnerFriendly"
@@ -111,6 +111,7 @@ export function ClubFilterList({ clubs }: { clubs: Club[] }) {
               className="rounded-xl border border-line bg-surface p-5"
             >
               <h3 className="font-semibold">{club.name}</h3>
+              {club.town && <p className="text-xs text-muted">{club.town}</p>}
               <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
                 {club.beginnerFriendly && (
                   <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">

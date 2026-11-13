@@ -1,7 +1,7 @@
 import type { events } from "@/db/schema";
 import { eventDateParts, formatTimeRange } from "@/lib/format";
 
-type Event = typeof events.$inferSelect;
+type Event = typeof events.$inferSelect & { town?: string | null };
 
 const TYPE_LABEL: Record<string, string> = {
   OPEN_PLAY: "Open play",
@@ -50,7 +50,7 @@ function EventRow({ event }: { event: Event }) {
         <h3 className="font-semibold leading-snug">{event.name}</h3>
         <p className="mt-1 text-sm text-muted">
           {date && <span className="sr-only">{date.long}. </span>}
-          {[time, shortVenue(event.venue)].filter(Boolean).join(" · ")}
+          {[time, shortVenue(event.venue), event.town].filter(Boolean).join(" · ")}
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
           {typeLabel && (

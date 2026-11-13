@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { eq, and, ne, asc, gte } from "drizzle-orm";
+import { eq, and, ne, asc, gte, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
@@ -29,6 +29,22 @@ async function getCity(slug: string) {
     return null;
   }
 
+  // A town folded into a nearby city's area page has no page of its own: its URL redirects there (see the page below).
+  if (city.areaId) {
+    const [hub] = await db.select({ slug: cities.slug }).from(cities).where(eq(cities.id, city.areaId)).limit(1);
+    return { ...city, redirectTo: hub?.slug ?? null, towns: [] as string[], clubs: [], instructors: [], events: [] };
+  }
+
+  // The page also shows the towns folded into it; every row keeps the name of its own town.
+  const satellites = await db
+    .select({ id: cities.id, name: cities.name, state: cities.state })
+    .from(cities)
+    .where(eq(cities.areaId, city.id))
+    .orderBy(asc(cities.name));
+  const ids = [city.id, ...satellites.map((s) => s.id)];
+  const townOf = new Map(satellites.map((s) => [s.id, s.name]));
+  const withTown = <T extends { cityId: string }>(row: T) => ({ ...row, town: townOf.get(row.cityId) ?? null });
+
   // Only ACTIVE rows are shown publicly — NEEDS_REVIEW means a researcher
   // wasn't fully confident in the data (docs/DATA_COLLECTION.md), and
   // INACTIVE means it's known stale. Both stay in the database (so the
@@ -38,13 +54,13 @@ async function getCity(slug: string) {
     db
       .select()
       .from(clubs)
-      .where(and(eq(clubs.cityId, city.id), eq(clubs.status, "ACTIVE")))
+      .where(and(inArray(clubs.cityId, ids), eq(clubs.status, "ACTIVE")))
       .orderBy(asc(clubs.name)),
     db
       .select()
       .from(instructors)
       .where(
-        and(eq(instructors.cityId, city.id), eq(instructors.status, "ACTIVE")),
+        and(inArray(instructors.cityId, ids), eq(instructors.status, "ACTIVE")),
       )
       .orderBy(asc(instructors.name)),
     db
@@ -52,7 +68,7 @@ async function getCity(slug: string) {
       .from(events)
       .where(
         and(
-          eq(events.cityId, city.id),
+          inArray(events.cityId, ids),
           eq(events.status, "ACTIVE"),
           gte(events.eventDate, todayEventDate()),
         ),
@@ -61,7 +77,14 @@ async function getCity(slug: string) {
       .limit(10),
   ]);
 
-  return { ...city, clubs: cityClubs, instructors: cityInstructors, events: cityEvents };
+  return {
+    ...city,
+    redirectTo: null as string | null,
+    towns: satellites.map((s) => s.name),
+    clubs: cityClubs.map(withTown),
+    instructors: cityInstructors.map(withTown),
+    events: cityEvents.map(withTown),
+  };
 }
 
 async function getNearbyCities(city: { id: string; slug: string; state: string }) {
@@ -134,7 +157,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const city = await getCity(slug);
 
-  if (!city) {
+  if (!city || city.redirectTo) {
     return {};
   }
 
@@ -192,7 +215,7 @@ function buildEventsJsonLd(city: City) {
   return city.events.map((event) => {
     const club = city.clubs.find((club) => club.id === event.clubId);
     const teacher = city.instructors.find((i) => i.id === event.instructorId);
-    const venueName = event.venue ?? club?.name ?? `${city.name}, ${city.state}`;
+    const venueName = event.venue ?? club?.name ?? `${event.town ?? city.name}, ${city.state}`;
 
     // eventDate is stored as a naive "YYYY-MM-DD HH:MM:SS" string (midnight);
     // the real start/end live in startTime/endTime (local "HH:MM"). Without a
@@ -206,7 +229,7 @@ function buildEventsJsonLd(city: City) {
     const organizerUrl = club?.website ?? teacher?.website ?? originOf(event.registrationUrl) ?? originOf(event.sourceUrl);
     const phrase = EVENT_TYPE_PHRASES[event.eventType] ?? EVENT_TYPE_PHRASES.OTHER;
     const description = [
-      `${phrase}${event.beginnerFriendly ? " for beginners" : ""} at ${venueName} in ${city.name}, ${city.state}`,
+      `${phrase}${event.beginnerFriendly ? " for beginners" : ""} at ${venueName} in ${event.town ?? city.name}, ${city.state}`,
       organizerName ? `hosted by ${organizerName}` : null,
     ]
       .filter(Boolean)
@@ -228,7 +251,7 @@ function buildEventsJsonLd(city: City) {
         name: venueName,
         address: {
           "@type": "PostalAddress",
-          addressLocality: city.name,
+          addressLocality: event.town ?? city.name,
           addressRegion: city.state,
         },
       },
@@ -273,7 +296,7 @@ function buildClubJsonLd(city: City, club: City["clubs"][number]) {
     address: {
       "@type": "PostalAddress",
       ...(club.address ? { streetAddress: club.address } : {}),
-      addressLocality: city.name,
+      addressLocality: club.town ?? city.name,
       addressRegion: city.state,
     },
     ...(club.latitude != null && club.longitude != null
@@ -316,6 +339,9 @@ export default async function CityPage({
   const { slug } = await params;
   const city = await getCity(slug);
 
+  if (city?.redirectTo) {
+    permanentRedirect(`/cities/${city.redirectTo}`);
+  }
   if (!city || !city.published) {
     notFound();
   }
@@ -347,6 +373,11 @@ export default async function CityPage({
         Clubs, lessons, and events near {city.name}, {city.state} — filter
         by beginner-friendly, free, lessons, open play, or social.
       </p>
+      {city.towns.length > 0 && (
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          Also covers nearby {city.towns.join(", ")}.
+        </p>
+      )}
 
       <CityHighlights
         clubs={city.clubs}
@@ -409,6 +440,9 @@ export default async function CityPage({
                 className="rounded-xl border border-line bg-surface p-5"
               >
                 <h3 className="font-semibold">{instructor.name}</h3>
+                {instructor.town && (
+                  <p className="text-xs text-muted">{instructor.town}</p>
+                )}
                 <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
                   {instructor.beginnerLesson && (
                     <span className="rounded-full bg-jade/10 px-2 py-0.5 text-jade-strong">

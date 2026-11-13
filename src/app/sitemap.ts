@@ -3,6 +3,7 @@ import { eq, max } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { cities, clubs, instructors, events } from "@/db/schema";
 import { SITE_URL } from "@/lib/site";
+import { getAreaMap } from "@/lib/areas";
 import { LEARN_TOPIC_META } from "@/content/learn";
 
 // The D1 binding is only available at request time (in the Workers
@@ -35,9 +36,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       db.select({ cityId: t.cityId, at: max(t.updatedAt) }).from(t).where(eq(t.status, "ACTIVE")).groupBy(t.cityId),
     ),
   );
+  const areaOf = await getAreaMap(db); // a folded town's rows change its area page
   const newest = new Map<string, string>();
   for (const { cityId, at } of [...clubStamps, ...instructorStamps, ...eventStamps]) {
-    if (at && at > (newest.get(cityId) ?? "")) newest.set(cityId, at);
+    const page = areaOf.get(cityId) ?? cityId;
+    if (at && at > (newest.get(page) ?? "")) newest.set(page, at);
   }
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({

@@ -2,6 +2,7 @@ import { and, asc, eq, gte, lte } from "drizzle-orm";
 import type { getDb } from "@/lib/db";
 import { cities, events } from "@/db/schema";
 import { todayEventDate } from "@/lib/city-counts";
+import { areaPage, onAreaPage } from "@/lib/areas";
 
 type Db = Awaited<ReturnType<typeof getDb>>;
 
@@ -37,16 +38,17 @@ export async function getUpcomingHighlights(
       eventType: events.eventType,
       beginnerFriendly: events.beginnerFriendly,
       price: events.price,
-      cityName: cities.name,
-      cityState: cities.state,
-      citySlug: cities.slug,
+      cityName: areaPage.name,
+      cityState: areaPage.state,
+      citySlug: areaPage.slug,
     })
     .from(events)
     .innerJoin(cities, eq(events.cityId, cities.id))
+    .innerJoin(areaPage, onAreaPage)
     .where(
       and(
         eq(events.status, "ACTIVE"),
-        eq(cities.published, true),
+        eq(areaPage.published, true),
         gte(events.eventDate, todayEventDate(now)),
         lte(events.eventDate, `${horizon.toISOString().slice(0, 10)} 23:59:59`),
       ),
