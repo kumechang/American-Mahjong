@@ -1,0 +1,10 @@
+# Troy, NY: event crawler (2026-11-13)
+
+## New events
+- 2026-11-18 13:00 WEDNESDAY AFTERNOON MAH JONGG (Capital Region Mah Jongg) [NEEDS_REVIEW]
+- 2026-12-02 13:00 WEDNESDAY AFTERNOON MAH JONGG (Capital Region Mah Jongg) [NEEDS_REVIEW]
+- 2026-12-09 13:00 WEDNESDAY AFTERNOON MAH JONGG (Capital Region Mah Jongg) [NEEDS_REVIEW]
+- 2026-12-16 13:00 WEDNESDAY AFTERNOON MAH JONGG (Capital Region Mah Jongg) [NEEDS_REVIEW]
+
+## Notes
+- none
