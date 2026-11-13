@@ -1,3 +1,4 @@
+billings
 birmingham
 boise
 bonita-springs
@@ -14,6 +15,7 @@ johns-creek
 kansas-city
 knoxville
 little-elm
+marble-falls
 memphis
 new-orleans
 new-york
@@ -24,4 +26,5 @@ roswell
 salt-lake-city
 sarasota
 washington
+west-hartford
 whitehouse-station
