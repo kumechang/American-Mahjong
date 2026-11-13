@@ -15,6 +15,7 @@ Mesa, AZ > Gilbert, AZ
 Cave Creek, AZ > Phoenix, AZ
 Queen Creek, AZ > Gilbert, AZ
 # California
+Irvine, CA > Anaheim, CA
 Alamo, CA > Oakland, CA
 Danville, CA > Oakland, CA
 Clovis, CA > Fresno, CA
@@ -86,6 +87,8 @@ D’Iberville, MS > Ocean Springs, MS
 Cary, NC > Raleigh, NC
 Holly Springs, NC > Raleigh, NC
 Chapel Hill, NC > Durham, NC
+# Nevada
+Henderson, NV > Las Vegas, NV
 # New Hampshire
 North Hampton, NH > Portsmouth, NH
 # New Jersey
