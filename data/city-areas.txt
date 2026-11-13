@@ -1,0 +1,134 @@
+# Nearby towns folded into one area page: "<town>, ST > <hub>, ST". The hub's page lists the towns' groups, teachers and
+# sessions (each row keeps its town name); the town's own page redirects to the hub. Five rows are counted over the whole area.
+# Only towns of the same metro (about 30 miles or less) go together. Towns not listed stay on their own pages.
+# Alabama
+Chelsea, AL > Birmingham, AL
+Trussville, AL > Birmingham, AL
+Pell City, AL > Birmingham, AL
+Inverness, AL > Birmingham, AL
+Auburn, AL > Opelika, AL
+Gulf Shores, AL > Daphne, AL
+# Arkansas
+Lonoke, AR > Little Rock, AR
+# Arizona
+Cave Creek, AZ > Phoenix, AZ
+Queen Creek, AZ > Gilbert, AZ
+# California
+Alamo, CA > Oakland, CA
+Danville, CA > Oakland, CA
+Clovis, CA > Fresno, CA
+Santa Monica, CA > Los Angeles, CA
+Thousand Oaks, CA > Los Angeles, CA
+Lake Forest, CA > Los Angeles, CA
+# Connecticut
+Darien, CT > Greenwich, CT
+Stamford, CT > Greenwich, CT
+New Canaan, CT > Greenwich, CT
+Westport, CT > Greenwich, CT
+Newington, CT > Hartford, CT
+West Hartford, CT > Hartford, CT
+# Florida
+Palm Beach Gardens, FL > West Palm Beach, FL
+Jupiter, FL > West Palm Beach, FL
+Lake Worth, FL > West Palm Beach, FL
+Boynton Beach, FL > West Palm Beach, FL
+Delray Beach, FL > Boca Raton, FL
+Margate, FL > Fort Lauderdale, FL
+Bonita Springs, FL > Fort Myers, FL
+Altamonte Springs, FL > Orlando, FL
+Windermere, FL > Orlando, FL
+Winter Garden, FL > Orlando, FL
+Winter Park, FL > Orlando, FL
+DeLand, FL > Orlando, FL
+Bradenton, FL > Sarasota, FL
+St. Petersburg, FL > Tampa, FL
+# Georgia
+Johns Creek, GA > Roswell, GA
+Cumming, GA > Roswell, GA
+Marietta, GA > Atlanta, GA
+Woodstock, GA > Atlanta, GA
+Canton, GA > Atlanta, GA
+Peachtree City, GA > Newnan, GA
+Palmetto, GA > Newnan, GA
+Moreland, GA > Newnan, GA
+Tyrone, GA > Newnan, GA
+# Illinois
+Elmhurst, IL > Downers Grove, IL
+Burr Ridge, IL > Downers Grove, IL
+Glen Ellyn, IL > Downers Grove, IL
+Batavia, IL > Naperville, IL
+Geneva, IL > Naperville, IL
+# Kansas
+El Dorado, KS > Wichita, KS
+# Louisiana
+Slidell, LA > New Orleans, LA
+# Massachusetts
+Cambridge, MA > Boston, MA
+Charlestown, MA > Boston, MA
+Watertown, MA > Boston, MA
+Belmont, MA > Boston, MA
+Wilmington, MA > Boston, MA
+Ipswich, MA > Newburyport, MA
+Milford, MA > Grafton, MA
+# Maryland
+Elkridge, MD > Baltimore, MD
+# Minnesota
+Coon Rapids, MN > Minneapolis, MN
+Maplewood, MN > Minneapolis, MN
+Wayzata, MN > Minneapolis, MN
+# Missouri
+Webster Groves, MO > St. Louis, MO
+Hallsville, MO > Columbia, MO
+# Mississippi
+D’Iberville, MS > Ocean Springs, MS
+# North Carolina
+Cary, NC > Raleigh, NC
+Holly Springs, NC > Raleigh, NC
+Chapel Hill, NC > Durham, NC
+# New Hampshire
+North Hampton, NH > Portsmouth, NH
+# New Jersey
+Haddonfield, NJ > Cherry Hill, NJ
+Hoboken, NJ > Newark, NJ
+Wyckoff, NJ > Newark, NJ
+Wharton, NJ > Newark, NJ
+Marlboro Township, NJ > Farmingdale, NJ
+Flemington, NJ > Whitehouse Station, NJ
+# New York
+Scarsdale, NY > Rye, NY
+East Hills, NY > Island Park, NY
+East Meadow, NY > Island Park, NY
+Montauk, NY > Southampton, NY
+Sagaponack, NY > Southampton, NY
+Brighton, NY > Rochester, NY
+Troy, NY > Albany, NY
+Saratoga Springs, NY > Albany, NY
+# Ohio
+Lakewood, OH > Cleveland, OH
+Avon, OH > Cleveland, OH
+# Pennsylvania
+Ambler, PA > Philadelphia, PA
+Carlisle, PA > Gettysburg, PA
+# Rhode Island
+Newport, RI > Providence, RI
+# South Carolina
+Johns Island, SC > Charleston, SC
+Simpsonville, SC > Greenville, SC
+Spartanburg, SC > Greenville, SC
+York, SC > Charlotte, NC
+# Texas
+Friendswood, TX > Houston, TX
+Mont Belvieu, TX > Houston, TX
+Angleton, TX > Houston, TX
+Georgetown, TX > Round Rock, TX
+Little Elm, TX > Denton, TX
+Keller, TX > Fort Worth, TX
+Brenham, TX > Bryan, TX
+# Utah
+Layton, UT > Salt Lake City, UT
+# Virginia
+Alexandria, VA > Washington, DC
+Norfolk, VA > Virginia Beach, VA
+Hampton Roads, VA > Virginia Beach, VA
+New Baltimore, VA > Haymarket, VA
+Nokesville, VA > Gainesville, VA
