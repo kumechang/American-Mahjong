@@ -2,6 +2,7 @@ billings
 birmingham
 boise
 bonita-springs
+champaign
 cumming
 downers-grove
 fort-worth
@@ -17,6 +18,7 @@ knoxville
 little-elm
 marble-falls
 memphis
+milwaukee
 new-orleans
 new-york
 orlando
