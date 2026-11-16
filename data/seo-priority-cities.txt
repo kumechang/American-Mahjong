@@ -1,6 +1,7 @@
 # Cities that Google Search Console shows with many impressions but a poor position (2026-11-05): their pages are thin for the size of the
 # city, so the nightly research (verify / find modes) takes them first, right after published cities that are about to fall under five rows.
 # One city slug per line. Review against the Search Console export every few weeks.
+# Also listed (2026-11-16): cities that fell under five rows or are about to, so the nightly research tops them up first (see the second block).
 atlanta
 scottsdale
 phoenix
@@ -13,3 +14,16 @@ houston
 seattle
 baltimore
 san-diego
+# Cities that lost, or are about to lose, their page for lack of a fifth row
+west-hartford
+milwaukee
+boise
+champaign
+billings
+marble-falls
+round-rock
+havre-de-grace
+rogers
+newburyport
+colorado-springs
+portsmouth
