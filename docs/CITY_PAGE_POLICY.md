@@ -213,3 +213,5 @@ A town with too few groups for its own page can be folded into a nearby city's p
 - The same group or teacher filed under two towns of one area is shown once (the copy is set to INACTIVE).
 - The hub's intro is written for the whole area (`data/area-intros.json`), same rules as §2.
 - To change the grouping: edit `data/city-areas.txt`, then `node scripts/city-areas-sql.mjs --out=migrations/NNNN_….sql` (without `--alter`) and review the SQL. The first grouping is migration 0284.
+
+**Staying published.** Five rows are needed to publish. Once published, a city (or area, §12) stays while it has at least three groups and teachers, even when its upcoming sessions expire and the total drops under five: sessions come and go every week, groups do not. Below three groups and five rows for three days in a row, `scripts/auto-import.mjs` unpublishes it, and republishes it when it is back over either bar. (Rule added 2026-11-16 after eight cities dropped out in a week.)

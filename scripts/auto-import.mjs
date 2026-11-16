@@ -27,6 +27,9 @@ import { arg, today, q, parseCsv, csvCell, NOT_A_SESSION, venueOk } from "./lib/
 const dirs = (arg("dirs") ?? "").split(",").map((d) => d.trim()).filter(Boolean);
 const digestPath = arg("digest");
 const MIN_ROWS = 5;
+// A city is published at five rows (groups + teachers + upcoming sessions), but once published it stays while it has this many groups and teachers:
+// sessions expire every week, groups do not, so a city with three groups should not drop out and come back as its sessions come and go.
+const KEEP_GROUPS = 3;
 const MAX_ROWS = { clubs: 400, instructors: 250, events: 500, flips: 12 };
 const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
 const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -211,22 +214,24 @@ if (parts.length) {
 // Rows are counted over the whole area page (the city and the towns folded into it, City.areaId); a folded town is never published itself.
 const inArea = "cityId IN (SELECT t.id FROM City t WHERE t.id = c.id OR t.areaId = c.id)";
 const counts = q(`SELECT c.slug, c.name, c.state, c.published,
+  (SELECT count(*) FROM Club WHERE ${inArea} AND status = 'ACTIVE') + (SELECT count(*) FROM Instructor WHERE ${inArea} AND status = 'ACTIVE') AS groups,
   (SELECT count(*) FROM Club WHERE ${inArea} AND status = 'ACTIVE') + (SELECT count(*) FROM Instructor WHERE ${inArea} AND status = 'ACTIVE') +
   (SELECT count(*) FROM Event WHERE ${inArea} AND status = 'ACTIVE' AND eventDate >= '${today} 00:00:00') AS n FROM City c WHERE c.areaId IS NULL`);
 for (const c of counts) {
-  if (c.published && c.n < MIN_ROWS) {
+  const holds = c.n >= MIN_ROWS || c.groups >= KEEP_GROUPS; // enough to stay published (or to come back, for a city this script unpublished)
+  if (c.published && !holds) {
     const since = below.get(c.slug) ?? today;
     below.set(c.slug, since);
     const days = Math.round((Date.parse(today) - Date.parse(since)) / 864e5);
     if (days >= GRACE_DAYS) { flips.off.push(c); below.delete(c.slug); } else watching.push(`${c.name}, ${c.state} (${c.n} since ${since})`);
   } else {
     below.delete(c.slug);
-    if (!c.published && autoList.has(c.slug) && c.n >= MIN_ROWS) flips.on.push(c);
+    if (!c.published && autoList.has(c.slug) && holds) flips.on.push(c);
   }
 }
 if (flips.off.length + flips.on.length > MAX_ROWS.flips) { console.error(`${flips.off.length + flips.on.length} cities would change visibility at once: leaving it to a person`); try { execFileSync("rm", ["-f", out]); } catch { /* ignore */ } process.exit(1); }
 const flipSql = [
-  ...flips.off.map((c) => `UPDATE "City" SET "published" = 0, "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(c.slug)}; -- ${c.name}, ${c.state}: ${c.n} active rows for ${GRACE_DAYS}+ days (rule: ${MIN_ROWS})`),
+  ...flips.off.map((c) => `UPDATE "City" SET "published" = 0, "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(c.slug)}; -- ${c.name}, ${c.state}: ${c.n} active rows for ${GRACE_DAYS}+ days (rule: ${MIN_ROWS} rows, or ${KEEP_GROUPS} groups to stay)`),
   ...flips.on.map((c) => `UPDATE "City" SET "published" = 1, "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(c.slug)}; -- ${c.name}, ${c.state}: back to ${c.n} active rows`),
 ];
 const belowChanged = JSON.stringify([...below]) !== belowBefore;
