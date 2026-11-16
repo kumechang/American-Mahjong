@@ -1,9 +1,7 @@
 chelsea 2026-11-10
-colorado-springs 2026-11-15
+havre-de-grace 2026-11-16
 johns-island 2026-11-11
-newburyport 2026-11-13
 nokesville 2026-11-12
-rogers 2026-11-13
 round-rock 2026-11-15
 webster-groves 2026-11-11
 wyckoff 2026-11-11
