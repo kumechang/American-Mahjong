@@ -30,7 +30,7 @@ const MIN_ROWS = 5;
 // A city is published at five rows (groups + teachers + upcoming sessions), but once published it stays while it has this many groups and teachers:
 // sessions expire every week, groups do not, so a city with three groups should not drop out and come back as its sessions come and go.
 const KEEP_GROUPS = 3;
-const MAX_ROWS = { clubs: 400, instructors: 250, events: 500, flips: 12 };
+const MAX_ROWS = { clubs: 400, instructors: 250, events: 1000, flips: 12 }; // events raised from 500 on 2026-11-17: the crawler had delivered nothing for three weeks, so the first run after the fix carries a backlog
 const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
 const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const slugify = (t) => String(t).toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
