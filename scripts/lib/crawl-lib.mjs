@@ -274,9 +274,24 @@ export async function eventbriteOrg(url) {
   return out;
 }
 
-export async function jsonLd(url) {
+// US state -> IANA time zone (the zone most of the state is in), to turn a UTC timestamp (2026-12-09T21:00:00.000Z) into local date and time
+const STATE_TZ = Object.fromEntries([
+  ...["CT","DE","DC","FL","GA","IN","KY","ME","MD","MA","MI","NH","NJ","NY","NC","OH","PA","RI","SC","VT","VA","WV"].map((x) => [x, "America/New_York"]),
+  ...["AL","AR","IL","IA","LA","MN","MS","MO","OK","WI","KS","NE","SD","ND","TX","TN"].map((x) => [x, "America/Chicago"]),
+  ...["CO","ID","MT","NM","UT","WY"].map((x) => [x, "America/Denver"]), ["AZ", "America/Phoenix"],
+  ...["CA","NV","OR","WA"].map((x) => [x, "America/Los_Angeles"]), ["AK", "America/Anchorage"], ["HI", "Pacific/Honolulu"],
+]);
+export function utcToLocal(iso, state) {
+  const tz = STATE_TZ[state];
+  const d = new Date(iso);
+  if (!tz || Number.isNaN(d.getTime())) return null;
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(d).map((x) => [x.type, x.value]));
+  return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}` };
+}
+
+export async function jsonLd(url, state) {
   const html = await get(url);
-  const first = jsonLdFromHtml(html, url);
+  const first = jsonLdFromHtml(html, url, state);
   if (first.length || !/mah/i.test(html)) return first;
   // the schedule often lives on a subpage ("Events", "Classes", "Calendar"): follow up to three such links from the home page
   const out = [];
@@ -287,14 +302,14 @@ export async function jsonLd(url) {
     if (out.length >= 3) break;
   }
   for (const u of out) {
-    try { const sub = jsonLdFromHtml(await get(u), u); if (sub.length) return sub; } catch { /* 404 and the like */ }
+    try { const sub = jsonLdFromHtml(await get(u), u, state); if (sub.length) return sub; } catch { /* 404 and the like */ }
   }
   // a calendar feed linked from the home page
   const feed = (html.match(/(?:href|src)="((?:webcal:|https?:)[^"]*\.ics[^"]*)"/i) ?? [])[1];
   if (feed) { try { const ev = await icsEvents(feed.replace(/&amp;/g, "&")); if (ev.length) return ev; } catch { /* unreadable feed */ } }
   return first;
 }
-export function jsonLdFromHtml(html, url) {
+export function jsonLdFromHtml(html, url, state) {
   const out = [];
   const walk = (n) => {
     if (Array.isArray(n)) return n.forEach(walk);
@@ -306,11 +321,13 @@ export function jsonLdFromHtml(html, url) {
     }
     if (/Event/.test(t) && n.startDate && n.name) {
       const sd = String(n.startDate);
-      const dm = sd.match(/^(\d{4}-\d{2}-\d{2})(?:T(\d{2}:\d{2}))?/);
+      // a UTC timestamp is converted with the state's time zone; without a known state it is skipped as before
+      const local = /Z$/.test(sd) ? utcToLocal(sd, state) : null;
+      const dm = local ? [sd, local.date, local.time] : sd.match(/^(\d{4}-\d{2}-\d{2})(?:T(\d{2}:\d{2}))?/);
       const text = `${n.name} ${n.description ?? ""}`;
       // a calendar page lists everything the venue does: keep American-style mahjong only,
       // and skip UTC timestamps (the local date and time can't be recovered from them)
-      if (dm && /mah[\s-]?j/i.test(text) && !/riichi|hong kong|chinese|singapore|taiwan|japanese/i.test(text) && !/Z$/.test(sd)) {
+      if (dm && /mah[\s-]?j/i.test(text) && !/riichi|hong kong|chinese|singapore|taiwan|japanese/i.test(text) && (!/Z$/.test(sd) || local)) {
         const loc = decode(String(n.location?.name ?? ""));
         const price = [].concat(n.offers ?? []).map((o) => Number(o?.price ?? o?.lowPrice)).find((p) => Number.isFinite(p));
         out.push({ name: decode(String(n.name)), date: dm[1], time: dm[2] ?? "", venue: loc, price: price ?? null, url: typeof n.url === "string" ? n.url : url, type: guessType(String(n.name)) });

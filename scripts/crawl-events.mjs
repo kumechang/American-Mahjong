@@ -140,7 +140,7 @@ for (const { owner, src } of work) {
       : src.kind === "browser" ? await browserEvents(src.key, horizonDate)
       : src.kind === "calendar" ? await widgetCalendar(src.key, src.all, src.include)
       : src.kind === "ics" ? await icsEvents(src.key, horizonDate, src.all)
-      : ((await tribe(src.key)) ?? (await jsonLd(src.key)));
+      : ((await tribe(src.key)) ?? (await jsonLd(src.key, city.state)));
     if (found.organizer && !crawledLinks.has(`${ownerKey(owner)}|${found.organizer}`)) {
       crawledLinks.add(`${ownerKey(owner)}|${found.organizer}`);
       work.push({ owner, src: { kind: "ebrite", key: found.organizer } });

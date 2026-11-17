@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   stats:
@@ -28,3 +29,17 @@ jobs:
         run: |
           [[ "${WEEKS:-6}" =~ ^[0-9]{1,2}$ ]] || { echo "不正な weeks"; exit 1; }
           { echo "## 夜間リサーチの週次集計"; node scripts/nightly-stats.mjs --weeks="${WEEKS:-6}" --branches; } | tee -a "$GITHUB_STEP_SUMMARY"
+      # 定期ワークフローが黙って失敗し続けていないか(crawl-events は 10-29 から 3 週間失敗していて、誰も気づかなかった)
+      - name: 定期ワークフローの直近 7 回
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo ""
+            echo "## 定期ワークフローの直近 7 回(success / failure)"
+            for wf in crawl-events discover-clubs auto-import nightly-research freshness; do
+              res=$(gh run list --workflow="$wf.yml" --limit 7 --json conclusion --jq '[.[].conclusion] | join(" ")' 2>/dev/null || echo "?")
+              bad=$(echo "$res" | tr ' ' '\n' | grep -c failure || true)
+              echo "- $wf: $res $([ "$bad" -ge 3 ] && echo '**← 3 回以上失敗**')"
+            done
+          } | tee -a "$GITHUB_STEP_SUMMARY"
