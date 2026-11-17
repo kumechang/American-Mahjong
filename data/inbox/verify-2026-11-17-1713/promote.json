@@ -1,0 +1,20 @@
+[
+ {
+  "type": "club",
+  "slug": "wilmette-lakeside-mahjong",
+  "name": "Lakeside Mahjong",
+  "city": "Wilmette",
+  "state": "IL",
+  "evidence": "Happy Merry Mahjong - Holiday open play mahjong event! Wear your festive, holiday sweater and come for some holiday cheer! Must know NMJL rules and be able to play unguided.",
+  "url": "https://lakeside-mahjong.bamgoodtime.com/events/343b37ff-74bb-4ff7-af51-b9d284ab7f06"
+ },
+ {
+  "type": "club",
+  "slug": "arlington-arlington-mahj-muddle",
+  "name": "Arlington Mahj Muddle",
+  "city": "Arlington",
+  "state": "TX",
+  "evidence": "Play on the NMJL 2026 card, record your scores, and follow the leaderboard throughout the season.",
+  "url": "https://mahjmuddle.com/arlington"
+ }
+]
