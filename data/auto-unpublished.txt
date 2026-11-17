@@ -5,8 +5,6 @@ bonita-springs
 champaign
 cumming
 downers-grove
-fort-worth
-fresno
 georgetown
 haddonfield
 hartford
@@ -18,12 +16,10 @@ knoxville
 little-elm
 marble-falls
 memphis
-milwaukee
 new-orleans
 new-york
 orlando
 palm-beach-gardens
-portsmouth
 roswell
 salt-lake-city
 sarasota
