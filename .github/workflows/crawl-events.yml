@@ -42,8 +42,19 @@ jobs:
           if [ "$rc" -eq 3 ]; then echo "found=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           [ "$rc" -eq 0 ] || exit "$rc"
           echo "found=true" >> "$GITHUB_OUTPUT"
+      # 載っている日程が「毎週木曜 5〜7 時」のような決まった周期だけの団体(予約ページにセッションが無いもの)を、6 週間先まで日付にする
+      - name: 周期の日程を展開する
+        id: recur
+        env:
+          ID: ${{ steps.crawl.outputs.id }}
+        run: |
+          set +e
+          node scripts/expand-recurring.mjs --out-dir="data/inbox/$ID" | tee -a summary.md
+          rc=${PIPESTATUS[0]}
+          [ "$rc" -eq 0 ] && echo "found=true" >> "$GITHUB_OUTPUT"
+          exit 0
       - name: 検証して PR を作る
-        if: steps.crawl.outputs.found == 'true'
+        if: steps.crawl.outputs.found == 'true' || steps.recur.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           ID: ${{ steps.crawl.outputs.id }}
