@@ -86,6 +86,13 @@ jobs:
             node scripts/validate-csv.mjs "${args[@]}" >> "$report" 2>&1
             echo '```' >> "$report"
           done
+          # GitHub refuses a PR body over 65,536 characters (the crawler's list of new events outgrew it on 2026-10-29 and every run since
+          # failed here, so nothing was imported): cut the body, the full report is in the branch
+          if [ "$(wc -c < "$report")" -gt 60000 ]; then
+            head -c 60000 "$report" > "$report.cut"
+            printf '\n\n(cut here: the full report is in the branch)\n' >> "$report.cut"
+            mv "$report.cut" "$report"
+          fi
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
