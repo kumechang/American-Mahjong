@@ -1,0 +1,17 @@
+# Webster Groves, MO: event crawler (2026-11-17)
+
+## New events
+- 2026-11-17 16:00 Mahj Social Open Play: Tuesday 4P (Paisley Boutique) [ACTIVE]
+- 2026-11-18 18:00 Learn to Play Mahjong: 101 Class (Paisley Boutique) [ACTIVE]
+- 2026-11-19 15:00 Mahj Social Open Play: Thursday 3P (Paisley Boutique) [ACTIVE]
+- 2026-11-21 10:30 Mahj Social Open Play: Saturday Mornings (Paisley Boutique) [ACTIVE]
+- 2026-11-22 11:00 Mahjong Brunch and Open Play: Sunday (Paisley Boutique) [ACTIVE]
+- 2026-11-22 14:00 Mahjong 102 and Guided Play (Paisley Boutique) [ACTIVE]
+- 2026-11-24 16:00 Mahj Social Open Play: Tuesday 4P (Paisley Boutique) [ACTIVE]
+- 2026-11-29 11:00 Mahjong Brunch and Open Play: Sunday (Paisley Boutique) [ACTIVE]
+- 2026-11-30 18:00 Learn to Play Mahjong: 101 Class (Paisley Boutique) [ACTIVE]
+- 2026-12-01 16:00 Mahj Social Open Play: Tuesday 4P (Paisley Boutique) [ACTIVE]
+- 2026-12-01 18:00 A Very Merry Christmas Mahjong League (Paisley Boutique) [ACTIVE]
+
+## Notes
+- none
