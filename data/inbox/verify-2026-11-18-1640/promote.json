@@ -1,0 +1,29 @@
+[
+ {
+  "type": "club",
+  "slug": "bellingham-stemma-mahj-on-moore",
+  "name": "Stemma Mahj on Moore",
+  "city": "Bellingham",
+  "state": "WA",
+  "evidence": "American Mahjong - NMJL Rules",
+  "url": "https://stemma-mahj.bamgoodtime.com/events/bae61be1-ebf4-49d9-9587-d6ac883eccb1"
+ },
+ {
+  "type": "instructor",
+  "slug": "canton-kay-bell",
+  "name": "Kay Bell",
+  "city": "Canton",
+  "state": "GA",
+  "evidence": "American (NMJL)",
+  "url": "https://mahjongcompare.com/teachers/kay-bell"
+ },
+ {
+  "type": "club",
+  "slug": "canton-the-mahjong-circle-georgiagals-mahjong-games",
+  "name": "The Mahjong Circle (Georgiagals Mahjong & Games)",
+  "city": "Canton",
+  "state": "GA",
+  "evidence": "Wait List Registration is open to players who already know how to play and agree to follow the official rules of the National Mah Jongg League during open play. Join us on June 3rd for a fun and exciting gathering with great games, great co",
+  "url": "https://www.themahjongcircle.com/june-open-play"
+ }
+]
