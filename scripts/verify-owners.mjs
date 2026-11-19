@@ -28,7 +28,7 @@ const skipList = existsSync("data/promote-skip.txt")
   : [];
 const skipped = (o) => skipList.some((s) => s === o.citySlug || s === norm(o.name) || s === `${o.citySlug}/${norm(o.name)}`);
 
-const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com|tiktok|youtube|google\.|linktr\.ee|eventbrite|meetup\.com|calendly|bookwhen/i;
+const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|themahjongline|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com|tiktok|youtube|google\.|linktr\.ee|eventbrite|meetup\.com|calendly|bookwhen/i;
 const siteOf = (o) => [o.website, o.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !DIRECTORY.test(u));
 
 const rows = [

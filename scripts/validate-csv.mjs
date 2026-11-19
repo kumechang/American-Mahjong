@@ -39,7 +39,7 @@ const EVENT_TYPE_HINTS = {
   "guided open play": "OPEN_PLAY", "guided play": "OPEN_PLAY", "open play": "OPEN_PLAY",
   league: "TOURNAMENT", "social tournament": "TOURNAMENT", tournament: "TOURNAMENT", social: "SOCIAL",
 };
-const DIRECTORY_HOSTS = ["bambuddies.org", "mahjonggmaven.com", "orderofthetile.com", "mahjong4friends.com", "wherethewindsblow.com", "markyourmahjong.com", "sloperama.com"];
+const DIRECTORY_HOSTS = ["bambuddies.org", "mahjonggmaven.com", "orderofthetile.com", "mahjong4friends.com", "themahjongline.com", "wherethewindsblow.com", "markyourmahjong.com", "sloperama.com"];
 const VARIANT_WORDS = /american|nmjl|national mah\s?j|mah\s?jongg?|mahj/i;
 
 // ---------------------------------------------------------------- parsing

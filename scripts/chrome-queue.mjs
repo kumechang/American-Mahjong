@@ -37,7 +37,7 @@ for (const o of owners) {
   const own = [o.website, o.sourceUrl].filter((u) => u && /^https?:\/\//.test(u));
   const social = own.find((u) => SOCIAL.test(u));
   // "only" Facebook / Instagram: no other own address besides directories
-  const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|mahjonggmaven|mahjong4friends|orderofthetile|americanmahjonggassociation/i;
+  const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|mahjonggmaven|mahjong4friends|themahjongline|orderofthetile|americanmahjonggassociation/i;
   const other = own.filter((u) => !SOCIAL.test(u) && !DIRECTORY.test(u));
   if (!social || other.length) continue;
   const c = cities.get(o.cityId);

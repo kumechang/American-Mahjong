@@ -65,9 +65,9 @@ for (const { run, dir } of roots) {
 
 // ---------- database ----------
 const norm = (s) => String(s ?? "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").replace(/\b(the|mahjong|mah jongg|mahjongg|mah jong|mahj|club|llc|inc)\b/g, " ").replace(/\s+/g, " ").trim();
-const SHARED_HOST = /(^|\.)(bamgoodtime\.com|eventbrite\.[a-z.]+|meetup\.com|facebook\.com|instagram\.com|linktr\.ee|bookwhen\.com|calendly\.com|simpletix\.com|tickettailor\.com|active\.com|mahjong4friends\.com|bambuddies\.org|mahjonggmaven\.com|orderofthetile\.com|youtube\.com|google\.com|substack\.com|axios\.com|patch\.com)$/i;
+const SHARED_HOST = /(^|\.)(bamgoodtime\.com|eventbrite\.[a-z.]+|meetup\.com|facebook\.com|instagram\.com|linktr\.ee|bookwhen\.com|calendly\.com|simpletix\.com|tickettailor\.com|active\.com|mahjong4friends\.com|themahjongline\.com|bambuddies\.org|mahjonggmaven\.com|orderofthetile\.com|youtube\.com|google\.com|substack\.com|axios\.com|patch\.com)$/i;
 const hostOf = (u) => { try { const h = new URL(u).hostname.replace(/^www\./, ""); return SHARED_HOST.test(h) ? null : h; } catch { return null; } };
-const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com/i;
+const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|themahjongline|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com/i;
 
 const cities = q(`SELECT name, state, slug, published FROM City`);
 const cityByKey = new Map(cities.map((c) => [`${c.name.toLowerCase()}|${c.state}`, c]));
