@@ -155,7 +155,11 @@ for (const p of promote.slice(0, MAX_PROMOTIONS)) {
   const row = q(`SELECT x.id, x.slug, x.status, c.name AS cityName FROM ${table} x JOIN City c ON c.id = x.cityId WHERE x.slug = ${sqlStr(p.slug)}`)[0];
   if (!row || row.status !== "NEEDS_REVIEW") { skip("promotion: not a NEEDS_REVIEW row any more", p.name); continue; }
   const quote = String(p.evidence).replace(/[\r\n]+/g, " ").slice(0, 200);
-  promoteSql.push(`UPDATE "${table}" SET "status" = 'ACTIVE', "lastVerifiedAt" = '${today}', "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(p.slug)} AND "status" = 'NEEDS_REVIEW'; -- ${p.name} (${p.city}, ${p.state}): "${quote}" ${p.url}`);
+  // a lead's placeholder text ("American/NMJL not stated on the club's page.") must not stay on a card that is now ACTIVE: replace it with the sentence the promotion rests on
+  const cardText = table === "Club"
+    ? `, "description" = CASE WHEN "description" LIKE '%American/NMJL not stated%' THEN trim(replace("description", 'American/NMJL not stated on the club''s page.', '') || ${sqlStr(` Its own page says: "${quote}"`)}) ELSE "description" END`
+    : "";
+  promoteSql.push(`UPDATE "${table}" SET "status" = 'ACTIVE', "lastVerifiedAt" = '${today}'${cardText}, "updatedAt" = CURRENT_TIMESTAMP WHERE "slug" = ${sqlStr(p.slug)} AND "status" = 'NEEDS_REVIEW'; -- ${p.name} (${p.city}, ${p.state}): "${quote}" ${p.url}`);
   // its upcoming sessions that already have a start time and a named venue become visible too (same rule as the event crawler)
   let n = 0;
   for (const e of q(`SELECT slug, name, startTime, venue FROM Event WHERE ${col} = ${sqlStr(row.id)} AND status = 'NEEDS_REVIEW' AND eventDate >= '${today} 00:00:00'`)) {

@@ -125,7 +125,7 @@ for (const e of q(`SELECT clubId, instructorId FROM Event WHERE status='NEEDS_RE
   const k = e.clubId ? `club:${e.clubId}` : e.instructorId ? `instructor:${e.instructorId}` : null;
   if (k) pendingEvents.set(k, (pendingEvents.get(k) ?? 0) + 1);
 }
-const DIRECTORY_ONLY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies\.org|mahjonggmaven\.com|mahjong4friends\.com|americanmahjonggassociation\.com|orderofthetile|facebook\.com|instagram\.com/i;
+const DIRECTORY_ONLY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies\.org|mahjonggmaven\.com|mahjong4friends\.com|themahjongline\.com|americanmahjonggassociation\.com|orderofthetile|facebook\.com|instagram\.com/i;
 const ownUrl = (o) => [o.website, o.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !DIRECTORY_ONLY.test(u)) ?? null;
 // Something the server can actually work with: the owner's own site, or a Bam Good Time page that shows dated sessions or American wording.
 // A Bam Good Time page with no sessions and no wording has nothing to read; it goes to the outreach list instead.
@@ -142,7 +142,7 @@ const crawlerPlatform = (o) => {
 
 // Sites already on the site (ACTIVE owners with a page of their own). The server only got names before and kept returning the same group under
 // another name or town (Blue Tiger in three towns, JCC Milwaukee = Samson JCC, KC Mahjong Club = Mahjong Club KC), so the hosts go into the prompt.
-const SHARED_HOST = /(^|\.)(bamgoodtime\.com|eventbrite\.[a-z.]+|meetup\.com|facebook\.com|instagram\.com|linktr\.ee|bookwhen\.com|calendly\.com|simpletix\.com|tickettailor\.com|active\.com|mahjong4friends\.com|bambuddies\.org|mahjonggmaven\.com)$/i;
+const SHARED_HOST = /(^|\.)(bamgoodtime\.com|eventbrite\.[a-z.]+|meetup\.com|facebook\.com|instagram\.com|linktr\.ee|bookwhen\.com|calendly\.com|simpletix\.com|tickettailor\.com|active\.com|mahjong4friends\.com|themahjongline\.com|bambuddies\.org|mahjonggmaven\.com)$/i;
 const siteHost = (u) => { try { return new URL(u).hostname.replace(/^www\./, "").toLowerCase(); } catch { return null; } };
 const cityOf = new Map(cities.map((c) => [c.id, c]));
 const activeSites = new Map();

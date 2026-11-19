@@ -79,7 +79,7 @@ function sourceFor(owner) {
   }
   // Teachers' own sites are read too, but only through structured data (JSON-LD, calendar feeds) and only when they name mahjong;
   // pages of directories and social networks are not the teacher's own schedule.
-  const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com|tiktok|youtube|google\./i;
+  const DIRECTORY = /bamgoodtime\.com\/(clubs|mahjong-clubs)|bambuddies|orderofthetile|mahjonggmaven|mahjong4friends|themahjongline|americanmahjonggassociation|wherethewindsblow|facebook\.com|instagram\.com|tiktok|youtube|google\./i;
   const site = [owner.website, owner.sourceUrl].find((u) => u && /^https?:\/\//.test(u) && !DIRECTORY.test(u));
   return site ? { kind: "jsonld", key: site } : null;
 }
