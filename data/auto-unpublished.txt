@@ -1,6 +1,5 @@
 billings
 birmingham
-boise
 bonita-springs
 champaign
 cumming
