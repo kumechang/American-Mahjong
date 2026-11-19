@@ -24,6 +24,9 @@ Thousand Oaks, CA > Los Angeles, CA
 Lake Forest, CA > Los Angeles, CA
 # Connecticut
 Darien, CT > Greenwich, CT
+Norwalk, CT > Greenwich, CT
+Fairfield, CT > Greenwich, CT
+Bridgeport, CT > Greenwich, CT
 Stamford, CT > Greenwich, CT
 New Canaan, CT > Greenwich, CT
 Westport, CT > Greenwich, CT
