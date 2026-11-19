@@ -1,0 +1,12 @@
+# Shrewsbury Ma, MA: event crawler (2026-11-19)
+
+## New events
+- 2027-01-03 11:30 SUNDAY SOCIAL PLAY (Lets Bam Mahjong) [ACTIVE]
+- 2027-01-03 11:30 SUNDAY SOCIAL PLAY GUIDED (Lets Bam Mahjong) [ACTIVE]
+- 2027-01-10 11:30 SUNDAY SOCIAL PLAY (Lets Bam Mahjong) [ACTIVE]
+- 2027-01-10 11:30 SUNDAY SOCIAL PLAY GUIDED (Lets Bam Mahjong) [ACTIVE]
+- 2027-01-17 11:30 SUNDAY SOCIAL PLAY (Lets Bam Mahjong) [ACTIVE]
+- 2027-01-17 11:30 SUNDAY SOCIAL PLAY GUIDED (Lets Bam Mahjong) [ACTIVE]
+
+## Notes
+- none
