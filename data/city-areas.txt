@@ -120,6 +120,7 @@ Carlisle, PA > Gettysburg, PA
 Newport, RI > Providence, RI
 # South Carolina
 Johns Island, SC > Charleston, SC
+Mt. Pleasant, SC > Charleston, SC
 Simpsonville, SC > Greenville, SC
 Spartanburg, SC > Greenville, SC
 York, SC > Charlotte, NC
