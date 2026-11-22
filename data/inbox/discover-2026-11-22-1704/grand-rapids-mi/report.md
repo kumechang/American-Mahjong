@@ -1,0 +1,9 @@
+# Grand Rapids, MI: club discovery (2026-11-22)
+
+**This city is not on the site yet** (and may be a suburb of a larger metro: check which metro page it belongs to).
+
+## Clubs found on Bam Good Time
+- Mahj Club Collective (https://mahj-club-collective.bamgoodtime.com): American/NMJL not stated; 3 upcoming event(s)
+
+## Next step
+Confirm American / NMJL on each club's own page, then promote to ACTIVE. Rows here are NEEDS_REVIEW by design.
