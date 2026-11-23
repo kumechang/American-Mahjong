@@ -128,11 +128,11 @@ for (const type of ["club", "instructor"]) {
       if (MEMBER_ONLY.test(text)) row.why.push("member-only wording");
       if (HOME.test(text) || HOME.test(r.address ?? "")) row.why.push("possible private-home venue");
       if (!site) row.why.push("no own page (directory / social only)");
-      const qs = quotesIn(text).filter((x) => AMERICAN_WORDING.test(x));
+      const qs = [r.evidence_quote, ...quotesIn(text)].filter((x) => x && AMERICAN_WORDING.test(x)); // the evidence_quote column first, then quotes inside the text
       row.quotes = qs;
       if (qs.length === 0) row.why.push("no quote of an American / NMJL sentence");
       if (row.why.length === 0 && verify) {
-        const pages = [...new Set([r.website, r.source_url].filter((u) => u && /^https?:\/\//.test(u) && !DIRECTORY.test(u)))];
+        const pages = [...new Set([r.evidence_url, r.website, r.source_url].filter((u) => u && /^https?:\/\//.test(u) && !DIRECTORY.test(u)))];
         let ok = false, unreadable = 0;
         for (const u of pages) {
           const t = await pageText(u);

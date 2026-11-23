@@ -235,7 +235,10 @@ async function main() {
     if (table.length === 0) { results.push({ kind, path, problems: [{ level: "ERROR", row: 1, name: "", msg: "file is empty" }], count: 0 }); continue; }
     const header = table[0].values.map((h) => h.trim());
     const expected = HEADERS[kind];
-    if (header.join(",") !== expected.join(",")) {
+    // clubs and instructors may end with evidence_quote and evidence_url (the sentence the row rests on, word for word, and its page)
+    const evidenceTail = kind === "events" ? [] : ["evidence_quote", "evidence_url"];
+    const withEvidence = header.slice(expected.length).join(",") === evidenceTail.join(",") || header.slice(expected.length).join(",") === evidenceTail.slice(0, 1).join(",");
+    if (header.join(",") !== expected.join(",") && !(evidenceTail.length && withEvidence && header.slice(0, expected.length).join(",") === expected.join(","))) {
       const missing = expected.filter((h) => !header.includes(h));
       const extra = header.filter((h) => !expected.includes(h));
       const sameColumns = !missing.length && !extra.length;

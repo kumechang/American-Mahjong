@@ -209,6 +209,15 @@ function checkDate(value, field, ctx, issues) {
   }
 }
 
+// the sentence a row rests on (evidence_quote column) goes on its card unless the text already has it
+function withEvidence(text, quote) {
+  const qt = String(quote ?? "").replace(/\s+/g, " ").trim().slice(0, 300);
+  if (!qt) return text || null;
+  const base = String(text ?? "").trim();
+  if (base.replace(/\s+/g, " ").includes(qt)) return base;
+  return `${base ? `${base} ` : ""}Its own page says: "${qt}"`;
+}
+
 function mergeNote(existing, addition, label) {
   if (!addition) return existing || null;
   const line = label ? `${label}: ${addition}` : addition;
@@ -301,7 +310,7 @@ async function main() {
         sqlString(`club_${slug}`),
         sqlString(data.name),
         sqlString(slug),
-        sqlString(data.description || null),
+        sqlString(withEvidence(data.description, data.evidence_quote)),
         citySubquery(data.city, data.state),
         sqlString(data.address || null),
         sqlString(data.website || null),
@@ -366,7 +375,7 @@ async function main() {
       }
 
       const { price, note: priceNote } = parsePrice(data.price ?? "");
-      const notes = mergeNote(data.notes || null, priceNote, "Price");
+      const notes = withEvidence(mergeNote(data.notes || null, priceNote, "Price"), data.evidence_quote);
 
       if (issues.errors.length > 0) continue;
 
