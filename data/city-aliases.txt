@@ -1,0 +1,21 @@
+# Places the AI research server invents or files wrongly, and the city the site files them under: "<name>, ST > <city>, ST".
+# scripts/inbox-draft.mjs applies this before matching, so the draft already shows the right city. Metro rule: a town goes under the nearest
+# city of the same metro that the site has (or a town that already has its own page in the same area).
+Johnson County KS, KS > Kansas City, MO
+Overland Park, KS > Kansas City, MO
+San Francisco Bay Area, CA > San Francisco, CA
+Fox Point, WI > Milwaukee, WI
+McLean, VA > Vienna, VA
+Milton, VT > Burlington, VT
+Long Island, NY > Bethpage, NY
+Suffolk County, NY > Commack, NY
+Port Jefferson, NY > Huntington, NY
+Port Jefferson Station, NY > Huntington, NY
+Oceanside, NY > Island Park, NY
+Sunset Park Library, NY > New York, NY
+Frisco, TX > Dallas, TX
+Berkeley, CA > Oakland, CA
+Kennebunk, ME > Portland, ME
+Standish, ME > Portland, ME
+South Portland, ME > Portland, ME
+Cape Elizabeth, ME > Portland, ME

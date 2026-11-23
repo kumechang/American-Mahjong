@@ -51,6 +51,13 @@ function* walk(dir) {
 }
 
 const read = (p) => parseCsv(readFileSync(p, "utf8").replace(/^﻿/, ""));
+// city names the research server invents (data/city-aliases.txt): "<name>, ST > <city>, ST"
+const ALIAS = new Map();
+if (existsSync("data/city-aliases.txt")) for (const l of readFileSync("data/city-aliases.txt", "utf8").split("\n")) {
+  const m = l.trim().match(/^([^#].*?), ([A-Z]{2}) > (.+?), ([A-Z]{2})$/);
+  if (m) ALIAS.set(`${m[1].toLowerCase()}|${m[2]}`, { city: m[3], state: m[4] });
+}
+const aliased = (r) => { const a = ALIAS.get(`${String(r.city ?? "").toLowerCase()}|${r.state}`); if (a) { r.city = a.city; r.state = a.state; } return r; };
 const found = { clubs: [], instructors: [], events: [], reports: [] };
 for (const { run, dir } of roots) {
   for (const p of walk(dir)) {
@@ -59,7 +66,7 @@ for (const { run, dir } of roots) {
     const kind = { "clubs.csv": "clubs", "instructors.csv": "instructors", "events.csv": "events" }[f];
     if (!kind) continue;
     const folder = basename(dirname(p));
-    for (const r of read(p)) found[kind].push({ ...r, _run: run, _folder: folder });
+    for (const r of read(p)) found[kind].push(aliased({ ...r, _run: run, _folder: folder }));
   }
 }
 
