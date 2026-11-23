@@ -17,6 +17,7 @@ memphis
 myrtle-beach
 new-orleans
 new-york
+north-shore
 orlando
 palm-beach-gardens
 salt-lake-city

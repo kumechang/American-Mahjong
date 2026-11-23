@@ -1,0 +1,51 @@
+[
+ {
+  "slug": "island-park-beginner-mah-jongg-guided-play-20261127",
+  "name": "Beginner Mah Jongg Guided Play",
+  "date": "2026-11-27",
+  "owner": "MJ Social",
+  "city": "Island Park"
+ },
+ {
+  "slug": "island-park-canasta-open-play-20261128",
+  "name": "Canasta Open Play",
+  "date": "2026-11-28",
+  "owner": "MJ Social",
+  "city": "Island Park"
+ },
+ {
+  "slug": "island-park-mah-jongg-open-play-20261128",
+  "name": "Mah Jongg Open Play",
+  "date": "2026-11-28",
+  "owner": "MJ Social",
+  "city": "Island Park"
+ },
+ {
+  "slug": "island-park-automatic-table-mah-jongg-open-play-20261201",
+  "name": "Automatic Table Mah Jongg Open Play",
+  "date": "2026-12-01",
+  "owner": "MJ Social",
+  "city": "Island Park"
+ },
+ {
+  "slug": "gainesville-mahjong-open-play-at-old-bust-head-brewing-co-20261207",
+  "name": "Mahjong Open Play at Old Bust Head Brewing Co.",
+  "date": "2026-12-07",
+  "owner": "Blue Ridge Mahj",
+  "city": "Gainesville"
+ },
+ {
+  "slug": "dallas-mahjong-101-free-beginner-lesson-at-champions-8-seats-20261124",
+  "name": "Mahjong 101: Free Beginner Lesson at Champions (8 Seats)",
+  "date": "2026-11-24",
+  "owner": "Mahjong NTX by Briar House",
+  "city": "Dallas"
+ },
+ {
+  "slug": "dallas-mahjong-101-small-group-beginner-lesson-at-champions-4-seats-only-20261204",
+  "name": "Mahjong 101: Small-Group Beginner Lesson at Champions (4 Seats Only)",
+  "date": "2026-12-04",
+  "owner": "Mahjong NTX by Briar House",
+  "city": "Dallas"
+ }
+]
