@@ -38,10 +38,20 @@ jobs:
         id: backlog
         env:
           GH_TOKEN: ${{ github.token }}
+          MODE: ${{ inputs.mode }}
         run: |
           set -euo pipefail
           open=$(gh pr list --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("inbox/"))] | length')
           echo "未処理の inbox PR: $open"
+          # 実行する時刻(UTC)を data/nightly-hours.txt で決める。cron-job.org が 3 時間おきに呼んでも、ここに無い時刻は何もせず終わる
+          # (手動で mode を入れたときは、時刻に関係なく実行する)。cron-job.org 側の予定を減らせば、この確認は何もしなくなる。
+          hour=$(date -u +%-H)
+          allowed=$(grep -v '^#' data/nightly-hours.txt 2>/dev/null | tr -s ' \n' ' ' || true)
+          if [ -z "$MODE" ] && [ -n "$allowed" ] && ! echo " $allowed " | grep -q " $hour "; then
+            echo "UTC ${hour} 時は data/nightly-hours.txt に無いので、今回は依頼しません(許可: ${allowed})" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           echo "未処理の inbox PR: ${open} 件(制限なし。今夜も依頼します)" >> "$GITHUB_STEP_SUMMARY"
           echo "skip=false" >> "$GITHUB_OUTPUT"
       - run: npm ci

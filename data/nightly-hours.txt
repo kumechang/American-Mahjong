@@ -1,0 +1,11 @@
+# UTC hours at which the nightly research really runs (cron-job.org calls the workflow every three hours; the other calls end at once).
+# Changed on 2026-11-23 from eight runs a day to four, after measuring 11-09..11-23 (see docs/CRAWLER_KNOWHOW.md §56):
+#   0  find   (verify hands over to find)   best day for confirmed groups
+#   6  cities                                best for new towns
+#  12  find
+#  15  cities
+# To run again at another hour (3, 9, 18 or 21), add the hour here. A run started by hand with a mode ignores this file.
+0
+6
+12
+15
