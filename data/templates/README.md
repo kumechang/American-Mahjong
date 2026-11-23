@@ -84,3 +84,6 @@ local dev (`drizzle/seed.sql`) — replace it with real, verified rows.
 | `price` | Numeric, USD, blank if free/unknown |
 | `registration_url` | Sign-up link if there is one |
 | `source_url`, `last_verified_at`, `status` | See Conventions above |
+
+## Optional columns `evidence_quote` and `evidence_url` (clubs.csv and instructors.csv)
+After `status`, a file may add `evidence_quote` (one sentence from the group's own page that says American, NMJL, National Mah Jongg League or "the card", word for word) and `evidence_url` (the page it is on). They are required for an ACTIVE row from the nightly research. `validate-csv.mjs` accepts them, `import-csv.mjs` adds the sentence to the card ("Its own page says: ...") unless the description already contains it, and `inbox-draft.mjs` checks the sentence on that page.

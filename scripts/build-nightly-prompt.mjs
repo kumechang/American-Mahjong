@@ -159,6 +159,31 @@ const activeSitesBlock = `### すでにサイトにある団体の公式サイ�
 ${[...activeSites].slice(0, 450).map(([h, n]) => `- ${h} — ${n}`).join("\n")}
 `;
 
+// Leads (NEEDS_REVIEW owners with a page of their own) that are not ACTIVE yet: in the town-exploring mode the server returned them again as if new (12 of 40 owner rows
+// in the 11-23 batch were already on the site as a lead or as an ACTIVE group), so their hosts go into the prompt too.
+const leadSites = new Map();
+for (const o of owners.filter((x) => x.status === "NEEDS_REVIEW")) {
+  for (const u of [o.website, o.sourceUrl]) {
+    const h = u ? siteHost(u) : null;
+    if (!h || SHARED_HOST.test(h) || activeSites.has(h) || leadSites.has(h)) continue;
+    const c = cityOf.get(o.cityId);
+    leadSites.set(h, `${o.name} (${c?.name}, ${c?.state})`);
+  }
+}
+const leadSitesBlock = `### すでにリード(確認待ち)としてサイトにある団体の公式サイト(新しい団体として送らない)
+調べた団体のページが、下のドメインと同じなら、CSV には入れず、report.md に \`KNOWN: <下の団体名>\` と書く。そのリードの確認(American / NMJL の一文)は、別の夜の「確認」の仕事で行う。
+${[...leadSites].slice(0, 300).map(([h, n]) => `- ${h} — ${n}`).join("\n")}
+`;
+
+// A quote written inside description could not be told from the description by the importer, and paraphrases came back as "quote not found": it gets its own columns.
+const evidenceBlock = `### 引用は専用の 2 列に書く(clubs.csv / instructors.csv)
+ヘッダー行の最後(status の後ろ)に、列 \`evidence_quote\` と \`evidence_url\` を足す。
+- evidence_quote: 団体自身のページに書かれている、American / NMJL / National Mah Jongg League(または "the card")を含む一文を、**一字一句そのまま**(言い換え・要約・翻訳をしない)。
+- evidence_url: その一文が載っているページの URL。
+- status が ACTIVE の行は、両方が必須。ACTIVE にできる一文が見つからなければ、ACTIVE にせず NEEDS_REVIEW で送る。
+- 引用は、この 2 列にだけ書く(description / notes の中に引用を埋めない)。
+`;
+
 // The server names towns as it likes ("Johnson County KS", "ny", "san-francisco-bay-area", "Newington" for a West Hartford bookshop), and each
 // one had to be re-filed by hand. It now gets the list of cities the site has and must choose from it.
 const cityListBlock = `### サイトにある都市の一覧(CSV の city / state 列は、必ずこの一覧から選ぶ)
@@ -375,7 +400,7 @@ const swap = (name, text) => {
 };
 swap("MODE", modeText);
 swap("TARGETS", targets);
-swap("EXISTING", mode === "events" ? `${existing}\n${cityListBlock}` : `${existing}\n${activeSitesBlock}\n${cityListBlock}`);
+swap("EXISTING", mode === "events" ? `${existing}\n${cityListBlock}` : `${existing}\n${activeSitesBlock}\n${mode === "cities" ? `${leadSitesBlock}\n` : ""}${cityListBlock}\n${evidenceBlock}`);
 swap("FOCUS", `### 今夜の重点\n\n${focus}`);
 writeFileSync(out, s);
 
