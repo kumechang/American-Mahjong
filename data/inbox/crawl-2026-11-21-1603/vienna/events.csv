@@ -1,0 +1,2 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+"""Shell Yeah"" -- a Crafts & Craks Event @ The Bamboo Room",Vienna,VA,2026-12-06,14:30,,"THE BAMBOO ROOM - 101 Church Street, Unit D, Vienna VA 22180",The Bamboo Room,,OTHER,FALSE,85,https://thebambooroom.bamgoodtime.com/events/c9674186-316a-4d78-ab09-1e908eb62ae0,https://thebambooroom.bamgoodtime.com/events/c9674186-316a-4d78-ab09-1e908eb62ae0,2026-11-21,ACTIVE

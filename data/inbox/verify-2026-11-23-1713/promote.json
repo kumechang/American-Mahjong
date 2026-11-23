@@ -1,0 +1,20 @@
+[
+ {
+  "type": "club",
+  "slug": "milwaukee-four-winds-lounge",
+  "name": "Four Winds Lounge",
+  "city": "Milwaukee",
+  "state": "WI",
+  "evidence": "2025 Official National Mah Jongg League Card ($15 value)",
+  "url": "https://fourwindslounge.com/small-group-lessons"
+ },
+ {
+  "type": "instructor",
+  "slug": "new-york-bonnie-tchapraste",
+  "name": "Bonnie Tchapraste",
+  "city": "New York",
+  "state": "NY",
+  "evidence": "National Mah Jongg League",
+  "url": "https://www.westsiderag.com/2026/02/10/from-shuls-to-weed-shops-mahjong-is-clicking-on-the-upper-west-side"
+ }
+]
