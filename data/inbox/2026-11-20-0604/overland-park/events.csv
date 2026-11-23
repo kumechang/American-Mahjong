@@ -1,0 +1,4 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Merry Mahj,Overland Park,KS,2026-12-07,18:00,20:30,Strang Hall,Strang Hall Downtown OP Merry Mahj,,SOCIAL,TRUE,,https://ma.to/event/merry-mahj-07-dec-2026,https://ma.to/event/merry-mahj-07-dec-2026,2026-11-20,NEEDS_REVIEW
+Sisterhood Mah Jongg (Dec 2),Overland Park,KS,2026-12-02,,,The Temple Congregation B'nai Jehudah,Congregation B'nai Jehudah Sisterhood Mah Jongg,,OPEN_PLAY,TRUE,,,https://bnaijehudah.org/upcoming-events/,2026-11-20,NEEDS_REVIEW
+Sisterhood Mah Jongg (Dec 9),Overland Park,KS,2026-12-09,,,The Temple Congregation B'nai Jehudah,Congregation B'nai Jehudah Sisterhood Mah Jongg,,OPEN_PLAY,TRUE,,,https://bnaijehudah.org/upcoming-events/,2026-11-20,NEEDS_REVIEW
