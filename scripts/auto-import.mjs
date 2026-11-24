@@ -30,6 +30,9 @@ const MIN_ROWS = 5;
 // A city is published at five rows (groups + teachers + upcoming sessions), but once published it stays while it has this many groups and teachers:
 // sessions expire every week, groups do not, so a city with three groups should not drop out and come back as its sessions come and go.
 const KEEP_GROUPS = 3;
+// Pages that already earn search impressions (data/seo-keep-published.txt, from Search Console) stay published with two groups.
+const KEEP_GROUPS_SEO = 2;
+const seoKeep = new Set(existsSync("data/seo-keep-published.txt") ? readFileSync("data/seo-keep-published.txt", "utf8").split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#")) : []);
 const MAX_ROWS = { clubs: 400, instructors: 250, events: 1000, flips: 12 }; // events raised from 500 on 2026-11-17: the crawler had delivered nothing for three weeks, so the first run after the fix carries a backlog
 const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
 const norm = (n) => String(n).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -222,7 +225,7 @@ const counts = q(`SELECT c.slug, c.name, c.state, c.published,
   (SELECT count(*) FROM Club WHERE ${inArea} AND status = 'ACTIVE') + (SELECT count(*) FROM Instructor WHERE ${inArea} AND status = 'ACTIVE') +
   (SELECT count(*) FROM Event WHERE ${inArea} AND status = 'ACTIVE' AND eventDate >= '${today} 00:00:00') AS n FROM City c WHERE c.areaId IS NULL`);
 for (const c of counts) {
-  const holds = c.n >= MIN_ROWS || c.groups >= KEEP_GROUPS; // enough to stay published (or to come back, for a city this script unpublished)
+  const holds = c.n >= MIN_ROWS || c.groups >= KEEP_GROUPS || (seoKeep.has(c.slug) && c.groups >= KEEP_GROUPS_SEO); // enough to stay published (or to come back, for a city this script unpublished)
   if (c.published && !holds) {
     const since = below.get(c.slug) ?? today;
     below.set(c.slug, since);
