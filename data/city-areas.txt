@@ -38,6 +38,7 @@ Jupiter, FL > West Palm Beach, FL
 Lake Worth, FL > West Palm Beach, FL
 Boynton Beach, FL > West Palm Beach, FL
 Delray Beach, FL > Boca Raton, FL
+Florida, FL > Miami, FL
 Margate, FL > Fort Lauderdale, FL
 Bonita Springs, FL > Fort Myers, FL
 Altamonte Springs, FL > Orlando, FL
@@ -98,6 +99,7 @@ North Hampton, NH > Portsmouth, NH
 Haddonfield, NJ > Cherry Hill, NJ
 Hoboken, NJ > Newark, NJ
 Wyckoff, NJ > Newark, NJ
+Franklin Lakes, NJ > Newark, NJ
 Wharton, NJ > Newark, NJ
 Marlboro Township, NJ > Farmingdale, NJ
 Flemington, NJ > Whitehouse Station, NJ
