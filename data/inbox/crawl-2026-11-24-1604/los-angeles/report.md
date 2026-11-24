@@ -1,0 +1,14 @@
+# Los Angeles, CA: event crawler (2026-11-24)
+
+## New events
+- 2027-01-11 18:00 mahjong mondays at zinqué west hollywood (zinqué) [ACTIVE]
+
+## Notes
+- 0 events parsed from bgt:https://carasflowers.bamgoodtime.com for "Caras Flowers" (nothing listed, or the page layout changed)
+- 0 events parsed from bgt:https://echoparkmahj.bamgoodtime.com for "Echo Park Mahjong" (nothing listed, or the page layout changed)
+- 0 events parsed from bgt:https://mah-jongg-made-ez.bamgoodtime.com for "Mah Jongg Made EZ" (nothing listed, or the page layout changed)
+- 0 events parsed from bgt:https://mahjvibesml.bamgoodtime.com for "Mahj Vibes Mahjong League" (nothing listed, or the page layout changed)
+- 0 events parsed from bgt:https://marvelousmrsmahj-com.bamgoodtime.com for "Marvelous Mrs Mahj" (nothing listed, or the page layout changed)
+- 0 events parsed from bgt:https://themahjpit.bamgoodtime.com for "The Mahj Pit" (nothing listed, or the page layout changed)
+- 0 events parsed from bgt:https://um-mahjong.bamgoodtime.com for "UM Mahjong" (nothing listed, or the page layout changed)
+- 0 events parsed from ebrite:https://www.eventbrite.com/o/121774574546 for "Clifton's DTLA" (nothing listed, or the page layout changed)
