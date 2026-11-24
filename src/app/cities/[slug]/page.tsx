@@ -10,7 +10,7 @@ import { VerifiedNote } from "@/components/VerifiedNote";
 import { CityHighlights } from "@/components/CityHighlights";
 import { EventList } from "@/components/EventList";
 import { todayEventDate } from "@/lib/city-counts";
-import { fillDescription } from "@/lib/seo";
+import { fillDescription, DESCRIPTION_MIN, DESCRIPTION_MAX } from "@/lib/seo";
 
 // The D1 binding is only available at request time (in the Workers
 // runtime), not during `next build`, so this route can't be statically
@@ -108,7 +108,7 @@ async function getNearbyCities(city: { id: string; slug: string; state: string }
 function buildMetadataCopy(city: {
   name: string;
   state: string;
-  clubs: { lessonsAvailable?: boolean | null }[];
+  clubs: { lessonsAvailable?: boolean | null; name?: string }[];
   instructors: unknown[];
   events: { eventType?: string | null }[];
 }) {
@@ -128,15 +128,21 @@ function buildMetadataCopy(city: {
   const candidates = [`${headline} in ${place}${eventsPart}`, `${headline} in ${place}`, `American Mahjong in ${place}`, `Mahjong in ${place}`];
   const title = candidates.find((t) => t.length <= MAX_TITLE) ?? place;
 
-  let lead: string;
+  // People search for a group by its name ("charleston society fresno", "317 mahj collective" were the queries that got clicks), so the first
+  // one or two club names go into the description when the text still fits.
+  const shortName = (n: string) => n.replace(/\s*[(\u2014\u2013-].*$/, "").trim();
+  const clubNames = [...new Set(city.clubs.map((c) => shortName((c as { name?: string }).name ?? "")).filter((n) => n.length >= 4 && n.length <= 32))].slice(0, 2);
+  const eventsLead = hasEvents ? `, plus ${city.events.length} upcoming event${city.events.length === 1 ? "" : "s"}` : "";
+  const leads: string[] = [];
   if (hasClubs) {
-    lead = `${city.clubs.length} beginner-friendly American Mahjong club${city.clubs.length === 1 ? "" : "s"} in ${place}`;
+    const plain = `${city.clubs.length} beginner-friendly American Mahjong club${city.clubs.length === 1 ? "" : "s"} in ${place}`;
+    for (let k = clubNames.length; k >= 1; k--) leads.push(`${plain}, including ${clubNames.slice(0, k).join(" and ")}`);
+    leads.push(plain);
   } else if (hasInstructors) {
-    lead = `American Mahjong lessons in ${place}`;
+    leads.push(`American Mahjong lessons in ${place}`);
   } else {
-    lead = `American Mahjong in ${place}`;
+    leads.push(`American Mahjong in ${place}`);
   }
-  if (hasEvents) lead += `, plus ${city.events.length} upcoming event${city.events.length === 1 ? "" : "s"}`;
 
   // The filler sentences name no data type that might be missing (lessons only when the page has them), so they stay true for every
   // city; they bring the description to 150-160 characters (Bing Webmaster Tools: "meta description too short").
@@ -148,7 +154,10 @@ function buildMetadataCopy(city: {
     "Compare schedules and prices.",
     "Find the venue, the time and who to contact.",
   ];
-  return { title: { absolute: title }, description: fillDescription(lead, fillers) };
+  // the first lead (with the most club names) whose finished text lands in 150-160 characters; otherwise the longest text that fits
+  const options = leads.map((l) => fillDescription(`${l}${eventsLead}`, fillers));
+  const description = options.find((d) => d.length >= DESCRIPTION_MIN && d.length <= DESCRIPTION_MAX) ?? options.reduce((a, b) => (b.length > a.length ? b : a));
+  return { title: { absolute: title }, description };
 }
 
 export async function generateMetadata({
