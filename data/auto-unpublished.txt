@@ -1,4 +1,3 @@
-billings
 birmingham
 bonita-springs
 champaign
@@ -18,6 +17,7 @@ myrtle-beach
 new-orleans
 new-york
 north-shore
+olive-branch
 orlando
 palm-beach-gardens
 salt-lake-city
