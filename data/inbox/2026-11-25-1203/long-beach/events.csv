@@ -1,0 +1,5 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Mahjong at The Small Market,Long Beach,CA,2026-12-13,15:00,17:00,"The Small Market, Naples Island",Mahj Club,,SOCIAL,TRUE,,https://linktr.ee/longbeachmoms,https://mahjclub.com/events,2026-11-25,NEEDS_REVIEW
+16th Annual Mahjukah Party: Lucky Eights,Long Beach,CA,2026-12-06,13:00,16:00,Long Beach Alpert JCC,Mahj Club,,SOCIAL,FALSE,,https://jewishlongbeach.org,https://mahjclub.com/events,2026-11-25,NEEDS_REVIEW
+Mah Jongg Beginner Series (3 weeks),Long Beach,CA,2027-01-19,18:00,20:00,Long Beach Alpert JCC,Mahj Club,,LESSON,TRUE,,https://jewishlongbeach.org,https://mahjclub.com/events,2026-11-25,NEEDS_REVIEW
+Mahj Club Beginner Retreat,Long Beach,CA,2027-01-30,10:00,15:00,Long Beach Alpert JCC,Mahj Club,,LESSON,TRUE,,https://jewishlongbeach.org,https://mahjclub.com/events,2026-11-25,NEEDS_REVIEW

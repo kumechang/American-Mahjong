@@ -1,0 +1,6 @@
+name,city,state,event_date,start_time,end_time,venue,club_name,instructor_name,event_type,beginner_friendly,price,registration_url,source_url,last_verified_at,status
+Black Friday Open Play,Friendswood,TX,2026-11-27,10:00,20:00,Hall's Hall,Mahjong for a Cause,,OPEN_PLAY,TRUE,,https://friendswood.bamgoodtime.com,https://friendswood.bamgoodtime.com,2026-11-24,ACTIVE
+Mahjong 101 Lesson,Friendswood,TX,2026-11-25,09:00,11:00,Hall's Hall,Mahjong for a Cause,,LESSON,TRUE,40,https://friendswood.bamgoodtime.com,https://friendswood.bamgoodtime.com,2026-11-24,ACTIVE
+Mahjong 101 Lesson,Friendswood,TX,2026-12-02,09:00,11:00,Hall's Hall,Mahjong for a Cause,,LESSON,TRUE,40,https://friendswood.bamgoodtime.com,https://friendswood.bamgoodtime.com,2026-11-24,ACTIVE
+Mahjong 101 Lesson,Friendswood,TX,2026-12-09,09:00,11:00,Hall's Hall,Mahjong for a Cause,,LESSON,TRUE,40,https://friendswood.bamgoodtime.com,https://friendswood.bamgoodtime.com,2026-11-24,ACTIVE
+Social Tournament,Friendswood,TX,2027-01-30,09:30,15:30,Hall's Hall,Mahjong for a Cause,,TOURNAMENT,FALSE,125,https://friendswood.bamgoodtime.com,https://friendswood.bamgoodtime.com,2026-11-24,ACTIVE
